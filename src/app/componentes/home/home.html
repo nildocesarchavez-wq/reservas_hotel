@@ -1,0 +1,240 @@
+<p>home works!</p>
+<body>
+    <div class="app-container">
+        <!-- HEADER TOP -->
+        <header class="header-top">
+            <div class="header-left">
+                <button class="menu-toggle" id="menuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div class="logo">
+                    <a href="home.html">SUN RISE</a>
+                </div>
+            </div>
+            
+            <div class="header-right">
+                <div class="user-menu">
+                    <button class="user-button" id="userDropdown">
+                        <span class="user-avatar">
+                            <i class="fa fa-user"></i>
+                        </span>
+                        <span class="user-name">Admin</span>
+                        <i class="fa fa-caret-down"></i>
+                    </button>
+                    <div class="dropdown-menu" id="userMenu">
+                        <a href="usersetting.html" class="dropdown-item">
+                            <i class="fa fa-user"></i>
+                            <span>Perfil del usuario</span>
+                        </a>
+                        <a href="settings.html" class="dropdown-item">
+                            <i class="fa fa-gear"></i>
+                            <span>Configuraciones</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="index.html" class="dropdown-item">
+                            <i class="fa fa-sign-out"></i>
+                            <span>Cerrar sesión</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+            <nav class="sidebar-nav">
+                <ul class="nav-list">
+                    <li class="nav-item active">
+                        <a href="home.html" class="nav-link">
+                            <i class="fa fa-dashboard"></i>
+                            <span>Estado</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="roombook.html" class="nav-link">
+                            <i class="fa fa-bar-chart-o"></i>
+                            <span>Reserva de habitación</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="payment.html" class="nav-link">
+                            <i class="fa fa-qrcode"></i>
+                            <span>Pagos</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="profit.html" class="nav-link">
+                            <i class="fa fa-qrcode"></i>
+                            <span>Lucro</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="settings.html" class="nav-link">
+                            <i class="fa fa-dashboard"></i>
+                            <span>Estado de la habitación</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="room.html" class="nav-link">
+                            <i class="fa fa-plus-circle"></i>
+                            <span>Agregar habitación</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="roomdel.html" class="nav-link">
+                            <i class="fa fa-pencil-square-o"></i>
+                            <span>Eliminar habitación</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <div class="content-wrapper">
+                <!-- PAGE HEADER -->
+                <div class="page-header">
+                    <h1 class="page-title">Estado</h1>
+                    <p class="page-subtitle">Reserva de habitación</p>
+                </div>
+
+                <!-- CARDS GRID -->
+                <div class="cards-grid">
+                    <!-- CARD: NUEVA RESERVA -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Nueva reserva de habitaciones</h3>
+                            <span class="badge badge-danger">2</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Nombre</th>
+                                            <th>Email</th>
+                                            <th>País</th>
+                                            <th>Habitación</th>
+                                            <th>Cama</th>
+                                            <th>Comida</th>
+                                            <th>Check-in</th>
+                                            <th>Check-out</th>
+                                            <th>Estado</th>
+                                            <th>Acción</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>Juan Pérez</td>
+                                            <td>juan@email.com</td>
+                                            <td>Perú</td>
+                                            <td>Suite Deluxe</td>
+                                            <td>King Size</td>
+                                            <td>Desayuno incluido</td>
+                                            <td>2025-11-20</td>
+                                            <td>2025-11-25</td>
+                                            <td>Not Conform</td>
+                                            <td><a href="roombook.html" class="btn btn-primary">Action</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>María García</td>
+                                            <td>maria@email.com</td>
+                                            <td>España</td>
+                                            <td>Habitación Doble</td>
+                                            <td>Queen Size</td>
+                                            <td>Media pensión</td>
+                                            <td>2025-11-22</td>
+                                            <td>2025-11-28</td>
+                                            <td>Not Conform</td>
+                                            <td><a href="roombook.html" class="btn btn-primary">Action</a></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CARD: CUARTOS RESERVADOS -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Cuartos reservados</h3>
+                            <span class="badge badge-success">2</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="rooms-grid">
+                                <div class="room-card room-blue">
+                                    <div class="room-card-body">
+                                        <i class="fa fa-users"></i>
+                                        <h3>Carlos López</h3>
+                                    </div>
+                                    <div class="room-card-footer">
+                                        Suite Presidencial
+                                    </div>
+                                </div>
+                                <div class="room-card room-green">
+                                    <div class="room-card-body">
+                                        <i class="fa fa-users"></i>
+                                        <h3>Ana Martínez</h3>
+                                    </div>
+                                    <div class="room-card-footer">
+                                        Habitación Simple
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CARD: SEGUIDORES -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Seguidores</h3>
+                            <span class="badge badge-info">2</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Nombre completo</th>
+                                            <th>Email</th>
+                                            <th>Fecha</th>
+                                            <th>Estado</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>Pedro Sánchez</td>
+                                            <td>pedro@email.com</td>
+                                            <td>2025-11-15</td>
+                                            <td>Pending</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>Laura Torres</td>
+                                            <td>laura@email.com</td>
+                                            <td>2025-11-16</td>
+                                            <td>Approved</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="card-footer">
+                                <a href="messages.html" class="btn btn-primary">Más acción</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="js/home.js"></script>
