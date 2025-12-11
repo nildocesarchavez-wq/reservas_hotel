@@ -1,0 +1,106 @@
+/* Footer */
+.copy {
+    text-align: center;
+    background: #0f2453;
+}
+
+.copy p {
+    color: #fff;
+    font-size: 14px;
+    letter-spacing: 2px;
+    padding: 1em;
+}
+
+.copy p a {
+    color: #ffce14;
+    text-decoration: none;
+	transition: 0.5s all;
+}
+
+.copy p a:hover{
+	color:#fff;
+	transition: 0.5s all;
+}
+
+/* WhatsApp Button */
+.whatsapp-btn {
+	position: fixed;
+	bottom: 20px;
+	left: 20px;
+	background-color: #25d366;
+	color: #fff;
+	width: 60px;
+	height: 60px;
+	border-radius: 50%;
+	text-align: center;
+	font-size: 28px;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+	cursor: pointer;
+	text-decoration: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 9999;
+	transition: all 0.3s ease;
+}
+
+.whatsapp-btn:hover {
+	background-color: #1da851;
+	color: #fff;
+	transform: scale(1.1);
+	box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Scroll to Top */
+.arr-w3ls {
+	position: fixed;
+	bottom: 20px;
+	right: 20px;
+	z-index: 999;
+}
+
+#toTop {
+	width: 50px;
+	height: 50px;
+	background: #ffce14;
+	color: #fff;
+	text-align: center;
+	line-height: 50px;
+	border-radius: 50%;
+	font-size: 20px;
+	display: none;
+	transition: all 0.3s ease;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+#toTop:hover {
+	background: #212121;
+	transform: translateY(-5px);
+	box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+#toTopHover {
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+	.whatsapp-btn {
+		width: 50px;
+		height: 50px;
+		font-size: 24px;
+		bottom: 15px;
+		left: 15px;
+	}
+	
+	#toTop {
+		width: 40px;
+		height: 40px;
+		line-height: 40px;
+		font-size: 18px;
+		bottom: 15px;
+		right: 15px;
+	}
+}

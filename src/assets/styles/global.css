@@ -1,0 +1,184 @@
+/* Reset básico*/
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+html {
+	scroll-behavior: smooth;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	font-family: 'Lato', sans-serif;
+	font-size: 14px;
+	line-height: 1.6;
+	color: #212121;
+	background: #f5f5f5;
+}
+
+img {
+	max-width: 100%;
+	height: auto;
+	border: none;
+	display: block;
+}
+
+a {
+	text-decoration: none;
+	transition: all 0.3s ease;
+}
+
+ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+button {
+	border: none;
+	background: none;
+	cursor: pointer;
+}
+
+.clearfix::after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+.img-responsive {
+	max-width: 100%;
+	height: auto;
+	display: block;
+}
+
+/* LAYOUT Y CONTENEDORES*/
+
+.container {
+	width: 100%;
+	max-width: 1170px;
+	margin: 0 auto;
+	padding: 0 15px;
+}
+
+/* Títulos principales*/
+.title-w3-agileits,
+.title-black-wthree {
+	font-size: 40px;
+	color: #212121;
+	text-align: center;
+	margin-bottom: 50px;
+	font-weight: 700;
+	font-family: 'Oswald', sans-serif;
+	text-transform: uppercase;
+	letter-spacing: 2px;
+}
+
+.title-w3-agileits {
+	color: #000;
+}
+
+/* Sistema de grid básico*/
+.row {
+	display: flex;
+	flex-wrap: wrap;
+	margin: 0 -15px;
+}
+
+[class*="col-"] {
+	padding: 0 15px;
+}
+
+.col-md-3 {
+	width: 25%;
+	float: left;
+}
+
+.col-md-6 {
+	width: 50%;
+	float: left;
+}
+
+.col-lg-6 {
+	width: 50%;
+	float: left;
+}
+
+/* 
+   FONT AWESOME ICONS
+*/
+
+.fa {
+	display: inline-block;
+	font: normal normal normal 14px/1 FontAwesome;
+	font-size: inherit;
+	text-rendering: auto;
+}
+
+.fa-long-arrow-down:before { content: "\f175"; }
+.fa-credit-card:before { content: "\f09d"; }
+.fa-clock-o:before { content: "\f017"; }
+.fa-check:before { content: "\f00c"; }
+.fa-facebook:before { content: "\f09a"; }
+.fa-twitter:before { content: "\f099"; }
+.fa-google-plus:before { content: "\f0d5"; }
+.fa-rss:before { content: "\f09e"; }
+.fa-picture-o:before { content: "\f03e"; }
+.fa-star:before { content: "\f005"; }
+.fa-star-o:before { content: "\f006"; }
+.fa-phone:before { content: "\f095"; }
+.fa-lock:before { content: "\f023"; }
+
+/* 
+   RESPONSIVE GLOBAL
+*/
+
+/* Tablets y pantallas medianas*/
+@media (max-width: 991px) {
+	.col-md-3,
+	.col-md-6 {
+		width: 50%;
+	}
+	
+	.title-w3-agileits,
+	.title-black-wthree {
+		font-size: 30px;
+		margin-bottom: 30px;
+	}
+}
+
+/* Tablets pequeñas y móviles grandes*/
+@media (max-width: 768px) {
+	.col-md-3,
+	.col-md-6,
+	.col-lg-6 {
+		width: 100%;
+		float: none;
+	}
+	
+	.title-w3-agileits,
+	.title-black-wthree {
+		font-size: 30px;
+		margin-bottom: 30px;
+	}
+}
+
+/* Móviles*/
+@media (max-width: 480px) {
+	.title-w3-agileits,
+	.title-black-wthree {
+		font-size: 24px;
+		margin-bottom: 25px;
+	}
+}
+
+/* Móviles pequeños*/
+@media (max-width: 320px) {
+	.title-w3-agileits,
+	.title-black-wthree {
+		font-size: 20px;
+	}
+}

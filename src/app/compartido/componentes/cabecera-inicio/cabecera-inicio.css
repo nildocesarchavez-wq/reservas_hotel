@@ -1,0 +1,270 @@
+/* Banner */
+.w3ls-banner {
+	position: relative;
+	padding-top: 0;
+}
+
+.slider {
+	position: relative;
+}
+
+.callbacks_container {
+	position: relative;
+	width: 100%;
+}
+
+.rslides {
+	position: relative;
+	list-style: none;
+	overflow: hidden;
+	width: 100%;
+	padding: 0;
+	margin: 0;
+}
+
+.rslides li {
+	position: absolute;
+	display: none;
+	width: 100%;
+	left: 0;
+	top: 0;
+}
+
+.rslides li:first-child {
+	position: relative;
+	display: block;
+}
+
+.rslides img {
+	display: block;
+	height: auto;
+	width: 100%;
+	border: 0;
+}
+
+.w3layouts-banner-top {
+	background: url(/assets/images/public/1.jpg) no-repeat center;
+	background-size: cover;
+	min-height: 100vh;
+	display: flex;
+	align-items: center;
+	position: relative;
+	padding-top: 80px;
+}
+
+.w3layouts-banner-top::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.5);
+}
+
+.w3layouts-banner-top1 {
+	background: url(/assets/images/public/2.jpg) no-repeat center;
+	background-size: cover;
+}
+
+.w3layouts-banner-top2 {
+	background: url(/assets/images/public/3.jpg) no-repeat center;
+	background-size: cover;
+}
+
+.agileits-banner-info {
+	position: relative;
+	z-index: 1;
+	text-align: center;
+	color: #fff;
+	padding: 150px 0 100px;
+	width: 100%;
+}
+
+.agileits-banner-info h4 {
+	font-size: 20px;
+	color: #ffce14;
+	font-weight: 300;
+	letter-spacing: 3px;
+	margin-bottom: 20px;
+	text-transform: uppercase;
+}
+
+.agileits-banner-info h3 {
+	font-size: 48px;
+	font-family: 'Oswald', sans-serif;
+	font-weight: 700;
+	text-transform: uppercase;
+	margin-bottom: 20px;
+	line-height: 1.2;
+}
+
+.agileits-banner-info p {
+	font-size: 18px;
+	margin-bottom: 30px;
+	font-weight: 300;
+}
+
+.agileits_w3layouts_more .menu__link {
+	background: #ffce14;
+	color: #fff;
+	padding: 12px 35px;
+	border-radius: 3px;
+	display: inline-block;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+}
+
+.agileits_w3layouts_more .menu__link:hover {
+	background: #fff;
+	color: #ffce14;
+}
+
+/* Modal */
+.modal {
+	display: none;
+	position: fixed;
+	z-index: 9999;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.8);
+	overflow: auto;
+}
+
+.modal.show {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.modal-dialog {
+	max-width: 600px;
+	width: 90%;
+	margin: 20px auto;
+}
+
+.modal-content {
+	background: #fff;
+	border-radius: 5px;
+	position: relative;
+	animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+	from {
+		opacity: 0;
+		transform: translateY(-50px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.modal-header {
+	padding: 30px;
+	text-align: center;
+}
+
+.modal-header .close {
+	position: absolute;
+	top: 15px;
+	right: 20px;
+	font-size: 30px;
+	color: #999;
+	background: none;
+	border: none;
+	cursor: pointer;
+	line-height: 1;
+}
+
+.modal-header .close:hover {
+	color: #212121;
+}
+
+.modal-header h4 {
+	font-size: 32px;
+	font-weight: 700;
+	margin-bottom: 20px;
+	color: #212121;
+	font-family: 'Oswald', sans-serif;
+}
+
+.modal-header h4 span {
+	color: #ffce14;
+}
+
+.modal-header img {
+	width: 100%;
+	margin-bottom: 20px;
+	border-radius: 5px;
+}
+
+.modal-header h5 {
+	font-size: 22px;
+	font-weight: 600;
+	margin-bottom: 15px;
+	color: #212121;
+}
+
+.modal-header p {
+	font-size: 15px;
+	line-height: 1.8;
+	color: #666;
+}
+
+/* Sección de reserva */
+#availability-agileits {
+	background: #ffce14;
+	padding: 30px 0;
+	text-align: center;
+}
+
+.book-form-left-w3layouts a {
+	color: #fff;
+	display: block;
+}
+
+.book-form-left-w3layouts h2 {
+	font-size: 28px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 2px;
+	font-family: 'Oswald', sans-serif;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+	.w3layouts-banner-top {
+		min-height: 400px;
+	}
+	
+	.agileits-banner-info {
+		padding: 50px 0;
+	}
+	
+	.agileits-banner-info h3 {
+		font-size: 32px;
+	}
+	
+	.agileits-banner-info h4 {
+		font-size: 16px;
+	}
+}
+
+@media (max-width: 480px) {
+	.agileits-banner-info h3 {
+		font-size: 26px;
+	}
+	
+	.agileits-banner-info h4 {
+		font-size: 14px;
+	}
+	
+	.agileits-banner-info p {
+		font-size: 16px;
+	}
+}
