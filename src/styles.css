@@ -1,1 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
+/* Importar estilos globales */
+@import './assets/styles/global.css';
+
+/* Importar Font Awesome */
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
+
+/* Importar Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;700&family=Lato:wght@300;400;700&display=swap');
+
+/* Estilos adicionales globales si necesitas */

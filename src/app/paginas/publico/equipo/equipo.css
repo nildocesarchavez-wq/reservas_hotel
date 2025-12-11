@@ -1,0 +1,177 @@
+/* Team */
+.team {
+	padding: 80px 0;
+	background: #f9f9f9;
+}
+
+.team-members {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 40px;
+	margin-top: 50px;
+}
+
+.team-member {
+	background: #fff;
+	border-radius: 10px;
+	overflow: hidden;
+	box-shadow: 0 5px 30px rgba(0,0,0,0.1);
+	transition: all 0.3s ease;
+}
+
+.team-member:hover {
+	transform: translateY(-10px);
+	box-shadow: 0 15px 50px rgba(0,0,0,0.2);
+}
+
+.team-img-w3-agile {
+	width: 100%;
+	overflow: hidden;
+	position: relative;
+}
+
+.team-img-w3-agile img {
+	width: 100%;
+	height: 300px;
+	object-fit: cover;
+	transition: all 0.5s ease;
+}
+
+.team-member:hover .team-img-w3-agile img {
+	transform: scale(1.1);
+}
+
+.team-Info-agileits {
+	padding: 40px 35px;
+}
+
+.team-Info-agileits h4 {
+	font-size: 28px;
+	font-weight: 700;
+	margin-bottom: 10px;
+	color: #212121;
+	font-family: 'Oswald', sans-serif;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+}
+
+.team-Info-agileits span {
+	font-size: 16px;
+	color: #ffce14;
+	display: block;
+	margin-bottom: 20px;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 2px;
+}
+
+.team-Info-agileits p {
+	font-size: 15px;
+	line-height: 1.8;
+	color: #666;
+	margin-bottom: 25px;
+}
+
+/* Social icons */
+.social-bnr-agileits {
+	margin-top: 10px;
+}
+
+.social-icons3 {
+	display: flex;
+	gap: 12px;
+	padding: 0;
+	list-style: none;
+}
+
+.social-icons3 li {
+	list-style: none;
+}
+
+.social-icons3 li a {
+	width: 45px;
+	height: 45px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 50%;
+	color: #fff;
+	font-size: 18px;
+	transition: all 0.3s ease;
+	box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.facebook {
+	background: #3b5998;
+}
+
+.twitter {
+	background: #1da1f2;
+}
+
+.googleplus {
+	background: #dd4b39;
+}
+
+.rss {
+	background: #f26522;
+}
+
+.social-icons3 li a:hover {
+	transform: translateY(-5px) rotate(360deg);
+	box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+}
+
+/* Responsive */
+@media (max-width: 991px) {
+	.team-members {
+		grid-template-columns: 1fr;
+		gap: 30px;
+	}
+}
+
+@media (max-width: 768px) {
+	.team {
+		padding: 50px 0;
+	}
+	
+	.team-img-w3-agile img {
+		height: 250px;
+	}
+	
+	.team-Info-agileits {
+		padding: 30px 25px;
+	}
+	
+	.team-Info-agileits h4 {
+		font-size: 24px;
+	}
+}
+
+@media (max-width: 480px) {
+	.team-members {
+		gap: 25px;
+	}
+	
+	.team-img-w3-agile img {
+		height: 220px;
+	}
+	
+	.team-Info-agileits {
+		padding: 25px 20px;
+	}
+	
+	.team-Info-agileits h4 {
+		font-size: 22px;
+	}
+	
+	.team-Info-agileits p {
+		font-size: 14px;
+	}
+	
+	.social-icons3 li a {
+		width: 40px;
+		height: 40px;
+		font-size: 16px;
+	}
+}
