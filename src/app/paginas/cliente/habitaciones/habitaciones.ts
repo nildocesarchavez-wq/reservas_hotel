@@ -4,8 +4,8 @@ import { Component } from '@angular/core';
     selector: 'app-habitaciones',
     standalone: true,
     imports: [],
-    templateUrl: './habitaciones.component.html',
-    styleUrl: './habitaciones.component.css'
+    templateUrl: './habitaciones.html',
+    styleUrl: './habitaciones.css'
 })
 export class HabitacionesComponent {
 

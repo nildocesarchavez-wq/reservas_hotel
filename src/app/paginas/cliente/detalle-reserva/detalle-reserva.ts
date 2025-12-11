@@ -4,8 +4,8 @@ import { Component } from '@angular/core';
     selector: 'app-detalle-reserva',
     standalone: true,
     imports: [],
-    templateUrl: './detalle-reserva.component.html',
-    styleUrl: './detalle-reserva.component.css'
+    templateUrl: './detalle-reserva.html',
+    styleUrl: './detalle-reserva.css'
 })
 export class DetalleReservaComponent {
 

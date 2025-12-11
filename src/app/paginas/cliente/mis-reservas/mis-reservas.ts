@@ -4,8 +4,8 @@ import { Component } from '@angular/core';
     selector: 'app-mis-reservas',
     standalone: true,
     imports: [],
-    templateUrl: './mis-reservas.component.html',
-    styleUrl: './mis-reservas.component.css'
+    templateUrl: './mis-reservas.html',
+    styleUrl: './mis-reservas.css'
 })
 export class MisReservasComponent {
 

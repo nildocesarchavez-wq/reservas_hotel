@@ -4,8 +4,8 @@ import { Component } from '@angular/core';
     selector: 'app-inicio-sesion',
     standalone: true,
     imports: [],
-    templateUrl: './inicio-sesion.component.html',
-    styleUrl: './inicio-sesion.component.css'
+    templateUrl: './inicio-sesion.html',
+    styleUrl: './inicio-sesion.css'
 })
 export class InicioSesionComponent {
 

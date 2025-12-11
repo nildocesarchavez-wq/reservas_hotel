@@ -4,8 +4,8 @@ import { Component } from '@angular/core';
     selector: 'app-gestionar-habitaciones',
     standalone: true,
     imports: [],
-    templateUrl: './gestionar-habitaciones.component.html',
-    styleUrl: './gestionar-habitaciones.component.css'
+    templateUrl: './gestionar-habitaciones.html',
+    styleUrl: './gestionar-habitaciones.css'
 })
 export class GestionarHabitacionesComponent {
 

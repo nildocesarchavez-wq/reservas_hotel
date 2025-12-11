@@ -4,8 +4,8 @@ import { Component } from '@angular/core';
     selector: 'app-registro',
     standalone: true,
     imports: [],
-    templateUrl: './registro.component.html',
-    styleUrl: './registro.component.css'
+    templateUrl: './registro.html',
+    styleUrl: './registro.css'
 })
 export class RegistroComponent {
 

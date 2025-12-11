@@ -7,28 +7,28 @@ export const routes: Routes = [
     redirectTo: 'inicio',
     pathMatch: 'full'
   },
-  
+
   // Rutas públicas
   {
     path: 'inicio',
-    loadComponent: () => import('./paginas/publico/inicio/inicio.component').then(m => m.InicioComponent)
+    loadComponent: () => import('./paginas/publico/inicio/inicio').then(m => m.InicioComponent)
   },
   {
     path: 'nosotros',
-    loadComponent: () => import('./paginas/publico/nosotros/nosotros.component').then(m => m.NosotrosComponent)
+    loadComponent: () => import('./paginas/publico/nosotros/nosotros').then(m => m.NosotrosComponent)
   },
   {
     path: 'habitaciones',
-    loadComponent: () => import('./paginas/publico/habitaciones-publicas/habitaciones-publicas.component').then(m => m.HabitacionesPublicasComponent)
+    loadComponent: () => import('./paginas/publico/habitaciones-publicas/habitaciones-publicas').then(m => m.HabitacionesPublicasComponent)
   },
   {
     path: 'contacto',
-    loadComponent: () => import('./paginas/publico/contacto/contacto.component').then(m => m.ContactoComponent)
+    loadComponent: () => import('./paginas/publico/contacto/contacto').then(m => m.ContactoComponent)
   },
-  
+
   // Ruta 404
   {
     path: '**',
-    loadComponent: () => import('./no-encontrado/no-encontrado.component').then(m => m.NoEncontradoComponent)
+    loadComponent: () => import('./no-encontrado/no-encontrado').then(m => m.NoEncontradoComponent)
   }
 ];

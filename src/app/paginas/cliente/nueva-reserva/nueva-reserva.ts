@@ -4,8 +4,8 @@ import { Component } from '@angular/core';
     selector: 'app-nueva-reserva',
     standalone: true,
     imports: [],
-    templateUrl: './nueva-reserva.component.html',
-    styleUrl: './nueva-reserva.component.css'
+    templateUrl: './nueva-reserva.html',
+    styleUrl: './nueva-reserva.css'
 })
 export class NuevaReservaComponent {
 

@@ -4,8 +4,8 @@ import { Component } from '@angular/core';
     selector: 'app-habitaciones-publicas',
     standalone: true,
     imports: [],
-    templateUrl: './habitaciones-publicas.component.html',
-    styleUrl: './habitaciones-publicas.component.css'
+    templateUrl: './habitaciones-publicas.html',
+    styleUrl: './habitaciones-publicas.css'
 })
 export class HabitacionesPublicasComponent {
 

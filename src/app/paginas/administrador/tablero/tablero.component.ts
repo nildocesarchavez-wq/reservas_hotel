@@ -4,8 +4,8 @@ import { Component } from '@angular/core';
     selector: 'app-tablero',
     standalone: true,
     imports: [],
-    templateUrl: './tablero.component.html',
-    styleUrl: './tablero.component.css'
+    templateUrl: './tablero.html',
+    styleUrl: './tablero.css'
 })
 export class TableroComponent {
 
