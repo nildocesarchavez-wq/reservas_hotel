@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './cabecera-inicio.html',
   styleUrls: ['./cabecera-inicio.css']
 })
-export class CabeceraInicioComponent implements OnInit, OnDestroy {
+export class CabeceraInicio implements OnInit, OnDestroy {
   private sliderInterval: any;
   private currentSlide = 0;
   private slides: NodeListOf<HTMLElement> | null = null;

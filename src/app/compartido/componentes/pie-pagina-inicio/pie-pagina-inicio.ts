@@ -9,8 +9,8 @@ import { RouterModule } from '@angular/router';
   templateUrl: './pie-pagina-inicio.html',
   styleUrls: ['./pie-pagina-inicio.css']
 })
-export class PiePaginaInicioComponent implements OnInit {
-  
+export class PiePaginaInicio implements OnInit {
+      
   ngOnInit(): void {
     this.initScrollToTop();
   }

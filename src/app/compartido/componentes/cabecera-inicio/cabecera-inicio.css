@@ -43,7 +43,7 @@
 }
 
 .w3layouts-banner-top {
-	background: url(../../../assets/images/1.jpg) no-repeat center;
+	background: url(/images/1.jpg) no-repeat center;
 	background-size: cover;
 	min-height: 100vh;
 	display: flex;
@@ -63,12 +63,12 @@
 }
 
 .w3layouts-banner-top1 {
-	background: url(../../../assets/images/2.jpg) no-repeat center;
+	background: url(/images/2.jpg) no-repeat center;
 	background-size: cover;
 }
 
 .w3layouts-banner-top2 {
-	background: url(../../../assets/images/3.jpg) no-repeat center;
+	background: url(/images/3.jpg) no-repeat center;
 	background-size: cover;
 }
 
@@ -158,6 +158,7 @@
 		opacity: 0;
 		transform: translateY(-50px);
 	}
+
 	to {
 		opacity: 1;
 		transform: translateY(0);
@@ -241,15 +242,15 @@
 	.w3layouts-banner-top {
 		min-height: 400px;
 	}
-	
+
 	.agileits-banner-info {
 		padding: 50px 0;
 	}
-	
+
 	.agileits-banner-info h3 {
 		font-size: 32px;
 	}
-	
+
 	.agileits-banner-info h4 {
 		font-size: 16px;
 	}
@@ -259,11 +260,11 @@
 	.agileits-banner-info h3 {
 		font-size: 26px;
 	}
-	
+
 	.agileits-banner-info h4 {
 		font-size: 14px;
 	}
-	
+
 	.agileits-banner-info p {
 		font-size: 16px;
 	}
