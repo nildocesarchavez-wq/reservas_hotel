@@ -11,25 +11,53 @@
   </div>
 
   <div class="header-right">
-    <div class="user-menu">
+    <div class="user-menu" *ngIf="!isLoading">
       <button class="user-button" (click)="toggleUserMenu()">
-        <span class="user-avatar">
-          <i class="fa fa-user"></i>
+        <span class="user-avatar" *ngIf="!hasProfilePhoto()">
+          {{ getUserInitials() }}
         </span>
-        <span class="user-name">Usuario</span>
+        <img 
+          *ngIf="hasProfilePhoto()" 
+          [src]="getProfilePhotoUrl()" 
+          alt="Avatar" 
+          class="user-avatar-img"
+        />
+        <span class="user-name">{{ getUserName() }}</span>
         <i class="fa fa-caret-down"></i>
       </button>
+      
       <div class="dropdown-menu" [class.show]="showUserMenu">
-        <a routerLink="/cliente/perfil" class="dropdown-item">
+        <div class="dropdown-header">
+          <div class="dropdown-user-info">
+            <span class="dropdown-name">{{ getFullName() }}</span>
+            <span class="dropdown-email">{{ getUserEmail() }}</span>
+          </div>
+        </div>
+        
+        <div class="dropdown-divider"></div>
+        
+        <a (click)="goToProfile()" class="dropdown-item">
           <i class="fa fa-user"></i>
           <span>Mi Perfil</span>
         </a>
+        
+        <a (click)="goToReservas()" class="dropdown-item">
+          <i class="fa fa-calendar"></i>
+          <span>Mis Reservas</span>
+        </a>
+
         <div class="dropdown-divider"></div>
-        <a routerLink="/auth/login" class="dropdown-item">
+        
+        <a (click)="logout()" class="dropdown-item logout-item">
           <i class="fa fa-sign-out"></i>
           <span>Cerrar sesión</span>
         </a>
       </div>
+    </div>
+
+    <!-- Loading indicator -->
+    <div class="loading-avatar" *ngIf="isLoading">
+      <div class="spinner"></div>
     </div>
   </div>
 </header>

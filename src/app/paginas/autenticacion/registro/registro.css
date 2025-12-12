@@ -297,3 +297,84 @@ select.form-input {
         font-size: 13px;
     }
 }
+
+/* Agregar estos estilos al archivo registro.css existente */
+
+/* Error Message */
+.error-message {
+    background: #fee;
+    border: 2px solid #fcc;
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    color: #c33;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: shake 0.5s ease;
+}
+
+.error-message i {
+    font-size: 18px;
+}
+
+/* Success Message */
+.success-message {
+    background: #efe;
+    border: 2px solid #cfc;
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    color: #3c3;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: slideIn 0.5s ease;
+}
+
+.success-message i {
+    font-size: 18px;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Loading State */
+.submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+.submit-btn .fa-spinner {
+    margin-right: 8px;
+}
+
+/* Form Input Disabled State */
+.form-input:disabled,
+select.form-input:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: #f0f0f0;
+}
+
+.checkbox-label input[type="checkbox"]:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}

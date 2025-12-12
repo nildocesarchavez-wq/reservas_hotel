@@ -15,6 +15,18 @@
           <p class="register-subtitle">Crear Cuenta</p>
         </div>
 
+        <!-- Mensaje de error -->
+        <div class="error-message" *ngIf="errorMessage">
+          <i class="fa fa-exclamation-circle"></i>
+          {{ errorMessage }}
+        </div>
+
+        <!-- Mensaje de éxito -->
+        <div class="success-message" *ngIf="successMessage">
+          <i class="fa fa-check-circle"></i>
+          {{ successMessage }}
+        </div>
+
         <!-- Nombre Completo -->
         <div class="form-group">
           <input 
@@ -22,7 +34,9 @@
             class="form-input" 
             name="fullName"
             [(ngModel)]="formData.fullName"
-            placeholder="Nombre Completo" 
+            (input)="onInputChange()"
+            placeholder="Nombre Completo"
+            [disabled]="loading"
             required>
           <span class="input-icon">👤</span>
         </div>
@@ -34,7 +48,9 @@
             class="form-input" 
             name="email"
             [(ngModel)]="formData.email"
-            placeholder="Correo Electrónico" 
+            (input)="onInputChange()"
+            placeholder="Correo Electrónico"
+            [disabled]="loading"
             required>
           <span class="input-icon">📧</span>
         </div>
@@ -46,7 +62,9 @@
             class="form-input" 
             name="phone"
             [(ngModel)]="formData.phone"
-            placeholder="Teléfono" 
+            (input)="onInputChange()"
+            placeholder="Teléfono"
+            [disabled]="loading"
             required>
           <span class="input-icon">📱</span>
         </div>
@@ -57,6 +75,8 @@
             class="form-input" 
             name="country"
             [(ngModel)]="formData.country"
+            (change)="onInputChange()"
+            [disabled]="loading"
             required>
             <option value="">Seleccionar País</option>
             <option value="AR">Argentina</option>
@@ -80,7 +100,9 @@
             class="form-input"
             name="password"
             [(ngModel)]="formData.password"
-            placeholder="Contraseña" 
+            (input)="onInputChange()"
+            placeholder="Contraseña (mínimo 6 caracteres)"
+            [disabled]="loading"
             required>
           <span class="input-icon">🔒</span>
         </div>
@@ -92,9 +114,11 @@
             class="form-input"
             name="confirmPassword"
             [(ngModel)]="formData.confirmPassword"
-            placeholder="Confirmar Contraseña" 
+            (input)="onInputChange()"
+            placeholder="Confirmar Contraseña"
+            [disabled]="loading"
             required>
-          <span class="input-icon">🔑</span>
+          <span class="input-icon">🔒</span>
         </div>
 
         <!-- Términos y Condiciones -->
@@ -104,13 +128,19 @@
               type="checkbox" 
               name="terms"
               [(ngModel)]="formData.acceptTerms"
+              [disabled]="loading"
               required>
             <span>Acepto los <a href="#" class="terms-link">términos y condiciones</a></span>
           </label>
         </div>
 
         <!-- Botón Submit -->
-        <button type="submit" class="submit-btn">Registrarse</button>
+        <button type="submit" class="submit-btn" [disabled]="loading">
+          <span *ngIf="!loading">Registrarse</span>
+          <span *ngIf="loading">
+            <i class="fa fa-spinner fa-spin"></i> Creando cuenta...
+          </span>
+        </button>
 
         <!-- Link de login -->
         <p class="login-link">

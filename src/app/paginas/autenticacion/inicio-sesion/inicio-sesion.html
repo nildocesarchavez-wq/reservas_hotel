@@ -15,6 +15,12 @@
           <p class="login-subtitle">Iniciar Sesión</p>
         </div>
 
+        <!-- Mensaje de error -->
+        <div class="error-message" *ngIf="errorMessage">
+          <i class="fa fa-exclamation-circle"></i>
+          {{ errorMessage }}
+        </div>
+
         <!-- Selector de tipo de usuario -->
         <div class="user-type-selector">
           <label class="radio-option">
@@ -33,16 +39,18 @@
           </label>
         </div>
 
-        <!-- Campo Usuario -->
+        <!-- Campo Email -->
         <div class="form-group">
           <input 
-            type="text" 
+            type="email" 
             class="form-input" 
             name="username"
             [(ngModel)]="username"
-            placeholder="Usuario o Email" 
+            (input)="onInputChange()"
+            placeholder="Correo Electrónico" 
+            [disabled]="loading"
             required>
-          <span class="input-icon">👤</span>
+          <span class="input-icon">📧</span>
         </div>
 
         <!-- Campo Contraseña -->
@@ -52,13 +60,20 @@
             class="form-input"
             name="password"
             [(ngModel)]="password"
+            (input)="onInputChange()"
             placeholder="Contraseña" 
+            [disabled]="loading"
             required>
           <span class="input-icon">🔒</span>
         </div>
 
         <!-- Botón Submit -->
-        <button type="submit" class="submit-btn">Iniciar Sesión</button>
+        <button type="submit" class="submit-btn" [disabled]="loading">
+          <span *ngIf="!loading">Iniciar Sesión</span>
+          <span *ngIf="loading">
+            <i class="fa fa-spinner fa-spin"></i> Iniciando...
+          </span>
+        </button>
 
         <!-- Link de registro -->
         <p class="register-link" *ngIf="userType === 'user'">

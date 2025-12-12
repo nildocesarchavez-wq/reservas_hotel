@@ -71,7 +71,290 @@
     font-family: 'Lato', sans-serif;
 }
 
-/* Botón de Login */
+/* ===== MENÚ DE USUARIO ===== */
+
+.user-menu-container {
+    position: relative;
+}
+
+/* Botón del menú de usuario */
+.user-menu-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 206, 20, 0.3);
+    padding: 8px 15px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: white;
+}
+
+.user-menu-btn:hover,
+.user-menu-btn.active {
+    background: rgba(255, 206, 20, 0.2);
+    border-color: #ffce14;
+    transform: translateY(-2px);
+}
+
+.user-menu-btn .fa-chevron-down {
+    font-size: 12px;
+    transition: transform 0.3s ease;
+}
+
+.user-menu-btn.active .fa-chevron-down {
+    transform: rotate(180deg);
+}
+
+/* Avatar del usuario */
+.user-avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    color: white;
+    text-transform: uppercase;
+}
+
+.user-avatar-small {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 13px;
+    color: white;
+    text-transform: uppercase;
+}
+
+.user-avatar-large {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 24px;
+    color: white;
+    text-transform: uppercase;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.user-name-mobile {
+    display: none;
+    font-size: 14px;
+    font-weight: 600;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Dropdown del usuario */
+.user-dropdown {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    background: rgba(0, 0, 0, 0.98);
+    border: 1px solid rgba(255, 206, 20, 0.3);
+    border-radius: 15px;
+    min-width: 280px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.user-dropdown.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* Header del dropdown */
+.user-dropdown-header {
+    padding: 25px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.user-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.user-info .user-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: white;
+    margin: 0 0 5px 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.user-info .user-email {
+    font-size: 13px;
+    color: #bbb;
+    margin: 0 0 8px 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.user-role {
+    display: inline-block;
+    padding: 4px 12px;
+    background: rgba(51, 102, 255, 0.2);
+    border: 1px solid rgba(51, 102, 255, 0.3);
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #5b8dff;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.user-role.admin {
+    background: rgba(255, 206, 20, 0.2);
+    border-color: rgba(255, 206, 20, 0.3);
+    color: #ffce14;
+}
+
+.user-dropdown-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 0 15px;
+}
+
+/* Menú del dropdown */
+.user-dropdown-menu {
+    list-style: none;
+    padding: 10px 0;
+    margin: 0;
+}
+
+.user-dropdown-menu li button {
+    width: 100%;
+    padding: 12px 25px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: left;
+}
+
+.user-dropdown-menu li button:hover {
+    background: rgba(255, 206, 20, 0.1);
+    color: #ffce14;
+}
+
+.user-dropdown-menu li button i {
+    width: 20px;
+    font-size: 16px;
+    color: #ffce14;
+}
+
+/* Footer del dropdown */
+.user-dropdown-footer {
+    padding: 15px;
+}
+
+.logout-btn {
+    width: 100%;
+    padding: 12px 20px;
+    background: rgba(255, 59, 48, 0.15);
+    border: 1px solid rgba(255, 59, 48, 0.3);
+    border-radius: 10px;
+    color: #ff6b6b;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+    background: rgba(255, 59, 48, 0.25);
+    border-color: rgba(255, 59, 48, 0.5);
+    transform: translateY(-2px);
+}
+
+.logout-btn i {
+    font-size: 16px;
+}
+
+/* Loading State */
+.loading-user {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+}
+
+.spinner-small {
+    width: 24px;
+    height: 24px;
+    border: 3px solid rgba(255, 206, 20, 0.3);
+    border-top-color: #ffce14;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Botón de usuario en desktop menu */
+.menu__item--user {
+    display: block;
+}
+
+.user-btn-desktop {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 206, 20, 0.15);
+    border: 2px solid rgba(255, 206, 20, 0.3);
+    padding: 8px 18px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.user-btn-desktop:hover {
+    background: rgba(255, 206, 20, 0.25);
+    border-color: #ffce14;
+    transform: translateY(-2px);
+}
+
+/* ===== BOTÓN LOGIN ===== */
+
 .login-btn {
     background: #3366ff;
     color: white;
@@ -264,18 +547,36 @@
         font-size: 15px;
     }
     
-    /* Ocultar login del menú */
-    .menu__item--login {
+    /* Ocultar elementos desktop */
+    .menu__item--login,
+    .menu__item--user {
         display: none;
     }
     
-    .login-btn-desktop {
+    .login-btn-desktop,
+    .user-btn-desktop {
         display: none;
     }
     
-    /* Mostrar login mobile */
+    /* Mostrar botones mobile */
     .login-btn-mobile {
         display: flex;
+    }
+    
+    /* Ajustar nombre de usuario en mobile */
+    .user-name-mobile {
+        display: block;
+    }
+    
+    /* Dropdown del usuario en mobile */
+    .user-dropdown {
+        right: auto;
+        left: 50%;
+        transform: translateX(-50%) translateY(-10px);
+    }
+    
+    .user-dropdown.show {
+        transform: translateX(-50%) translateY(0);
     }
 }
 
@@ -293,14 +594,25 @@
         font-size: 10px;
     }
     
-    .login-btn {
+    .login-btn,
+    .user-menu-btn {
         padding: 10px 18px;
         font-size: 13px;
         gap: 6px;
     }
     
+    .user-avatar {
+        width: 32px;
+        height: 32px;
+        font-size: 13px;
+    }
+    
     .login-btn i {
         font-size: 14px;
+    }
+    
+    .user-dropdown {
+        min-width: 260px;
     }
 }
 
@@ -333,6 +645,22 @@
         margin: 0;
     }
     
+    /* Botón Usuario - Compacto */
+    .user-menu-btn {
+        padding: 8px 12px;
+    }
+    
+    .user-name-mobile {
+        max-width: 80px;
+        font-size: 13px;
+    }
+    
+    .user-avatar {
+        width: 30px;
+        height: 30px;
+        font-size: 12px;
+    }
+    
     /* Toggle más pequeño */
     .navbar-toggle {
         padding: 10px 12px;
@@ -347,6 +675,21 @@
     /* Espaciado */
     .navbar-right-controls {
         gap: 10px;
+    }
+    
+    /* Dropdown más estrecho */
+    .user-dropdown {
+        min-width: 240px;
+    }
+    
+    .user-dropdown-header {
+        padding: 20px;
+    }
+    
+    .user-avatar-large {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
     }
 }
 
@@ -370,6 +713,16 @@
         font-size: 14px;
     }
     
+    .user-menu-btn {
+        padding: 6px 10px;
+    }
+    
+    .user-avatar {
+        width: 28px;
+        height: 28px;
+        font-size: 11px;
+    }
+    
     .navbar-toggle {
         padding: 8px 10px;
     }
@@ -380,5 +733,9 @@
     
     .navbar-right-controls {
         gap: 8px;
+    }
+    
+    .user-dropdown {
+        min-width: 220px;
     }
 }
