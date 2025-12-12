@@ -26,6 +26,11 @@ export const routes: Routes = [
     loadComponent: () => import('./paginas/publico/contacto/contacto').then(m => m.ContactoComponent)
   },
 
+  {
+    path: 'auth/login',
+    loadComponent: () => import('./paginas/autenticacion/inicio-sesion/inicio-sesion').then(m => m.InicioSesionComponent)
+  },
+
   // Ruta 404
   {
     path: '**',

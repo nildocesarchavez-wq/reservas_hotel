@@ -1,1 +1,74 @@
-<p>inicio-sesion works!</p>
+<div class="login-page">
+  <div class="clouds">
+    <div class="cloud x1"></div>
+    <div class="cloud x2"></div>
+    <div class="cloud x3"></div>
+    <div class="cloud x4"></div>
+    <div class="cloud x5"></div>
+  </div>
+
+  <div class="login-container">
+    <div class="login-box">
+      <form class="login-form" (ngSubmit)="onSubmit()">
+        <div class="login-header">
+          <h2 class="login-title">NEW DAWN HOTEL</h2>
+          <p class="login-subtitle">Iniciar Sesión</p>
+        </div>
+
+        <!-- Selector de tipo de usuario -->
+        <div class="user-type-selector">
+          <label class="radio-option">
+            <input type="radio" name="userType" value="user" [(ngModel)]="userType" checked>
+            <div class="radio-label">
+              <i class="fa fa-user"></i>
+              <span>Cliente</span>
+            </div>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="userType" value="admin" [(ngModel)]="userType">
+            <div class="radio-label">
+              <i class="fa fa-lock"></i>
+              <span>Administrador</span>
+            </div>
+          </label>
+        </div>
+
+        <!-- Campo Usuario -->
+        <div class="form-group">
+          <input 
+            type="text" 
+            class="form-input" 
+            name="username"
+            [(ngModel)]="username"
+            placeholder="Usuario o Email" 
+            required>
+          <span class="input-icon">👤</span>
+        </div>
+
+        <!-- Campo Contraseña -->
+        <div class="form-group">
+          <input 
+            type="password" 
+            class="form-input"
+            name="password"
+            [(ngModel)]="password"
+            placeholder="Contraseña" 
+            required>
+          <span class="input-icon">🔒</span>
+        </div>
+
+        <!-- Botón Submit -->
+        <button type="submit" class="submit-btn">Iniciar Sesión</button>
+
+        <!-- Link de registro -->
+        <p class="register-link" *ngIf="userType === 'user'">
+          ¿No tienes cuenta? <a routerLink="/auth/registro">Regístrate aquí</a>
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <div class="bottom-link">
+    <a routerLink="/" class="home-link">NEW DAWN HOMEPAGE</a>
+  </div>
+</div>
