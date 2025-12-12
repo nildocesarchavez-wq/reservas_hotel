@@ -10,7 +10,8 @@
     justify-content: center;
     align-items: center;
     position: relative;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
     padding: 20px;
 }
 
@@ -237,10 +238,10 @@ select.form-input {
     text-decoration: underline;
 }
 
-/* Bottom Link */
+/* Bottom Link - CAMBIO AQUÍ */
 .bottom-link {
-    position: fixed;
-    bottom: 30px;
+    position: relative;
+    margin-top: 20px;
     text-align: center;
     z-index: 1;
 }
@@ -290,15 +291,19 @@ select.form-input {
     }
     
     .bottom-link {
-        bottom: 20px;
+        margin-top: 25px;
+        margin-bottom: 20px;
+    }
+    
+    .home-link {
+        font-size: 13px;
+        padding: 10px 20px;
     }
     
     .checkbox-label {
         font-size: 13px;
     }
 }
-
-/* Agregar estos estilos al archivo registro.css existente */
 
 /* Error Message */
 .error-message {
