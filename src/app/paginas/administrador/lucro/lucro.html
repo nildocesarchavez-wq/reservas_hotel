@@ -1,1 +1,119 @@
-<p>lucro works!</p>
+<div class="app-container">
+  <!-- HEADER TOP -->
+  <app-header-dashboard></app-header-dashboard>
+
+  <!-- SIDEBAR -->
+  <app-sidebar-admin></app-sidebar-admin>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    <div class="content-wrapper">
+      <!-- PAGE HEADER -->
+      <div class="page-header">
+        <h1 class="page-title">Detalles de ganancias</h1>
+        <p class="page-subtitle">Análisis de lucro basado en el 10% del total de las transacciones.</p>
+      </div>
+
+      <!-- CONTENT GRID (Una sola columna de ancho completo) -->
+      <div class="content-grid" style="grid-template-columns: 1fr;">
+
+        <!-- CARD: GRÁFICO DE GANANCIAS -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">GANANCIAS POR FECHA DE SALIDA</h3>
+          </div>
+          <div class="card-body">
+            <!-- Contenedor del gráfico -->
+            <div class="chart-container">
+              <div id="chart"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD: TABLA DE DETALLES DE LUCRO -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">DESGLOSE DETALLADO DE LUCRO</h3>
+          </div>
+          <div class="card-body">
+            <div class="table-container">
+              <table class="data-table" id="dataTables-example">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Entrada</th>
+                    <th>Salida</th>
+                    <th>Alquiler Hab. (USD)</th>
+                    <th>Extras (USD)</th>
+                    <th>Comidas (USD)</th>
+                    <th>Gr. Total (USD)</th>
+                    <th>Lucro (10%)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Fila de ejemplo 1 -->
+                  <tr class="odd">
+                    <td>1001</td>
+                    <td>Antonio Gómez</td>
+                    <td>2025-10-15</td>
+                    <td>2025-10-20</td>
+                    <td>$500.00</td>
+                    <td>$50.00</td>
+                    <td>$120.00</td>
+                    <td>$670.00</td>
+                    <td>$67.00</td>
+                  </tr>
+                  <!-- Fila de ejemplo 2 -->
+                  <tr class="even">
+                    <td>1002</td>
+                    <td>Elena Morales</td>
+                    <td>2025-11-01</td>
+                    <td>2025-11-04</td>
+                    <td>$240.00</td>
+                    <td>$0.00</td>
+                    <td>$45.00</td>
+                    <td>$285.00</td>
+                    <td>$28.50</td>
+                  </tr>
+                  <!-- Fila de ejemplo 3 -->
+                  <tr class="odd">
+                    <td>1003</td>
+                    <td>Luis Fernández</td>
+                    <td>2025-12-05</td>
+                    <td>2025-12-12</td>
+                    <td>$910.00</td>
+                    <td>$0.00</td>
+                    <td>$0.00</td>
+                    <td>$910.00</td>
+                    <td>$91.00</td>
+                  </tr>
+                  <!-- Fila de ejemplo 4 -->
+                  <tr class="even">
+                    <td>1004</td>
+                    <td>Sofia Torres</td>
+                    <td>2025-12-15</td>
+                    <td>2025-12-18</td>
+                    <td>$350.00</td>
+                    <td>$20.00</td>
+                    <td>$60.00</td>
+                    <td>$430.00</td>
+                    <td>$43.00</td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <th colspan="7" style="text-align: right;">Total de Ganancias Simuladas:</th>
+                    <th>$2295.00</th>
+                    <th>$229.50</th>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>

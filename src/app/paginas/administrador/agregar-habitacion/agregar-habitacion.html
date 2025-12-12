@@ -1,1 +1,127 @@
-<p>agregar-habitacion works!</p>
+<div class="app-container">
+  <!-- HEADER TOP -->
+  <app-header-dashboard></app-header-dashboard>
+
+  <!-- SIDEBAR -->
+  <app-sidebar-admin></app-sidebar-admin>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    <div class="content-wrapper">
+      <!-- PAGE HEADER -->
+      <div class="page-header">
+        <h1 class="page-title">NUEVO CUARTO</h1>
+      </div>
+
+      <!-- CONTENT GRID -->
+      <div class="content-grid">
+        <!-- CARD: FORMULARIO AGREGAR HABITACIÓN -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">AGREGAR NUEVA SALA</h3>
+          </div>
+          <div class="card-body">
+            <form class="form" (submit)="onSubmit($event)">
+              <div class="form-group">
+                <label for="roomType">Tipo de habitación *</label>
+                <select [(ngModel)]="newRoom.roomType" name="roomType" id="roomType" class="form-input" required>
+                  <option value="">Seleccionar...</option>
+                  <option value="Superior Room">HABITACIÓN SUPERIOR</option>
+                  <option value="Deluxe Room">HABITACIÓN DE LUJO</option>
+                  <option value="Guest House">CASA DE HUÉSPEDES</option>
+                  <option value="Single Room">HABITACIÓN INDIVIDUAL</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="bedType">Tipo de cama *</label>
+                <select [(ngModel)]="newRoom.bedType" name="bedType" id="bedType" class="form-input" required>
+                  <option value="">Seleccionar...</option>
+                  <option value="Single">Simple</option>
+                  <option value="Double">Double</option>
+                  <option value="Triple">Triple</option>
+                  <option value="Quad">Cuádruple</option>
+                  <option value="None">Ninguna</option>
+                </select>
+              </div>
+
+              <button type="submit" class="btn btn-primary">Agregar Nueva</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- CARD: INFORMACIÓN DE HABITACIONES -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">INFORMACIÓN DE HABITACIONES</h3>
+          </div>
+          <div class="card-body">
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Room ID</th>
+                    <th>Room Type</th>
+                    <th>Bedding</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="odd">
+                    <td>1</td>
+                    <td>Superior Room</td>
+                    <td>Double</td>
+                  </tr>
+                  <tr class="even">
+                    <td>2</td>
+                    <td>Deluxe Room</td>
+                    <td>Single</td>
+                  </tr>
+                  <tr class="odd">
+                    <td>3</td>
+                    <td>Guest House</td>
+                    <td>Triple</td>
+                  </tr>
+                  <tr class="even">
+                    <td>4</td>
+                    <td>Single Room</td>
+                    <td>Single</td>
+                  </tr>
+                  <tr class="odd">
+                    <td>5</td>
+                    <td>Superior Room</td>
+                    <td>Quad</td>
+                  </tr>
+                  <tr class="even">
+                    <td>6</td>
+                    <td>Deluxe Room</td>
+                    <td>Double</td>
+                  </tr>
+                  <tr class="odd">
+                    <td>7</td>
+                    <td>Single Room</td>
+                    <td>Single</td>
+                  </tr>
+                  <tr class="even">
+                    <td>8</td>
+                    <td>Guest House</td>
+                    <td>Triple</td>
+                  </tr>
+                  <tr class="odd">
+                    <td>9</td>
+                    <td>Superior Room</td>
+                    <td>Double</td>
+                  </tr>
+                  <tr class="even">
+                    <td>10</td>
+                    <td>Deluxe Room</td>
+                    <td>Quad</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

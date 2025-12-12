@@ -1,0 +1,212 @@
+/* ===== DASHBOARD RESET ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #222b45;
+    background-color: #f7f9fc;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: inherit;
+}
+
+ul {
+    list-style: none;
+}
+
+/* ===== LAYOUT ===== */
+.app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f7f9fc;
+}
+
+.main-content {
+    margin-left: 260px;
+    margin-top: 64px;
+    min-height: calc(100vh - 64px);
+    background-color: #f7f9fc;
+    transition: margin-left 0.3s ease;
+}
+
+.content-wrapper {
+    padding: 2rem;
+    max-width: 1600px;
+}
+
+.page-header {
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid #edf1ff;
+}
+
+.page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #222b45;
+    margin-bottom: 0.75rem;
+}
+
+.page-subtitle {
+    font-size: 1rem;
+    color: #8f9bb3;
+    font-weight: 500;
+}
+
+/* ===== ROOMS GRID ===== */
+.rooms-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+/* ===== ROOM CARDS ===== */
+.room-card {
+    position: relative;
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    color: white;
+    transition: transform 0.2s ease;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.room-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.room-blue {
+    background: linear-gradient(135deg, #0095ff 0%, #0077cc 100%);
+}
+
+.room-green {
+    background: linear-gradient(135deg, #00d68f 0%, #00b377 100%);
+}
+
+.room-brown {
+    background: linear-gradient(135deg, #8b4513 0%, #6b3410 100%);
+}
+
+.room-red {
+    background: linear-gradient(135deg, #ff3d71 0%, #cc2f5a 100%);
+}
+
+.room-number {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.btn-delete-room {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #dc3545;
+    color: white;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    line-height: 1;
+    opacity: 0.9;
+    transition: opacity 0.3s;
+}
+
+.btn-delete-room:hover {
+    opacity: 1;
+    background: #c82333;
+}
+
+.room-card-body {
+    padding: 1.5rem 0;
+}
+
+.room-card-body i {
+    font-size: 48px;
+    margin-bottom: 1rem;
+    opacity: 0.9;
+}
+
+.room-card-body h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.room-card-footer {
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+    .main-content {
+        margin-left: 0;
+    }
+
+    .rooms-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .content-wrapper {
+        padding: 1rem;
+    }
+
+    .page-title {
+        font-size: 1.5rem;
+    }
+
+    .rooms-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-title {
+        font-size: 1.25rem;
+    }
+
+    .rooms-grid {
+        grid-template-columns: 1fr;
+    }
+}

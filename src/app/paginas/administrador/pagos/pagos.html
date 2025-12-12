@@ -1,1 +1,99 @@
-<p>pagos works!</p>
+<div class="app-container">
+  <!-- HEADER TOP -->
+  <app-header-dashboard></app-header-dashboard>
+
+  <!-- SIDEBAR -->
+  <app-sidebar-admin></app-sidebar-admin>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    <div class="content-wrapper">
+      <!-- PAGE HEADER -->
+      <div class="page-header">
+        <h1 class="page-title">Detalles del pago</h1>
+        <p class="page-subtitle">Historial completo de pagos de reservas</p>
+      </div>
+
+      <!-- CONTENT GRID -->
+      <div class="content-grid" style="grid-template-columns: 1fr;">
+
+        <!-- CARD: TABLA DE PAGOS -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">PAGOS COMPLETADOS</h3>
+          </div>
+          <div class="card-body">
+            <div class="table-container">
+              <table class="data-table" id="dataTables-example">
+                <thead>
+                  <tr>
+                    <th>Nombre</th>
+                    <th>Tipo de habitación</th>
+                    <th>Tipo de cama</th>
+                    <th>Entrada</th>
+                    <th>Salida</th>
+                    <th>No. Habitación</th>
+                    <th>Tipo de comida</th>
+                    <th>Alquiler Hab. (USD)</th>
+                    <th>Alquiler Cama (USD)</th>
+                    <th>Comidas (USD)</th>
+                    <th>Gr. Total (USD)</th>
+                    <th>Impresión</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="odd" data-payment-id="1">
+                    <td>Mr. Antonio Gómez</td>
+                    <td>Deluxe Room</td>
+                    <td>Double</td>
+                    <td>2025-10-15</td>
+                    <td>2025-10-20</td>
+                    <td>101</td>
+                    <td>Full Board</td>
+                    <td>$500.00</td>
+                    <td>$50.00</td>
+                    <td>$120.00</td>
+                    <td>$670.00</td>
+                    <td><button class="btn btn-print btn-print-payment"><i
+                          class="fa fa-print"></i> Imprimir</button></td>
+                  </tr>
+                  <tr class="even" data-payment-id="2">
+                    <td>Miss. Elena Morales</td>
+                    <td>Superior Room</td>
+                    <td>Single</td>
+                    <td>2025-11-01</td>
+                    <td>2025-11-04</td>
+                    <td>205</td>
+                    <td>Breakfast</td>
+                    <td>$240.00</td>
+                    <td>$0.00</td>
+                    <td>$45.00</td>
+                    <td>$285.00</td>
+                    <td><button class="btn btn-print btn-print-payment"><i
+                          class="fa fa-print"></i> Imprimir</button></td>
+                  </tr>
+                  <tr class="odd" data-payment-id="3">
+                    <td>Dr. Luis Fernández</td>
+                    <td>Guest House</td>
+                    <td>Triple</td>
+                    <td>2025-12-05</td>
+                    <td>2025-12-12</td>
+                    <td>302</td>
+                    <td>Room only</td>
+                    <td>$910.00</td>
+                    <td>$0.00</td>
+                    <td>$0.00</td>
+                    <td>$910.00</td>
+                    <td><button class="btn btn-print btn-print-payment"><i
+                          class="fa fa-print"></i> Imprimir</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>

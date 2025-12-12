@@ -1,0 +1,93 @@
+/* sidebar-admin.css - Menú lateral del administrador */
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 64px;
+    width: 260px;
+    height: calc(100vh - 64px);
+    background: #ffffff;
+    box-shadow: 2px 0 12px rgba(25, 42, 70, 0.08);
+    overflow-y: auto;
+    transition: transform 0.3s ease;
+    z-index: 999;
+}
+
+.sidebar-nav {
+    padding: 1.5rem 0;
+}
+
+.nav-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.nav-item {
+    padding: 0 1rem;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    color: #222b45;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.nav-link:hover {
+    background-color: #f7f9fc;
+    color: #3366ff;
+}
+
+.nav-link i {
+    font-size: 20px;
+    width: 24px;
+    text-align: center;
+    color: #8f9bb3;
+    transition: color 0.2s;
+}
+
+.nav-link:hover i {
+    color: #3366ff;
+}
+
+.nav-item.active .nav-link {
+    background-color: #edf1ff;
+    color: #3366ff;
+}
+
+.nav-item.active .nav-link i {
+    color: #3366ff;
+}
+
+/* Scrollbar personalizado */
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: #c5cee0;
+    border-radius: 3px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: #8f9bb3;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+
+    .sidebar.show {
+        transform: translateX(0);
+    }
+}

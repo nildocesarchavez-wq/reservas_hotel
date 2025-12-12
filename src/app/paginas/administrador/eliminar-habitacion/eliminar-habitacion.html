@@ -1,1 +1,178 @@
-<p>eliminar-habitacion works!</p>
+<div class="app-container">
+  <!-- HEADER TOP -->
+  <app-header-dashboard></app-header-dashboard>
+
+  <!-- SIDEBAR -->
+  <app-sidebar-admin></app-sidebar-admin>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    <div class="content-wrapper">
+      <!-- PAGE HEADER -->
+      <div class="page-header">
+        <h1 class="page-title">ELIMINAR HABITACIÓN</h1>
+        <p class="page-subtitle">Haga clic en el botón rojo (×) de la habitación que desea eliminar</p>
+      </div>
+
+      <!-- GRID DE HABITACIONES -->
+      <div class="rooms-grid" id="roomsGrid">
+        <!-- Superior Room - Azul #1 -->
+        <div class="room-card room-blue" data-room-id="1">
+          <div class="room-number">1</div>
+          <button class="btn-delete-room" (click)="deleteRoom(1)" title="Eliminar habitación">×</button>
+          <div class="room-card-body">
+            <i class="fa fa-users"></i>
+            <h3>Double</h3>
+          </div>
+          <div class="room-card-footer">
+            Superior Room
+          </div>
+        </div>
+
+        <!-- Deluxe Room - Verde #2 -->
+        <div class="room-card room-green" data-room-id="2">
+          <div class="room-number">2</div>
+          <button class="btn-delete-room" (click)="deleteRoom(2)" title="Eliminar habitación">×</button>
+          <div class="room-card-body">
+            <i class="fa fa-users"></i>
+            <h3>Single</h3>
+          </div>
+          <div class="room-card-footer">
+            Deluxe Room
+          </div>
+        </div>
+
+        <!-- Guest House - Marrón #3 -->
+        <div class="room-card room-brown" data-room-id="3">
+          <div class="room-number">3</div>
+          <button class="btn-delete-room" (click)="deleteRoom(3)" title="Eliminar habitación">×</button>
+          <div class="room-card-body">
+            <i class="fa fa-users"></i>
+            <h3>Triple</h3>
+          </div>
+          <div class="room-card-footer">
+            Guest House
+          </div>
+        </div>
+
+        <!-- Single Room - Rojo #4 -->
+        <div class="room-card room-red" data-room-id="4">
+          <div class="room-number">4</div>
+          <button class="btn-delete-room" (click)="deleteRoom(4)" title="Eliminar habitación">×</button>
+          <div class="room-card-body">
+            <i class="fa fa-users"></i>
+            <h3>Single</h3>
+          </div>
+          <div class="room-card-footer">
+            Single Room
+          </div>
+        </div>
+
+        <!-- Superior Room - Azul #5 -->
+        <div class="room-card room-blue" data-room-id="5">
+          <div class="room-number">5</div>
+          <button class="btn-delete-room" (click)="deleteRoom(5)" title="Eliminar habitación">×</button>
+          <div class="room-card-body">
+            <i class="fa fa-users"></i>
+            <h3>Quad</h3>
+          </div>
+          <div class="room-card-footer">
+            Superior Room
+          </div>
+        </div>
+
+        <!-- Deluxe Room - Verde #6 -->
+        <div class="room-card room-green" data-room-id="6">
+          <div class="room-number">6</div>
+          <button class="btn-delete-room" (click)="deleteRoom(6)" title="Eliminar habitación">×</button>
+          <div class="room-card-body">
+            <i class="fa fa-users"></i>
+            <h3>Double</h3>
+          </div>
+          <div class="room-card-footer">
+            Deluxe Room
+          </div>
+        </div>
+
+        <!-- Guest House - Marrón #7 -->
+        <div class="room-card room-brown" data-room-id="7">
+          <div class="room-number">7</div>
+          <button class="btn-delete-room" (click)="deleteRoom(7)" title="Eliminar habitación">×</button>
+          <div class="room-card-body">
+            <i class="fa fa-users"></i>
+            <h3>Triple</h3>
+          </div>
+          <div class="room-card-footer">
+            Guest House
+          </div>
+        </div>
+
+        <!-- Single Room - Rojo #8 -->
+        <div class="room-card room-red" data-room-id="8">
+          <div class="room-number">8</div>
+          <button class="btn-delete-room" (click)="deleteRoom(8)" title="Eliminar habitación">×</button>
+          <div class="room-card-body">
+            <i class="fa fa-users"></i>
+            <h3>Single</h3>
+          </div>
+          <div class="room-card-footer">
+            Single Room
+          </div>
+        </div>
+
+        <!-- Superior Room - Azul #9 -->
+        <div class="room-card room-blue" data-room-id="9">
+          <div class="room-number">9</div>
+          <button class="btn-delete-room" (click)="deleteRoom(9)" title="Eliminar habitación">×</button>
+          <div class="room-card-body">
+            <i class="fa fa-users"></i>
+            <h3>Double</h3>
+          </div>
+          <div class="room-card-footer">
+            Superior Room
+          </div>
+        </div>
+
+        <!-- Deluxe Room - Verde #10 -->
+        <div class="room-card room-green" data-room-id="10">
+          <div class="room-number">10</div>
+          <button class="btn-delete-room" (click)="deleteRoom(10)" title="Eliminar habitación">×</button>
+          <div class="room-card-body">
+            <i class="fa fa-users"></i>
+            <h3>Quad</h3>
+          </div>
+          <div class="room-card-footer">
+            Deluxe Room
+          </div>
+        </div>
+
+        <!-- Guest House - Marrón #11 -->
+        <div class="room-card room-brown" data-room-id="11">
+          <div class="room-number">11</div>
+          <button class="btn-delete-room" (click)="deleteRoom(11)" title="Eliminar habitación">×</button>
+          <div class="room-card-body">
+            <i class="fa fa-users"></i>
+            <h3>Double</h3>
+          </div>
+          <div class="room-card-footer">
+            Guest House
+          </div>
+        </div>
+
+        <!-- Single Room - Rojo #12 -->
+        <div class="room-card room-red" data-room-id="12">
+          <div class="room-number">12</div>
+          <button class="btn-delete-room" (click)="deleteRoom(12)" title="Eliminar habitación">×</button>
+          <div class="room-card-body">
+            <i class="fa fa-users"></i>
+            <h3>Single</h3>
+          </div>
+          <div class="room-card-footer">
+            Single Room
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>

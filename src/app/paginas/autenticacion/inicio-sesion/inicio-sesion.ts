@@ -28,7 +28,7 @@ export class InicioSesionComponent {
         // Redirige según el tipo de usuario seleccionado
         if (this.userType === 'admin') {
             console.log('Redirigiendo al panel de administrador...');
-            this.router.navigate(['/admin/tablero']);
+            this.router.navigate(['/admin/estado']);
         } else {
             console.log('Redirigiendo al dashboard de cliente...');
             this.router.navigate(['/cliente/dashboard']);

@@ -1,1 +1,151 @@
-<p>estado works!</p>
+<div class="app-container">
+  <!-- HEADER TOP -->
+  <app-header-dashboard></app-header-dashboard>
+
+  <!-- SIDEBAR -->
+  <app-sidebar-admin></app-sidebar-admin>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    <div class="content-wrapper">
+      <!-- PAGE HEADER -->
+      <div class="page-header">
+        <h1 class="page-title">Estado</h1>
+        <p class="page-subtitle">Reserva de habitación</p>
+      </div>
+
+      <!-- CARDS GRID -->
+      <div class="cards-grid">
+        <!-- CARD: NUEVA RESERVA -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Nueva reserva de habitaciones</h3>
+            <span class="badge badge-danger">2</span>
+          </div>
+          <div class="card-body">
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>País</th>
+                    <th>Habitación</th>
+                    <th>Cama</th>
+                    <th>Comida</th>
+                    <th>Check-in</th>
+                    <th>Check-out</th>
+                    <th>Estado</th>
+                    <th>Acción</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>1</td>
+                    <td>Juan Pérez</td>
+                    <td>juan@email.com</td>
+                    <td>Perú</td>
+                    <td>Suite Deluxe</td>
+                    <td>King Size</td>
+                    <td>Desayuno incluido</td>
+                    <td>2025-11-20</td>
+                    <td>2025-11-25</td>
+                    <td>Not Conform</td>
+                    <td><a routerLink="/admin/reserva-habitacion" class="btn btn-primary">Action</a></td>
+                  </tr>
+                  <tr>
+                    <td>2</td>
+                    <td>María García</td>
+                    <td>maria@email.com</td>
+                    <td>España</td>
+                    <td>Habitación Doble</td>
+                    <td>Queen Size</td>
+                    <td>Media pensión</td>
+                    <td>2025-11-22</td>
+                    <td>2025-11-28</td>
+                    <td>Not Conform</td>
+                    <td><a routerLink="/admin/reserva-habitacion" class="btn btn-primary">Action</a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD: CUARTOS RESERVADOS -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Cuartos reservados</h3>
+            <span class="badge badge-success">2</span>
+          </div>
+          <div class="card-body">
+            <div class="rooms-grid">
+              <div class="room-card room-blue">
+                <div class="room-card-body">
+                  <i class="fa fa-users"></i>
+                  <h3>Carlos López</h3>
+                </div>
+                <div class="room-card-footer">
+                  Suite Presidencial
+                </div>
+              </div>
+              <div class="room-card room-green">
+                <div class="room-card-body">
+                  <i class="fa fa-users"></i>
+                  <h3>Ana Martínez</h3>
+                </div>
+                <div class="room-card-footer">
+                  Habitación Simple
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD: SEGUIDORES -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Seguidores</h3>
+            <span class="badge badge-info">2</span>
+          </div>
+          <div class="card-body">
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Nombre completo</th>
+                    <th>Email</th>
+                    <th>Fecha</th>
+                    <th>Estado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>1</td>
+                    <td>Pedro Sánchez</td>
+                    <td>pedro@email.com</td>
+                    <td>2025-11-15</td>
+                    <td>Pending</td>
+                  </tr>
+                  <tr>
+                    <td>2</td>
+                    <td>Laura Torres</td>
+                    <td>laura@email.com</td>
+                    <td>2025-11-16</td>
+                    <td>Approved</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="card-footer">
+              <a routerLink="/admin/mensajes-masivos" class="btn btn-primary">Más acción</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
