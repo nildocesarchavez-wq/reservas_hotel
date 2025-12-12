@@ -7,10 +7,16 @@ import { SidebarAdmin } from "../../../compartido/componentes/sidebar-admin/side
 import { ReservasService } from '../../../nucleo/servicios/reservas.service';
 import { HabitacionesService } from '../../../nucleo/servicios/habitaciones.service';
 import { ContactoService } from '../../../nucleo/servicios/contacto.service';
+import { AutenticacionService } from '../../../nucleo/servicios/autenticacion.service';
 import { Reserva } from '../../../nucleo/modelos/reserva.model';
 import { Habitacion } from '../../../nucleo/modelos/habitacion.model';
 import { Contacto } from '../../../nucleo/modelos/contacto.model';
-import { Subscription } from 'rxjs';
+import { Subscription, forkJoin } from 'rxjs';
+import { 
+  Firestore, 
+  doc, 
+  getDoc 
+} from '@angular/fire/firestore';
 
 interface ReservaDisplay {
   id: string;
@@ -50,6 +56,8 @@ export class Estado implements OnInit, OnDestroy {
   private reservasService = inject(ReservasService);
   private habitacionesService = inject(HabitacionesService);
   private contactoService = inject(ContactoService);
+  private authService = inject(AutenticacionService);
+  private firestore = inject(Firestore);
 
   // Subscripciones
   private reservasSubscription?: Subscription;
@@ -99,9 +107,9 @@ export class Estado implements OnInit, OnDestroy {
   cargarDatosEnTiempoReal() {
     // 1. Cargar todas las reservas en tiempo real
     this.reservasSubscription = this.reservasService.obtenerTodasReservas().subscribe({
-      next: (reservas) => {
+      next: async (reservas) => {
         this.todasReservas = reservas;
-        this.procesarReservas();
+        await this.procesarReservas();
         this.applyFilters();
         this.isLoading = false;
       },
@@ -134,20 +142,47 @@ export class Estado implements OnInit, OnDestroy {
     });
   }
 
-  procesarReservas() {
+  async procesarReservas() {
     // Transformar reservas de Firebase al formato de la vista
-    this.newReservations = this.todasReservas.map(reserva => ({
-      id: reserva.id,
-      name: reserva.usuarioNombre,
-      email: reserva.usuarioEmail,
-      country: 'N/A', // Firebase no guarda país en reserva
-      room: reserva.habitacionTipo,
-      bed: this.obtenerTipoCama(reserva.habitacionTipo),
-      meal: reserva.notas || 'No especificado',
-      checkIn: this.formatearFecha(reserva.fechaEntrada),
-      checkOut: this.formatearFecha(reserva.fechaSalida),
-      status: reserva.estado
-    }));
+    const reservasConDatos = await Promise.all(
+      this.todasReservas.map(async (reserva) => {
+        let nombre = reserva.usuarioNombre || 'N/A';
+        let email = reserva.usuarioEmail || 'N/A';
+        let pais = 'N/A';
+
+        // Si el nombre o email están vacíos, intentar obtenerlos del usuario
+        if (!reserva.usuarioNombre || !reserva.usuarioEmail || reserva.usuarioNombre === '' || reserva.usuarioEmail === '') {
+          try {
+            const userDocRef = doc(this.firestore, `usuarios/${reserva.usuarioId}`);
+            const userDoc = await getDoc(userDocRef);
+            
+            if (userDoc.exists()) {
+              const userData = userDoc.data();
+              nombre = userData['displayName'] || nombre;
+              email = userData['email'] || email;
+              pais = userData['country'] || pais;
+            }
+          } catch (error) {
+            console.error(`Error al obtener datos del usuario ${reserva.usuarioId}:`, error);
+          }
+        }
+
+        return {
+          id: reserva.id,
+          name: nombre,
+          email: email,
+          country: pais,
+          room: reserva.habitacionTipo,
+          bed: this.obtenerTipoCama(reserva.habitacionTipo),
+          meal: reserva.notas || 'No especificado',
+          checkIn: this.formatearFecha(reserva.fechaEntrada),
+          checkOut: this.formatearFecha(reserva.fechaSalida),
+          status: reserva.estado
+        };
+      })
+    );
+
+    this.newReservations = reservasConDatos;
   }
 
   procesarHabitacionesReservadas() {
@@ -158,7 +193,7 @@ export class Estado implements OnInit, OnDestroy {
 
     // Crear lista de habitaciones reservadas
     this.confirmedRooms = reservasConfirmadas.map((reserva, index) => ({
-      guest: reserva.usuarioNombre,
+      guest: reserva.usuarioNombre || 'Huésped',
       roomType: `${reserva.habitacionTipo} #${reserva.habitacionNumero}`,
       color: index % 2 === 0 ? 'room-blue' : 'room-green'
     }));

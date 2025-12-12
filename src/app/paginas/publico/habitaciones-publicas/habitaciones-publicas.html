@@ -1,3 +1,374 @@
+<!-- NOTIFICACIÓN FLOTANTE -->
+<div class="notification-container" 
+     [class.show]="notificacion.visible"
+     [class.success]="notificacion.tipo === 'success'"
+     [class.error]="notificacion.tipo === 'error'"
+     [class.warning]="notificacion.tipo === 'warning'"
+     [class.info]="notificacion.tipo === 'info'">
+  <div class="notification-content">
+    <i class="fa" 
+       [class.fa-check-circle]="notificacion.tipo === 'success'"
+       [class.fa-exclamation-circle]="notificacion.tipo === 'error'"
+       [class.fa-exclamation-triangle]="notificacion.tipo === 'warning'"
+       [class.fa-info-circle]="notificacion.tipo === 'info'"></i>
+    <span>{{ notificacion.mensaje }}</span>
+    <button class="notification-close" (click)="cerrarNotificacion()">
+      <i class="fa fa-times"></i>
+    </button>
+  </div>
+
+<!-- Estilos inline para notificaciones y modal -->
+<style>
+/* Notificación */
+.notification-container {
+    position: fixed;
+    top: 20px;
+    right: -400px;
+    z-index: 10001;
+    transition: right 0.3s ease;
+}
+
+.notification-container.show {
+    right: 20px;
+}
+
+.notification-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    min-width: 300px;
+    max-width: 500px;
+    border-left: 4px solid;
+}
+
+.notification-container.success .notification-content {
+    border-left-color: #00d68f;
+}
+
+.notification-container.success .notification-content i {
+    color: #00d68f;
+    font-size: 24px;
+}
+
+.notification-container.error .notification-content {
+    border-left-color: #ff3d71;
+}
+
+.notification-container.error .notification-content i {
+    color: #ff3d71;
+    font-size: 24px;
+}
+
+.notification-container.warning .notification-content {
+    border-left-color: #ff9500;
+}
+
+.notification-container.warning .notification-content i {
+    color: #ff9500;
+    font-size: 24px;
+}
+
+.notification-container.info .notification-content {
+    border-left-color: #0095ff;
+}
+
+.notification-container.info .notification-content i {
+    color: #0095ff;
+    font-size: 24px;
+}
+
+.notification-content span {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 500;
+    color: #222b45;
+}
+
+.notification-close {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: transparent;
+    color: #8f9bb3;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+}
+
+.notification-close:hover {
+    background: #f7f9fc;
+    color: #222b45;
+}
+
+/* Modal Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    backdrop-filter: blur(4px);
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-dialog-details {
+    background: white;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 700px;
+    max-height: 90vh;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.modal-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #212121;
+    margin: 0;
+}
+
+.modal-close {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f0f0f0;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.modal-close:hover {
+    background: #e0e0e0;
+}
+
+.modal-body-details {
+    padding: 24px;
+    overflow-y: auto;
+    max-height: calc(90vh - 180px);
+}
+
+.details-image {
+    width: 100%;
+    height: 300px;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 24px;
+}
+
+.details-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.details-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.detail-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    background: #f9f9f9;
+    border-radius: 8px;
+}
+
+.detail-row i {
+    color: #ffce14;
+    font-size: 18px;
+}
+
+.detail-row strong {
+    color: #666;
+    font-size: 13px;
+}
+
+.detail-row span {
+    color: #212121;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.details-description,
+.details-features {
+    margin-bottom: 24px;
+}
+
+.details-description h4,
+.details-features h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #212121;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.details-description h4 i,
+.details-features h4 i {
+    color: #ffce14;
+}
+
+.details-description p {
+    color: #666;
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    font-size: 13px;
+}
+
+.feature-item i {
+    color: #4caf50;
+    font-size: 14px;
+}
+
+.modal-footer-details {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 20px 24px;
+    border-top: 1px solid #e0e0e0;
+    background: #f9f9f9;
+}
+
+.btn-primary,
+.btn-secondary {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: #ffce14;
+    color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: #212121;
+    transform: translateY(-2px);
+}
+
+.btn-primary:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.btn-secondary {
+    background: #f0f0f0;
+    color: #333;
+}
+
+.btn-secondary:hover {
+    background: #e0e0e0;
+}
+
+@media (max-width: 768px) {
+    .modal-dialog-details {
+        width: 95%;
+        max-height: 95vh;
+    }
+
+    .details-image {
+        height: 200px;
+    }
+
+    .details-info {
+        grid-template-columns: 1fr;
+    }
+
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .modal-footer-details {
+        flex-direction: column;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .notification-container {
+        right: -100%;
+    }
+
+    .notification-container.show {
+        right: 10px;
+        left: 10px;
+    }
+}
+</style>
+</div>
+
 <div class="plans-section" id="rooms">
   <div class="container">
     <h3 class="title-w3-agileits title-black-wthree">Habitaciones y tarifas</h3>
@@ -143,6 +514,81 @@
     <!-- Contador de resultados -->
     <div *ngIf="!isLoading && habitacionesFiltradas.length > 0" class="results-counter">
       Mostrando {{ habitacionesFiltradas.length }} de {{ habitaciones.length }} habitaciones
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DE DETALLES -->
+<div class="modal-overlay" *ngIf="modalDetalles.visible" (click)="cerrarModalDetalles()">
+  <div class="modal-dialog-details" (click)="$event.stopPropagation()">
+    <div class="modal-content" *ngIf="modalDetalles.habitacion">
+      <div class="modal-header">
+        <h3 class="modal-title">{{ modalDetalles.habitacion.tipo }}</h3>
+        <button class="modal-close" (click)="cerrarModalDetalles()">
+          <i class="fa fa-times"></i>
+        </button>
+      </div>
+
+      <div class="modal-body-details">
+        <div class="details-image">
+          <img [src]="getImagenPrincipal(modalDetalles.habitacion)" [alt]="modalDetalles.habitacion.tipo">
+        </div>
+
+        <div class="details-info">
+          <div class="detail-row">
+            <i class="fa fa-door-open"></i>
+            <strong>Habitación:</strong>
+            <span>#{{ modalDetalles.habitacion.numero }}</span>
+          </div>
+
+          <div class="detail-row">
+            <i class="fa fa-users"></i>
+            <strong>Capacidad:</strong>
+            <span>{{ modalDetalles.habitacion.capacidad }} {{ modalDetalles.habitacion.capacidad === 1 ? 'persona' : 'personas' }}</span>
+          </div>
+
+          <div class="detail-row">
+            <i class="fa fa-money"></i>
+            <strong>Precio:</strong>
+            <span>{{ modalDetalles.habitacion.precio | solesPeruanos }}/noche</span>
+          </div>
+
+          <div class="detail-row">
+            <i class="fa fa-star"></i>
+            <strong>Calificación:</strong>
+            <span>{{ modalDetalles.habitacion.estrellas }} estrellas</span>
+          </div>
+        </div>
+
+        <div class="details-description">
+          <h4><i class="fa fa-align-left"></i> Descripción</h4>
+          <p>{{ modalDetalles.habitacion.descripcion }}</p>
+        </div>
+
+        <div class="details-features" *ngIf="modalDetalles.habitacion.caracteristicas.length > 0">
+          <h4><i class="fa fa-check-square"></i> Características</h4>
+          <div class="features-grid">
+            <div *ngFor="let caracteristica of modalDetalles.habitacion.caracteristicas" class="feature-item">
+              <i class="fa fa-check-circle"></i>
+              <span>{{ caracteristica }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer-details">
+        <button class="btn-secondary" (click)="cerrarModalDetalles()">
+          <i class="fa fa-times"></i> Cerrar
+        </button>
+        <button 
+          *ngIf="puedeReservar()"
+          class="btn-primary" 
+          (click)="reservarDesdeModal()"
+          [disabled]="!modalDetalles.habitacion.disponible">
+          <i class="fa fa-calendar-check-o"></i>
+          {{ modalDetalles.habitacion.disponible ? 'Reservar ahora' : 'No disponible' }}
+        </button>
+      </div>
     </div>
   </div>
 </div>

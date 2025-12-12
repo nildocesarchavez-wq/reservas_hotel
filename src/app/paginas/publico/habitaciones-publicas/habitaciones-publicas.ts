@@ -35,6 +35,26 @@ export class HabitacionesPublicasComponent implements OnInit, OnDestroy {
   filtroEstrellas: number = 0;
   filtroPrecioMax: number = 1000;
 
+  // Modal de detalles
+  modalDetalles: {
+    visible: boolean;
+    habitacion: Habitacion | null;
+  } = {
+    visible: false,
+    habitacion: null
+  };
+
+  // Notificación
+  notificacion: {
+    visible: boolean;
+    mensaje: string;
+    tipo: 'success' | 'error' | 'warning' | 'info';
+  } = {
+    visible: false,
+    mensaje: '',
+    tipo: 'info'
+  };
+
   private subscriptions: Subscription[] = [];
 
   constructor(
@@ -50,6 +70,25 @@ export class HabitacionesPublicasComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(sub => sub.unsubscribe());
+  }
+
+  /**
+   * Mostrar notificación
+   */
+  mostrarNotificacion(mensaje: string, tipo: 'success' | 'error' | 'warning' | 'info') {
+    this.notificacion = {
+      visible: true,
+      mensaje,
+      tipo
+    };
+
+    setTimeout(() => {
+      this.notificacion.visible = false;
+    }, 4000);
+  }
+
+  cerrarNotificacion() {
+    this.notificacion.visible = false;
   }
 
   /**
@@ -159,33 +198,57 @@ export class HabitacionesPublicasComponent implements OnInit, OnDestroy {
     const user = this.authService.getCurrentUser();
 
     if (!user) {
-      // Si no está autenticado, redirigir al login
-      alert('Debes iniciar sesión para reservar una habitación');
-      this.router.navigate(['/auth/login'], {
-        queryParams: { returnUrl: '/inicio', habitacionId: habitacion.id }
-      });
+      // Si no está autenticado, mostrar notificación y redirigir al login
+      this.mostrarNotificacion('Debes iniciar sesión para reservar una habitación', 'info');
+      
+      setTimeout(() => {
+        this.router.navigate(['/auth/login'], {
+          queryParams: { returnUrl: '/inicio', habitacionId: habitacion.id }
+        });
+      }, 1500);
       return;
     }
 
     // Verificar si es cliente
     if (!this.esCliente) {
-      alert('Solo los clientes pueden realizar reservas');
+      this.mostrarNotificacion('Solo los clientes pueden realizar reservas', 'warning');
       return;
     }
 
-    // Si está autenticado y es cliente, redirigir a nueva reserva con la habitación seleccionada
-    this.router.navigate(['/cliente/nueva-reserva'], {
-      queryParams: { habitacionId: habitacion.id }
-    });
+    // Si está autenticado y es cliente, redirigir a mis reservas (que tiene el botón Nueva Reserva)
+    this.mostrarNotificacion('Redirigiendo a reservas...', 'success');
+    
+    setTimeout(() => {
+      this.router.navigate(['/cliente/mis-reservas']);
+    }, 800);
   }
 
   /**
-   * Ver detalles de la habitación
+   * Ver detalles de la habitación - Modal
    */
   verDetalles(habitacion: Habitacion): void {
-    // Por ahora solo mostramos un alert, luego se puede crear una página de detalles
-    const detalles = `Detalles de ${habitacion.tipo}\n\nPrecio: S/ ${habitacion.precio.toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}/noche\nCapacidad: ${habitacion.capacidad} personas\n\n${habitacion.descripcion}`;
-    alert(detalles);
+    this.modalDetalles = {
+      visible: true,
+      habitacion: habitacion
+    };
+  }
+
+  /**
+   * Cerrar modal de detalles
+   */
+  cerrarModalDetalles(): void {
+    this.modalDetalles.visible = false;
+    this.modalDetalles.habitacion = null;
+  }
+
+  /**
+   * Reservar desde el modal de detalles
+   */
+  reservarDesdeModal(): void {
+    if (this.modalDetalles.habitacion) {
+      this.cerrarModalDetalles();
+      this.reservarHabitacion(this.modalDetalles.habitacion);
+    }
   }
 
   /**

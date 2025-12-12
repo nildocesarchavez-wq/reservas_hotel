@@ -67,10 +67,10 @@
                     <th>Nombre</th>
                     <th>Entrada</th>
                     <th>Salida</th>
-                    <th>Alquiler Hab. (USD)</th>
-                    <th>Extras (USD)</th>
-                    <th>Comidas (USD)</th>
-                    <th>Gr. Total (USD)</th>
+                    <th>Alquiler Hab.</th>
+                    <th>Extras</th>
+                    <th>Comidas</th>
+                    <th>Gr. Total</th>
                     <th>Lucro (10%)</th>
                   </tr>
                 </thead>
@@ -82,18 +82,18 @@
                     <td>{{ detalle.nombre }}</td>
                     <td>{{ detalle.fechaEntrada }}</td>
                     <td>{{ detalle.fechaSalida }}</td>
-                    <td>{{ formatearMoneda(detalle.alquilerHabitacion) }}</td>
-                    <td>{{ formatearMoneda(detalle.extras) }}</td>
-                    <td>{{ formatearMoneda(detalle.comidas) }}</td>
-                    <td><strong>{{ formatearMoneda(detalle.granTotal) }}</strong></td>
-                    <td><strong class="text-success">{{ formatearMoneda(detalle.lucro) }}</strong></td>
+                    <td>{{ detalle.alquilerHabitacion | solesPeruanos }}</td>
+                    <td>{{ detalle.extras | solesPeruanos }}</td>
+                    <td>{{ detalle.comidas | solesPeruanos }}</td>
+                    <td><strong>{{ detalle.granTotal | solesPeruanos }}</strong></td>
+                    <td><strong class="text-success">{{ detalle.lucro | solesPeruanos }}</strong></td>
                   </tr>
                 </tbody>
                 <tfoot>
                   <tr>
                     <th colspan="7" style="text-align: right;">Total de Ganancias:</th>
-                    <th>{{ formatearMoneda(totalGeneral) }}</th>
-                    <th><strong class="text-success">{{ formatearMoneda(totalLucro) }}</strong></th>
+                    <th>{{ totalGeneral | solesPeruanos }}</th>
+                    <th><strong class="text-success">{{ totalLucro | solesPeruanos }}</strong></th>
                   </tr>
                 </tfoot>
               </table>

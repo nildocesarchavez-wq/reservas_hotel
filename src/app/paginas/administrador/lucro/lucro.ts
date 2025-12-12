@@ -4,6 +4,7 @@ import { HeaderAdmin } from "../../../compartido/componentes/header-admin/header
 import { SidebarAdmin } from "../../../compartido/componentes/sidebar-admin/sidebar-admin";
 import { ReservasService } from '../../../nucleo/servicios/reservas.service';
 import { Reserva } from '../../../nucleo/modelos/reserva.model';
+import { SolesPeruanosPipe } from '../../../nucleo/pipes/soles-peruanos-pipe';
 import { Subscription } from 'rxjs';
 
 interface LucroDetalle {
@@ -28,7 +29,7 @@ declare var ApexCharts: any;
 @Component({
   selector: 'app-lucro',
   standalone: true,
-  imports: [CommonModule, HeaderAdmin, SidebarAdmin],
+  imports: [CommonModule, HeaderAdmin, SidebarAdmin, SolesPeruanosPipe],
   templateUrl: './lucro.html',
   styleUrl: './lucro.css',
 })
@@ -187,10 +188,10 @@ export class Lucro implements OnInit, OnDestroy, AfterViewInit {
       },
       yaxis: {
         title: {
-          text: 'Lucro (USD)'
+          text: 'Lucro (S/.)'
         },
         labels: {
-          formatter: (value: number) => `$${value.toFixed(2)}`
+          formatter: (value: number) => `S/ ${value.toFixed(2)}`
         }
       },
       colors: ['#0095ff'],
@@ -205,7 +206,7 @@ export class Lucro implements OnInit, OnDestroy, AfterViewInit {
       },
       tooltip: {
         y: {
-          formatter: (value: number) => `$${value.toFixed(2)}`
+          formatter: (value: number) => `S/ ${value.toFixed(2)}`
         }
       }
     };
@@ -231,13 +232,6 @@ export class Lucro implements OnInit, OnDestroy, AfterViewInit {
       month: '2-digit',
       day: '2-digit'
     });
-  }
-
-  /**
-   * Formatear número como moneda
-   */
-  formatearMoneda(valor: number): string {
-    return `$${valor.toFixed(2)}`;
   }
 
   /**

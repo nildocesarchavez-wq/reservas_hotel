@@ -40,16 +40,18 @@ ul {
 }
 
 .main-content {
-    margin-left: 260px;
+    margin-left: 280px; /* Cambiado de 260px a 280px para coincidir con el ancho del sidebar */
     margin-top: 64px;
     min-height: calc(100vh - 64px);
     background-color: #f7f9fc;
     transition: margin-left 0.3s ease;
+    width: calc(100% - 280px); /* Añadido para evitar overflow */
 }
 
 .content-wrapper {
     padding: 2rem;
-    max-width: 1600px;
+    max-width: 100%; /* Cambiado de 1600px a 100% */
+    width: 100%;
 }
 
 .page-header {
@@ -197,6 +199,7 @@ select.filter-control {
     border-radius: 12px;
     box-shadow: 0 2px 12px rgba(25, 42, 70, 0.08);
     overflow: hidden;
+    transition: box-shadow 0.2s ease;
 }
 
 .card:hover {
@@ -248,7 +251,7 @@ select.filter-control {
 }
 
 .badge-warning {
-    background-color: #ff9500;
+    background-color: #ffaa00;
 }
 
 /* ===== TABLES ===== */
@@ -276,6 +279,7 @@ select.filter-control {
     font-size: 0.75rem;
     letter-spacing: 0.5px;
     border-bottom: 2px solid #edf1f7;
+    white-space: nowrap;
 }
 
 .data-table td {
@@ -345,8 +349,7 @@ select.filter-control {
 
 .room-card {
     border-radius: 12px;
-    padding: 1.5rem;
-    text-align: center;
+    overflow: hidden;
     color: white;
     transition: transform 0.2s ease;
 }
@@ -426,6 +429,7 @@ select.filter-control {
 @media (max-width: 1024px) {
     .main-content {
         margin-left: 0;
+        width: 100%;
     }
 
     .rooms-grid {
@@ -481,5 +485,11 @@ select.filter-control {
     .btn {
         padding: 0.5rem 1rem;
         font-size: 0.813rem;
+    }
+
+    .data-table th,
+    .data-table td {
+        padding: 0.5rem 0.25rem;
+        font-size: 0.7rem;
     }
 }

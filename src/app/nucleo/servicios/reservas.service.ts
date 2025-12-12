@@ -61,11 +61,11 @@ export class ReservasService {
       const precioPorNoche = habitacion['precio'];
       const precioTotal = numeroNoches * precioPorNoche;
 
-      // 4. Crear la reserva
+      // 4. Crear la reserva CON nombre y email del usuario
       const nuevaReserva = {
         usuarioId: data.usuarioId,
-        usuarioNombre: '', // Se debe pasar desde el componente
-        usuarioEmail: '', // Se debe pasar desde el componente
+        usuarioNombre: data.usuarioNombre || 'Usuario',
+        usuarioEmail: data.usuarioEmail || 'sin-email@ejemplo.com',
         habitacionId: data.habitacionId,
         habitacionNumero: habitacion['numero'],
         habitacionTipo: habitacion['tipo'],
@@ -75,7 +75,7 @@ export class ReservasService {
         numeroHuespedes: data.numeroHuespedes,
         precioTotal: precioTotal,
         precioPorNoche: precioPorNoche,
-        estado: 'pendiente',
+        estado: 'pendiente' as EstadoReserva,
         notas: data.notas || '',
         createdAt: Timestamp.now(),
         updatedAt: Timestamp.now()
@@ -328,4 +328,4 @@ export class ReservasService {
       updatedAt: reserva.updatedAt?.toDate() || new Date()
     };
   }
-}   
+}
