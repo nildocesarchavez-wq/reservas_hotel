@@ -31,52 +31,21 @@ export const routes: Routes = [
     path: 'auth/login',
     loadComponent: () => import('./paginas/autenticacion/inicio-sesion/inicio-sesion').then(m => m.InicioSesionComponent)
   },
-
   {
     path: 'auth/registro',
     loadComponent: () => import('./paginas/autenticacion/registro/registro').then(m => m.RegistroComponent)
   },
 
-  // Rutas cliente
+  // Rutas cliente - Carga lazy de rutas hijas
   {
-    path: 'cliente/dashboard',
-    loadComponent: () => import('./paginas/cliente/dashboard/dashboard').then(m => m.Dashboard)
+    path: 'cliente',
+    loadChildren: () => import('./paginas/cliente/cliente.routing').then(m => m.CLIENTE_ROUTES)
   },
 
+  // Rutas administrador - Carga lazy de rutas hijas
   {
-    path: 'cliente/mis-reservas',
-    loadComponent: () => import('./paginas/cliente/mis-reservas/mis-reservas').then(m => m.MisReservasComponent)
-  },
-
-  {
-    path: 'cliente/perfil',
-    loadComponent: () => import('./paginas/cliente/perfil/perfil').then(m => m.Perfil)
-  },
-
-  // Rutas administrador
-  {
-    path: 'admin/estado',
-    loadComponent: () => import('./paginas/administrador/estado/estado').then(m => m.Estado)
-  },
-  
-  {
-    path: 'admin/reserva-habitacion',
-    loadComponent: () => import('./paginas/administrador/reserva-habitacion/reserva-habitacion').then(m => m.ReservaHabitacion)
-  },
-
-  {
-    path: 'admin/lucro',
-    loadComponent: () => import('./paginas/administrador/lucro/lucro').then(m => m.Lucro)
-  },
-
-  {
-    path: 'admin/estado-habitacion',
-    loadComponent: () => import('./paginas/administrador/estado-habitacion/estado-habitacion').then(m => m.EstadoHabitacion)
-  },
-
-  {
-    path: 'admin/perfil',
-    loadComponent: () => import('./paginas/administrador/perfil/perfil').then(m => m.Perfil)
+    path: 'admin',
+    loadChildren: () => import('./paginas/administrador/admin.routes').then(m => m.ADMIN_ROUTES)
   },
 
   // Ruta 404
