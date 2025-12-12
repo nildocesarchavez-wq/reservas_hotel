@@ -15,36 +15,43 @@
       <div class="modal-body">
         <form id="reservationForm" (submit)="onSubmit($event)">
           
-          <!-- TIPO DE HABITACIÓN -->
-          <div class="form-row">
-            <div class="form-group">
-              <label>Tipo de Habitación *</label>
-              <select 
-                class="form-control" 
-                [(ngModel)]="reservationData.roomType" 
-                name="roomType"
-                (change)="onRoomTypeChange()"
-                required>
-                <option value="">Seleccionar...</option>
-                <option value="suite">Suite Deluxe - $320/noche</option>
-                <option value="deluxe">Habitación de Lujo - $220/noche</option>
-                <option value="guest">Casa de Huéspedes - $180/noche</option>
-                <option value="single">Habitación Individual - $150/noche</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Tipo de Cama *</label>
-              <select 
-                class="form-control" 
-                [(ngModel)]="reservationData.bedType" 
-                name="bedType"
-                required>
-                <option value="">Seleccionar...</option>
-                <option value="king">King Size</option>
-                <option value="queen">Queen Size</option>
-                <option value="double">Doble</option>
-                <option value="single">Individual</option>
-              </select>
+          <!-- SELECCIÓN DE HABITACIÓN -->
+          <div class="form-group">
+            <label>Seleccionar Habitación *</label>
+            <select 
+              class="form-control" 
+              [(ngModel)]="reservationData.habitacionId" 
+              name="habitacionId"
+              (change)="onRoomTypeChange()"
+              required>
+              <option value="">Seleccionar habitación...</option>
+              <option 
+                *ngFor="let habitacion of habitacionesDisponibles" 
+                [value]="habitacion.id">
+                {{ habitacion.numero }} - {{ habitacion.tipo }} - ${{ habitacion.precio }}/noche ({{ getCapacidadTexto(habitacion.capacidad) }})
+              </option>
+            </select>
+          </div>
+
+          <!-- INFORMACIÓN DE LA HABITACIÓN SELECCIONADA -->
+          <div class="room-info" *ngIf="habitacionSeleccionada">
+            <div style="background: #f7f9fc; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+              <h4 style="margin: 0 0 0.5rem 0; font-size: 1rem; color: #222b45;">
+                <i class="fa fa-info-circle"></i> 
+                Información de la Habitación
+              </h4>
+              <p style="margin: 0.25rem 0; font-size: 0.875rem; color: #8f9bb3;">
+                <strong>Tipo:</strong> {{ habitacionSeleccionada.tipo }}
+              </p>
+              <p style="margin: 0.25rem 0; font-size: 0.875rem; color: #8f9bb3;">
+                <strong>Capacidad:</strong> {{ habitacionSeleccionada.capacidad }} {{ habitacionSeleccionada.capacidad === 1 ? 'persona' : 'personas' }}
+              </p>
+              <p style="margin: 0.25rem 0; font-size: 0.875rem; color: #8f9bb3;">
+                <strong>Descripción:</strong> {{ habitacionSeleccionada.descripcion }}
+              </p>
+              <p style="margin: 0.25rem 0; font-size: 0.875rem; color: #8f9bb3;" *ngIf="habitacionSeleccionada.caracteristicas && habitacionSeleccionada.caracteristicas.length > 0">
+                <strong>Características:</strong> {{ habitacionSeleccionada.caracteristicas.join(', ') }}
+              </p>
             </div>
           </div>
 
@@ -59,6 +66,7 @@
                 name="checkIn"
                 (change)="checkAvailability()"
                 [min]="minDate"
+                [disabled]="!reservationData.habitacionId"
                 required>
             </div>
             <div class="form-group">
@@ -69,62 +77,66 @@
                 [(ngModel)]="reservationData.checkOut" 
                 name="checkOut"
                 (change)="checkAvailability()"
-                [min]="reservationData.checkIn"
+                [min]="reservationData.checkIn || minDate"
+                [disabled]="!reservationData.habitacionId || !reservationData.checkIn"
                 required>
             </div>
           </div>
 
           <!-- MENSAJE DE DISPONIBILIDAD -->
           <div class="availability-message" *ngIf="availabilityMessage">
-            <div class="alert" [ngClass]="{'alert-success': isAvailable, 'alert-danger': !isAvailable}">
-              <i class="fa" [ngClass]="{'fa-check-circle': isAvailable, 'fa-times-circle': !isAvailable}"></i>
+            <div 
+              class="alert" 
+              [ngClass]="{
+                'alert-success': isAvailable && !verificandoDisponibilidad, 
+                'alert-danger': !isAvailable && !verificandoDisponibilidad,
+                'alert-info': verificandoDisponibilidad
+              }">
+              <i 
+                class="fa" 
+                [ngClass]="{
+                  'fa-check-circle': isAvailable && !verificandoDisponibilidad, 
+                  'fa-times-circle': !isAvailable && !verificandoDisponibilidad,
+                  'fa-spinner fa-spin': verificandoDisponibilidad
+                }">
+              </i>
               <span>{{ availabilityMessage }}</span>
             </div>
           </div>
 
           <!-- RESUMEN DE PRECIO -->
-          <div class="booking-summary" *ngIf="totalNights > 0">
+          <div class="booking-summary" *ngIf="totalNights > 0 && isAvailable">
+            <h4 style="margin: 0 0 1rem 0; font-size: 1rem; color: #222b45;">
+              <i class="fa fa-calculator"></i> Resumen de Precio
+            </h4>
             <div class="summary-row">
               <span>Total de noches:</span>
-              <strong>{{ totalNights }} noches</strong>
+              <strong>{{ totalNights }} {{ totalNights === 1 ? 'noche' : 'noches' }}</strong>
             </div>
             <div class="summary-row">
               <span>Precio por noche:</span>
-              <strong>${{ pricePerNight }}</strong>
+              <strong>${{ pricePerNight.toFixed(2) }}</strong>
             </div>
             <div class="summary-row total">
               <span>Total estimado:</span>
-              <strong>${{ totalPrice }}</strong>
+              <strong>${{ totalPrice.toFixed(2) }}</strong>
             </div>
           </div>
 
-          <!-- SERVICIOS ADICIONALES -->
-          <div class="form-row">
-            <div class="form-group">
-              <label>Plan de Comida *</label>
-              <select 
-                class="form-control" 
-                [(ngModel)]="reservationData.mealPlan" 
-                name="mealPlan"
-                required>
-                <option value="">Seleccionar...</option>
-                <option value="none">Sin comida</option>
-                <option value="breakfast">Solo Desayuno</option>
-                <option value="half">Media Pensión</option>
-                <option value="full">Pensión Completa</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Número de Huéspedes *</label>
-              <input 
-                type="number" 
-                class="form-control" 
-                [(ngModel)]="reservationData.guests" 
-                name="guests"
-                min="1"
-                max="4"
-                required>
-            </div>
+          <!-- NÚMERO DE HUÉSPEDES -->
+          <div class="form-group">
+            <label>Número de Huéspedes *</label>
+            <input 
+              type="number" 
+              class="form-control" 
+              [(ngModel)]="reservationData.guests" 
+              name="guests"
+              [min]="1"
+              [max]="habitacionSeleccionada?.capacidad || 4"
+              required>
+            <small style="display: block; margin-top: 0.25rem; color: #8f9bb3; font-size: 0.75rem;" *ngIf="habitacionSeleccionada">
+              Máximo: {{ habitacionSeleccionada.capacidad }} {{ habitacionSeleccionada.capacidad === 1 ? 'persona' : 'personas' }}
+            </small>
           </div>
 
           <!-- COMENTARIOS -->
@@ -135,7 +147,7 @@
               [(ngModel)]="reservationData.comments" 
               name="comments"
               rows="3"
-              placeholder="Ej: Necesito cuna para bebé, habitación en piso alto, etc."></textarea>
+              placeholder="Ej: Necesito cuna para bebé, habitación en piso alto, llegada tarde, etc."></textarea>
           </div>
 
         </form>
@@ -146,19 +158,44 @@
         <button 
           type="button" 
           class="btn btn-secondary" 
-          (click)="closeModal()">
+          (click)="closeModal()"
+          [disabled]="guardandoReserva">
           Cancelar
         </button>
         <button 
           type="submit" 
           form="reservationForm"
           class="btn btn-primary"
-          [disabled]="!isAvailable || !reservationData.checkIn || !reservationData.checkOut">
-          <i class="fa fa-check"></i>
-          Confirmar Reserva
+          [disabled]="!isAvailable || !reservationData.checkIn || !reservationData.checkOut || guardandoReserva || verificandoDisponibilidad">
+          <i class="fa" [ngClass]="guardandoReserva ? 'fa-spinner fa-spin' : 'fa-check'"></i>
+          {{ guardandoReserva ? 'Guardando...' : 'Confirmar Reserva' }}
         </button>
       </div>
 
     </div>
   </div>
 </div>
+
+<!-- Estilos adicionales inline para alert-info -->
+<style>
+.alert-info {
+    background-color: #e6f3ff;
+    color: #0077cc;
+    border: 1px solid #0095ff;
+}
+
+.room-info {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>

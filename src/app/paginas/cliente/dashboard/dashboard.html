@@ -10,42 +10,72 @@
     <div class="content-wrapper">
       <!-- PAGE HEADER -->
       <div class="page-header">
-        <h1 class="page-title">Bienvenido a tu Panel</h1>
+        <h1 class="page-title">Bienvenido{{ usuario ? ', ' + usuario.displayName : '' }}</h1>
         <p class="page-subtitle">Gestiona tus reservas y perfil</p>
       </div>
 
-      <!-- CARDS GRID -->
-      <div class="cards-grid">
+      <!-- LOADING STATE -->
+      <div *ngIf="cargando" style="text-align: center; padding: 3rem;">
+        <i class="fa fa-spinner fa-spin" style="font-size: 48px; color: #3366ff;"></i>
+        <p style="margin-top: 1rem; color: #8f9bb3;">Cargando información...</p>
+      </div>
+
+      <!-- CONTENT (cuando no está cargando) -->
+      <div *ngIf="!cargando" class="cards-grid">
         <!-- CARD: MIS RESERVAS ACTIVAS -->
         <div class="card">
           <div class="card-header">
             <h3 class="card-title">Mis Reservas Activas</h3>
-            <span class="badge badge-success">1</span>
+            <span class="badge badge-success">{{ totalReservasActivas }}</span>
           </div>
           <div class="card-body">
-            <div class="table-container">
+            <!-- Tabla con reservas -->
+            <div class="table-container" *ngIf="reservasActivas.length > 0">
               <table class="data-table">
                 <thead>
                   <tr>
                     <th>Habitación</th>
+                    <th>Tipo</th>
                     <th>Check-in</th>
                     <th>Check-out</th>
+                    <th>Noches</th>
+                    <th>Precio Total</th>
                     <th>Estado</th>
                     <th>Acción</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>Suite Deluxe</td>
-                    <td>2025-12-20</td>
-                    <td>2025-12-25</td>
-                    <td><span class="badge badge-success">Confirmada</span></td>
+                  <tr *ngFor="let reserva of reservasActivas">
+                    <td><strong>{{ reserva.habitacionNumero }}</strong></td>
+                    <td>{{ reserva.habitacionTipo }}</td>
+                    <td>{{ formatearFecha(reserva.fechaEntrada) }}</td>
+                    <td>{{ formatearFecha(reserva.fechaSalida) }}</td>
+                    <td>{{ reserva.numeroNoches }}</td>
+                    <td><strong>{{ formatearPrecio(reserva.precioTotal) }}</strong></td>
                     <td>
-                      <a routerLink="/cliente/mis-reservas" class="btn btn-primary">Ver Detalles</a>
+                      <span class="badge" [ngClass]="getBadgeClass(reserva.estado)">
+                        {{ getEstadoTexto(reserva.estado) }}
+                      </span>
+                    </td>
+                    <td>
+                      <a routerLink="/cliente/mis-reservas" class="btn btn-primary">
+                        Ver Detalles
+                      </a>
                     </td>
                   </tr>
                 </tbody>
               </table>
+            </div>
+
+            <!-- Estado vacío -->
+            <div *ngIf="reservasActivas.length === 0" style="text-align: center; padding: 3rem; color: #8f9bb3;">
+              <i class="fa fa-calendar-times-o" style="font-size: 64px; margin-bottom: 1rem; opacity: 0.3;"></i>
+              <h4 style="margin-bottom: 0.5rem; color: #222b45;">No tienes reservas activas</h4>
+              <p style="margin-bottom: 1.5rem;">Explora nuestras habitaciones y haz tu primera reserva</p>
+              <button class="btn btn-primary" (click)="openNewReservation()">
+                <i class="fa fa-plus"></i>
+                Hacer una Reserva
+              </button>
             </div>
           </div>
         </div>
@@ -57,7 +87,7 @@
           </div>
           <div class="card-body">
             <div class="quick-actions">
-              <a routerLink="/cliente/nueva-reserva" class="action-card action-blue">
+              <a (click)="openNewReservation()" class="action-card action-blue" style="cursor: pointer;">
                 <i class="fa fa-plus-circle"></i>
                 <h4>Nueva Reserva</h4>
                 <p>Reserva una habitación</p>
@@ -83,10 +113,10 @@
           </div>
           <div class="card-body">
             <div class="contact-info">
-              <p><strong>Teléfono:</strong> +54 9 11 7601-1408</p>
-              <p><strong>Email:</strong> info@facturacionweb.site</p>
-              <p><strong>Dirección:</strong> Buenos Aires, Argentina</p>
-              <p><strong>Horario de atención:</strong> 24/7</p>
+              <p><strong><i class="fa fa-phone"></i> Teléfono:</strong> +54 9 11 7601-1408</p>
+              <p><strong><i class="fa fa-envelope"></i> Email:</strong> info@facturacionweb.site</p>
+              <p><strong><i class="fa fa-map-marker"></i> Dirección:</strong> Buenos Aires, Argentina</p>
+              <p><strong><i class="fa fa-clock-o"></i> Horario de atención:</strong> 24/7</p>
             </div>
           </div>
         </div>
@@ -94,4 +124,11 @@
 
     </div>
   </main>
+
+  <!-- MODAL NUEVA RESERVA -->
+  <app-nueva-reserva 
+    [isOpen]="showNewReservation"
+    (closeEvent)="closeNewReservation()"
+    (submitEvent)="onReservationSubmit($event)">
+  </app-nueva-reserva>
 </div>

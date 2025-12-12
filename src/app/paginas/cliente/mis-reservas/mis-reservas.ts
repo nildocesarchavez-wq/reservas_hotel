@@ -1,165 +1,268 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { HeaderCliente } from '../../../compartido/componentes/header-cliente/header-cliente';
 import { SidebarCliente } from '../../../compartido/componentes/sidebar-cliente/sidebar-cliente';
 import { NuevaReservaComponent } from '../nueva-reserva/nueva-reserva';
-
-interface Reservation {
-    id: number;
-    room: string;
-    bedType: string;
-    meal: string;
-    checkIn: string;
-    checkOut: string;
-    price: string;
-    status: 'active' | 'completed' | 'cancelled' | 'pending';
-}
+import { ReservasService } from '../../../nucleo/servicios/reservas.service';
+import { AutenticacionService } from '../../../nucleo/servicios/autenticacion.service';
+import { Reserva } from '../../../nucleo/modelos/reserva.model';
 
 @Component({
-    selector: 'app-mis-reservas',
-    standalone: true,
-    imports: [CommonModule, RouterModule, FormsModule, HeaderCliente, SidebarCliente, NuevaReservaComponent],
-    templateUrl: './mis-reservas.html',
-    styleUrl: './mis-reservas.css'
+  selector: 'app-mis-reservas',
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    FormsModule,
+    HeaderCliente,
+    SidebarCliente,
+    NuevaReservaComponent
+  ],
+  templateUrl: './mis-reservas.html',
+  styleUrl: './mis-reservas.css'
 })
-export class MisReservasComponent implements OnInit {
-    showNewReservation = false;
+export class MisReservasComponent implements OnInit, OnDestroy {
+  // Servicios
+  private reservasService = inject(ReservasService);
+  private authService = inject(AutenticacionService);
 
-    // Datos de ejemplo (luego conectarás con Firebase)
-    activeReservations: Reservation[] = [
-        {
-            id: 1,
-            room: 'Suite Deluxe',
-            bedType: 'King Size',
-            meal: 'Desayuno incluido',
-            checkIn: '2025-12-20',
-            checkOut: '2025-12-25',
-            price: '$320/noche',
-            status: 'active'
+  // Estado
+  showNewReservation = false;
+  loading = true;
+  error: string | null = null;
+
+  // Datos de reservas desde Firebase
+  activeReservations: Reserva[] = [];
+  historyReservations: Reserva[] = [];
+
+  // Datos filtrados
+  filteredActiveReservations: Reserva[] = [];
+  filteredHistoryReservations: Reserva[] = [];
+
+  // Filtros
+  filters = {
+    status: '',
+    dateFrom: '',
+    dateTo: ''
+  };
+
+  // Subscripciones
+  private subscriptions: Subscription[] = [];
+
+  ngOnInit() {
+    this.cargarReservas();
+  }
+
+  ngOnDestroy() {
+    // Limpiar todas las subscripciones
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+  }
+
+  /**
+   * Cargar reservas del usuario actual desde Firebase en tiempo real
+   */
+  cargarReservas() {
+    this.loading = true;
+    this.error = null;
+
+    const user = this.authService.getCurrentUser();
+
+    if (!user) {
+      this.error = 'No hay usuario autenticado';
+      this.loading = false;
+      return;
+    }
+
+    // Suscribirse a todas las reservas del usuario
+    const reservasSub = this.reservasService
+      .obtenerReservasPorUsuario(user.uid)
+      .subscribe({
+        next: (reservas) => {
+          console.log('📋 Reservas recibidas:', reservas);
+
+          // Separar reservas activas (pendientes y confirmadas)
+          this.activeReservations = reservas.filter(
+            r => r.estado === 'pendiente' || r.estado === 'confirmada'
+          );
+
+          // Historial (completadas y canceladas)
+          this.historyReservations = reservas.filter(
+            r => r.estado === 'completada' || r.estado === 'cancelada'
+          );
+
+          // Aplicar filtros
+          this.applyFilters();
+
+          this.loading = false;
         },
-        {
-            id: 2,
-            room: 'Habitación de Lujo',
-            bedType: 'Queen Size',
-            meal: 'Media Pensión',
-            checkIn: '2025-12-15',
-            checkOut: '2025-12-18',
-            price: '$220/noche',
-            status: 'active'
+        error: (err) => {
+          console.error('❌ Error al cargar reservas:', err);
+          this.error = 'Error al cargar las reservas';
+          this.loading = false;
         }
-    ];
+      });
 
-    historyReservations: Reservation[] = [
-        {
-            id: 3,
-            room: 'Habitación Doble',
-            bedType: 'Double',
-            meal: 'Sin comida',
-            checkIn: '2025-11-01',
-            checkOut: '2025-11-05',
-            price: '$180/noche',
-            status: 'completed'
-        },
-        {
-            id: 4,
-            room: 'Habitación Simple',
-            bedType: 'Single',
-            meal: 'Desayuno',
-            checkIn: '2025-10-15',
-            checkOut: '2025-10-18',
-            price: '$150/noche',
-            status: 'completed'
-        }
-    ];
+    this.subscriptions.push(reservasSub);
+  }
 
-    // Filtros
-    filters = {
-        status: '',
-        dateFrom: '',
-        dateTo: ''
+  /**
+   * Aplicar filtros a las reservas
+   */
+  applyFilters() {
+    // Filtrar reservas activas
+    this.filteredActiveReservations = this.activeReservations.filter(
+      reservation => this.filterReservation(reservation)
+    );
+
+    // Filtrar historial
+    this.filteredHistoryReservations = this.historyReservations.filter(
+      reservation => this.filterReservation(reservation)
+    );
+  }
+
+  /**
+   * Lógica de filtrado individual
+   */
+  filterReservation(reserva: Reserva): boolean {
+    // Filtro por estado
+    if (this.filters.status) {
+      const statusMap: { [key: string]: string[] } = {
+        'active': ['pendiente', 'confirmada'],
+        'completed': ['completada'],
+        'cancelled': ['cancelada']
+      };
+
+      const estadosPermitidos = statusMap[this.filters.status];
+      if (estadosPermitidos && !estadosPermitidos.includes(reserva.estado)) {
+        return false;
+      }
+    }
+
+    // Filtro por fecha desde
+    if (this.filters.dateFrom) {
+      const fechaDesde = new Date(this.filters.dateFrom);
+      if (reserva.fechaEntrada < fechaDesde) {
+        return false;
+      }
+    }
+
+    // Filtro por fecha hasta
+    if (this.filters.dateTo) {
+      const fechaHasta = new Date(this.filters.dateTo);
+      if (reserva.fechaSalida > fechaHasta) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * Limpiar todos los filtros
+   */
+  clearFilters() {
+    this.filters = {
+      status: '',
+      dateFrom: '',
+      dateTo: ''
     };
+    this.applyFilters();
+  }
 
-    // Datos filtrados
-    filteredActiveReservations: Reservation[] = [];
-    filteredHistoryReservations: Reservation[] = [];
+  /**
+   * Obtener texto del estado en español
+   */
+  getStatusText(estado: string): string {
+    const statusMap: { [key: string]: string } = {
+      'pendiente': 'Pendiente',
+      'confirmada': 'Confirmada',
+      'completada': 'Completada',
+      'cancelada': 'Cancelada'
+    };
+    return statusMap[estado] || estado;
+  }
 
-    ngOnInit() {
-        this.filteredActiveReservations = [...this.activeReservations];
-        this.filteredHistoryReservations = [...this.historyReservations];
+  /**
+   * Obtener clase CSS del badge según el estado
+   */
+  getStatusClass(estado: string): string {
+    const classMap: { [key: string]: string } = {
+      'pendiente': 'badge-warning',
+      'confirmada': 'badge-success',
+      'completada': 'badge-info',
+      'cancelada': 'badge-danger'
+    };
+    return classMap[estado] || 'badge-secondary';
+  }
+
+  /**
+   * Formatear fecha
+   */
+  formatDate(date: Date): string {
+    return new Date(date).toLocaleDateString('es-ES', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+  }
+
+  /**
+   * Formatear precio
+   */
+  formatPrice(price: number): string {
+    return `$${price.toFixed(2)}`;
+  }
+
+  /**
+   * Cancelar una reserva
+   */
+  async cancelReservation(id: string) {
+    if (!confirm('¿Estás seguro de que deseas cancelar esta reserva?')) {
+      return;
     }
 
-    applyFilters() {
-        // Filtrar reservas activas
-        this.filteredActiveReservations = this.activeReservations.filter(reservation => {
-            return this.filterReservation(reservation);
-        });
-
-        // Filtrar historial
-        this.filteredHistoryReservations = this.historyReservations.filter(reservation => {
-            return this.filterReservation(reservation);
-        });
+    try {
+      await this.reservasService.cancelarReserva(id);
+      console.log('✅ Reserva cancelada:', id);
+      alert('Reserva cancelada exitosamente');
+      // No necesitas recargar manualmente, Firebase actualizará en tiempo real
+    } catch (error) {
+      console.error('❌ Error al cancelar reserva:', error);
+      alert('Error al cancelar la reserva. Intenta nuevamente.');
     }
+  }
 
-    filterReservation(reservation: Reservation): boolean {
-        // Filtro por estado
-        if (this.filters.status && reservation.status !== this.filters.status) {
-            return false;
-        }
+  /**
+   * Abrir modal de nueva reserva
+   */
+  openNewReservation() {
+    this.showNewReservation = true;
+  }
 
-        // Filtro por fecha desde
-        if (this.filters.dateFrom && reservation.checkIn < this.filters.dateFrom) {
-            return false;
-        }
+  /**
+   * Cerrar modal de nueva reserva
+   */
+  closeNewReservation() {
+    this.showNewReservation = false;
+  }
 
-        // Filtro por fecha hasta
-        if (this.filters.dateTo && reservation.checkOut > this.filters.dateTo) {
-            return false;
-        }
-
-        return true;
+  /**
+   * Manejar envío de nueva reserva
+   */
+  async onReservationSubmit(data: any) {
+    try {
+      console.log('📝 Creando reserva:', data);
+      // La creación se maneja en el componente nueva-reserva
+      // Aquí solo cerramos el modal
+      this.closeNewReservation();
+      alert('¡Reserva creada exitosamente!');
+      // Firebase actualizará automáticamente la lista
+    } catch (error) {
+      console.error('❌ Error al crear reserva:', error);
+      alert('Error al crear la reserva');
     }
-
-    clearFilters() {
-        this.filters = {
-            status: '',
-            dateFrom: '',
-            dateTo: ''
-        };
-        this.filteredActiveReservations = [...this.activeReservations];
-        this.filteredHistoryReservations = [...this.historyReservations];
-    }
-
-    getStatusText(status: string): string {
-        const statusMap: { [key: string]: string } = {
-            'active': 'Confirmada',
-            'pending': 'Pendiente',
-            'completed': 'Completada',
-            'cancelled': 'Cancelada'
-        };
-        return statusMap[status] || status;
-    }
-
-    cancelReservation(id: number) {
-        if (confirm('¿Estás seguro de que deseas cancelar esta reserva?')) {
-            console.log('Cancelando reserva:', id);
-            alert('Reserva cancelada exitosamente');
-            // Aquí conectarías con Firebase para actualizar el estado
-        }
-    }
-
-    openNewReservation() {
-        this.showNewReservation = true;
-    }
-
-    closeNewReservation() {
-        this.showNewReservation = false;
-    }
-
-    onReservationSubmit(data: any) {
-        console.log('Reserva recibida:', data);
-        alert('¡Reserva creada exitosamente!');
-        // Aquí conectarías con Firebase
-    }
+  }
 }

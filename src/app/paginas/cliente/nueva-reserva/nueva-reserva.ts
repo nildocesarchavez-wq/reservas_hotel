@@ -1,6 +1,11 @@
-import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ReservasService } from '../../../nucleo/servicios/reservas.service';
+import { HabitacionesService } from '../../../nucleo/servicios/habitaciones.service';
+import { AutenticacionService } from '../../../nucleo/servicios/autenticacion.service';
+import { Habitacion } from '../../../nucleo/modelos/habitacion.model';
+import { Usuario } from '../../../nucleo/modelos/usuario.model';
 
 @Component({
     selector: 'app-nueva-reserva',
@@ -9,37 +14,47 @@ import { FormsModule } from '@angular/forms';
     templateUrl: './nueva-reserva.html',
     styleUrl: './nueva-reserva.css'
 })
-export class NuevaReservaComponent implements OnChanges {
+export class NuevaReservaComponent implements OnInit, OnChanges {
     @Input() isOpen: boolean = false;
     @Output() closeEvent = new EventEmitter<void>();
     @Output() submitEvent = new EventEmitter<any>();
 
+    // Servicios
+    private reservasService = inject(ReservasService);
+    private habitacionesService = inject(HabitacionesService);
+    private authService = inject(AutenticacionService);
+
+    // Usuario actual
+    usuario: Usuario | null = null;
+
+    // Habitaciones disponibles desde Firebase
+    habitacionesDisponibles: Habitacion[] = [];
+    habitacionSeleccionada: Habitacion | null = null;
+
     minDate: string = new Date().toISOString().split('T')[0];
     
     reservationData = {
-        roomType: '',
-        bedType: '',
+        habitacionId: '',
         checkIn: '',
         checkOut: '',
-        mealPlan: '',
         guests: 1,
         comments: ''
     };
 
+    // Estados
     availabilityMessage: string = '';
     isAvailable: boolean = false;
     totalNights: number = 0;
     pricePerNight: number = 0;
     totalPrice: number = 0;
+    verificandoDisponibilidad: boolean = false;
+    guardandoReserva: boolean = false;
 
-    roomPrices: { [key: string]: number } = {
-        'suite': 320,
-        'deluxe': 220,
-        'guest': 180,
-        'single': 150
-    };
+    async ngOnInit() {
+        await this.cargarUsuario();
+        this.cargarHabitacionesDisponibles();
+    }
 
-    // Detectar cambios en isOpen para bloquear/desbloquear scroll
     ngOnChanges(changes: SimpleChanges) {
         if (changes['isOpen']) {
             if (this.isOpen) {
@@ -50,43 +65,130 @@ export class NuevaReservaComponent implements OnChanges {
         }
     }
 
-    onRoomTypeChange() {
-        if (this.reservationData.roomType) {
-            this.pricePerNight = this.roomPrices[this.reservationData.roomType];
-            this.calculateTotal();
-        }
-    }
-
-    checkAvailability() {
-        if (this.reservationData.checkIn && this.reservationData.checkOut) {
-            const checkIn = new Date(this.reservationData.checkIn);
-            const checkOut = new Date(this.reservationData.checkOut);
-            
-            if (checkOut <= checkIn) {
-                this.availabilityMessage = 'La fecha de salida debe ser posterior a la fecha de entrada';
-                this.isAvailable = false;
-                return;
+    /**
+     * Cargar datos del usuario autenticado
+     */
+    private async cargarUsuario() {
+        try {
+            this.usuario = await this.authService.getUserData();
+            if (!this.usuario) {
+                console.error('No hay usuario autenticado');
             }
-
-            // Calcular noches
-            const diffTime = Math.abs(checkOut.getTime() - checkIn.getTime());
-            this.totalNights = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            
-            // Simulación de verificación de disponibilidad
-            this.isAvailable = true;
-            this.availabilityMessage = `¡Habitación disponible! ${this.totalNights} noche(s)`;
-            
-            this.calculateTotal();
+        } catch (error) {
+            console.error('Error al cargar usuario:', error);
         }
     }
 
+    /**
+     * Cargar habitaciones disponibles desde Firebase
+     */
+    private cargarHabitacionesDisponibles() {
+        this.habitacionesService.obtenerHabitacionesDisponibles().subscribe({
+            next: (habitaciones) => {
+                this.habitacionesDisponibles = habitaciones;
+                console.log('Habitaciones disponibles:', habitaciones);
+            },
+            error: (error) => {
+                console.error('Error al cargar habitaciones:', error);
+            }
+        });
+    }
+
+    /**
+     * Cuando cambia la habitación seleccionada
+     */
+    onRoomTypeChange() {
+        if (this.reservationData.habitacionId) {
+            this.habitacionSeleccionada = this.habitacionesDisponibles.find(
+                h => h.id === this.reservationData.habitacionId
+            ) || null;
+
+            if (this.habitacionSeleccionada) {
+                this.pricePerNight = this.habitacionSeleccionada.precio;
+                this.calculateTotal();
+                
+                // Re-verificar disponibilidad si ya hay fechas seleccionadas
+                if (this.reservationData.checkIn && this.reservationData.checkOut) {
+                    this.checkAvailability();
+                }
+            }
+        } else {
+            this.habitacionSeleccionada = null;
+            this.pricePerNight = 0;
+            this.totalPrice = 0;
+        }
+    }
+
+    /**
+     * Verificar disponibilidad real en Firebase
+     */
+    async checkAvailability() {
+        if (!this.reservationData.habitacionId) {
+            this.availabilityMessage = 'Por favor, selecciona una habitación primero';
+            this.isAvailable = false;
+            return;
+        }
+
+        if (!this.reservationData.checkIn || !this.reservationData.checkOut) {
+            return;
+        }
+
+        const checkIn = new Date(this.reservationData.checkIn);
+        const checkOut = new Date(this.reservationData.checkOut);
+        
+        // Validar que checkout sea después de checkin
+        if (checkOut <= checkIn) {
+            this.availabilityMessage = 'La fecha de salida debe ser posterior a la fecha de entrada';
+            this.isAvailable = false;
+            return;
+        }
+
+        // Calcular noches
+        const diffTime = Math.abs(checkOut.getTime() - checkIn.getTime());
+        this.totalNights = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        try {
+            this.verificandoDisponibilidad = true;
+            this.availabilityMessage = 'Verificando disponibilidad...';
+            
+            // Verificar disponibilidad real en Firebase
+            const disponible = await this.reservasService.verificarDisponibilidad(
+                this.reservationData.habitacionId,
+                checkIn,
+                checkOut
+            );
+
+            if (disponible) {
+                this.isAvailable = true;
+                this.availabilityMessage = `¡Habitación disponible! ${this.totalNights} noche(s)`;
+                this.calculateTotal();
+            } else {
+                this.isAvailable = false;
+                this.availabilityMessage = 'Lo sentimos, la habitación no está disponible para estas fechas';
+                this.totalPrice = 0;
+            }
+        } catch (error) {
+            console.error('Error al verificar disponibilidad:', error);
+            this.availabilityMessage = 'Error al verificar disponibilidad. Intenta nuevamente.';
+            this.isAvailable = false;
+        } finally {
+            this.verificandoDisponibilidad = false;
+        }
+    }
+
+    /**
+     * Calcular precio total
+     */
     calculateTotal() {
         if (this.totalNights > 0 && this.pricePerNight > 0) {
             this.totalPrice = this.totalNights * this.pricePerNight;
         }
     }
 
-    onSubmit(event: Event) {
+    /**
+     * Enviar formulario y crear reserva en Firebase
+     */
+    async onSubmit(event: Event) {
         event.preventDefault();
         
         if (!this.isAvailable) {
@@ -94,31 +196,86 @@ export class NuevaReservaComponent implements OnChanges {
             return;
         }
 
-        console.log('Reserva enviada:', this.reservationData);
-        this.submitEvent.emit(this.reservationData);
-        this.resetForm();
-        this.closeModal();
+        if (!this.usuario) {
+            alert('Debes iniciar sesión para hacer una reserva');
+            return;
+        }
+
+        if (!this.habitacionSeleccionada) {
+            alert('Por favor, selecciona una habitación');
+            return;
+        }
+
+        try {
+            this.guardandoReserva = true;
+
+            // Preparar datos de la reserva
+            const reservaData = {
+                usuarioId: this.usuario.uid,
+                usuarioNombre: this.usuario.displayName,
+                usuarioEmail: this.usuario.email,
+                habitacionId: this.reservationData.habitacionId,
+                fechaEntrada: new Date(this.reservationData.checkIn),
+                fechaSalida: new Date(this.reservationData.checkOut),
+                numeroHuespedes: this.reservationData.guests,
+                notas: this.reservationData.comments
+            };
+
+            // Crear reserva en Firebase
+            const reservaId = await this.reservasService.crearReserva(reservaData);
+            
+            console.log('Reserva creada exitosamente:', reservaId);
+            alert('¡Reserva creada exitosamente! Tu reserva está pendiente de confirmación.');
+            
+            // Emitir evento de éxito
+            this.submitEvent.emit({
+                reservaId,
+                ...reservaData
+            });
+
+            // Resetear y cerrar
+            this.resetForm();
+            this.closeModal();
+            
+        } catch (error: any) {
+            console.error('Error al crear reserva:', error);
+            alert(`Error al crear la reserva: ${error.message || 'Intenta nuevamente'}`);
+        } finally {
+            this.guardandoReserva = false;
+        }
     }
 
+    /**
+     * Cerrar modal
+     */
     closeModal() {
         document.body.classList.remove('modal-open');
         this.closeEvent.emit();
     }
 
+    /**
+     * Resetear formulario
+     */
     resetForm() {
         this.reservationData = {
-            roomType: '',
-            bedType: '',
+            habitacionId: '',
             checkIn: '',
             checkOut: '',
-            mealPlan: '',
             guests: 1,
             comments: ''
         };
+        this.habitacionSeleccionada = null;
         this.availabilityMessage = '';
         this.isAvailable = false;
         this.totalNights = 0;
         this.pricePerNight = 0;
         this.totalPrice = 0;
+    }
+
+    /**
+     * Obtener texto de capacidad
+     */
+    getCapacidadTexto(capacidad: number): string {
+        return capacidad === 1 ? '1 persona' : `${capacidad} personas`;
     }
 }

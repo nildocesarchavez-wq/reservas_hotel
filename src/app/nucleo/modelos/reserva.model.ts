@@ -20,6 +20,8 @@ export interface Reserva {
 
 export interface CrearReservaData {
   usuarioId: string;
+  usuarioNombre: string;  // ✅ Campo agregado
+  usuarioEmail: string;   // ✅ Campo agregado
   habitacionId: string;
   fechaEntrada: Date;
   fechaSalida: Date;

@@ -11,173 +11,212 @@
       <!-- PAGE HEADER -->
       <div class="page-header">
         <h1 class="page-title">Mis Reservas</h1>
-        <p class="page-subtitle">Gestiona todas tus reservas</p>
+        <p class="page-subtitle">Gestiona todas tus reservas en tiempo real</p>
       </div>
 
-      <!-- NUEVA RESERVA BUTTON -->
-      <div class="action-bar">
-        <button class="btn btn-primary" (click)="openNewReservation()">
-          <i class="fa fa-plus"></i> Nueva Reserva
-        </button>
+      <!-- LOADING STATE -->
+      <div *ngIf="loading" class="loading-container">
+        <i class="fa fa-spinner fa-spin fa-3x"></i>
+        <p>Cargando reservas...</p>
       </div>
 
-      <!-- FILTROS -->
-      <div class="filters-section">
-        <div class="filters-card">
-          <div class="filters-header">
-            <i class="fa fa-filter"></i>
-            <h3>Filtros de Búsqueda</h3>
-          </div>
-          <div class="filters-body">
-            <div class="filters-grid">
-              <!-- Filtro por Estado -->
-              <div class="filter-group">
-                <label>Estado</label>
-                <select class="filter-control" [(ngModel)]="filters.status" (change)="applyFilters()">
-                  <option value="">Todos</option>
-                  <option value="active">Activa</option>
-                  <option value="completed">Completada</option>
-                  <option value="cancelled">Cancelada</option>
-                </select>
-              </div>
+      <!-- ERROR STATE -->
+      <div *ngIf="error && !loading" class="error-container">
+        <i class="fa fa-exclamation-triangle"></i>
+        <p>{{ error }}</p>
+      </div>
 
-              <!-- Filtro por Fecha Desde -->
-              <div class="filter-group">
-                <label>Fecha Desde</label>
-                <input 
-                  type="date" 
-                  class="filter-control" 
-                  [(ngModel)]="filters.dateFrom"
-                  (change)="applyFilters()">
-              </div>
+      <!-- CONTENT (solo mostrar cuando no está cargando ni hay error) -->
+      <ng-container *ngIf="!loading && !error">
+        <!-- NUEVA RESERVA BUTTON -->
+        <div class="action-bar">
+          <button class="btn btn-primary" (click)="openNewReservation()">
+            <i class="fa fa-plus"></i> Nueva Reserva
+          </button>
+        </div>
 
-              <!-- Filtro por Fecha Hasta -->
-              <div class="filter-group">
-                <label>Fecha Hasta</label>
-                <input 
-                  type="date" 
-                  class="filter-control" 
-                  [(ngModel)]="filters.dateTo"
-                  (change)="applyFilters()">
-              </div>
+        <!-- FILTROS -->
+        <div class="filters-section">
+          <div class="filters-card">
+            <div class="filters-header">
+              <i class="fa fa-filter"></i>
+              <h3>Filtros de Búsqueda</h3>
+            </div>
+            <div class="filters-body">
+              <div class="filters-grid">
+                <!-- Filtro por Estado -->
+                <div class="filter-group">
+                  <label>Estado</label>
+                  <select class="filter-control" [(ngModel)]="filters.status" (change)="applyFilters()">
+                    <option value="">Todos</option>
+                    <option value="active">Activas</option>
+                    <option value="completed">Completadas</option>
+                    <option value="cancelled">Canceladas</option>
+                  </select>
+                </div>
 
-              <!-- Botón Limpiar -->
-              <div class="filter-group filter-actions">
-                <button class="btn btn-secondary" (click)="clearFilters()">
-                  <i class="fa fa-times"></i>
-                  Limpiar
-                </button>
+                <!-- Filtro por Fecha Desde -->
+                <div class="filter-group">
+                  <label>Fecha Desde</label>
+                  <input 
+                    type="date" 
+                    class="filter-control" 
+                    [(ngModel)]="filters.dateFrom"
+                    (change)="applyFilters()">
+                </div>
+
+                <!-- Filtro por Fecha Hasta -->
+                <div class="filter-group">
+                  <label>Fecha Hasta</label>
+                  <input 
+                    type="date" 
+                    class="filter-control" 
+                    [(ngModel)]="filters.dateTo"
+                    (change)="applyFilters()">
+                </div>
+
+                <!-- Botón Limpiar -->
+                <div class="filter-group filter-actions">
+                  <button class="btn btn-secondary" (click)="clearFilters()">
+                    <i class="fa fa-times"></i>
+                    Limpiar
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- CARDS GRID -->
-      <div class="cards-grid">
-        <!-- CARD: RESERVAS ACTIVAS -->
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">Reservas Activas</h3>
-            <span class="badge badge-success">{{ filteredActiveReservations.length }}</span>
+        <!-- CARDS GRID -->
+        <div class="cards-grid">
+          <!-- CARD: RESERVAS ACTIVAS -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <i class="fa fa-calendar-check-o"></i> Reservas Activas
+              </h3>
+              <span class="badge badge-success">{{ filteredActiveReservations.length }}</span>
+            </div>
+            <div class="card-body">
+              <div class="table-container">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Habitación</th>
+                      <th>Tipo</th>
+                      <th>Check-in</th>
+                      <th>Check-out</th>
+                      <th>Noches</th>
+                      <th>Huéspedes</th>
+                      <th>Precio Total</th>
+                      <th>Estado</th>
+                      <th>Acción</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let reserva of filteredActiveReservations; let i = index">
+                      <td>{{ i + 1 }}</td>
+                      <td>
+                        <strong>{{ reserva.habitacionNumero }}</strong>
+                      </td>
+                      <td>{{ reserva.habitacionTipo }}</td>
+                      <td>{{ formatDate(reserva.fechaEntrada) }}</td>
+                      <td>{{ formatDate(reserva.fechaSalida) }}</td>
+                      <td>{{ reserva.numeroNoches }}</td>
+                      <td>{{ reserva.numeroHuespedes }}</td>
+                      <td>
+                        <strong>{{ formatPrice(reserva.precioTotal) }}</strong>
+                        <br>
+                        <small style="color: #8f9bb3;">
+                          ({{ formatPrice(reserva.precioPorNoche) }}/noche)
+                        </small>
+                      </td>
+                      <td>
+                        <span class="badge" [ngClass]="getStatusClass(reserva.estado)">
+                          {{ getStatusText(reserva.estado) }}
+                        </span>
+                      </td>
+                      <td>
+                        <div style="display: flex; gap: 0.5rem;">
+                          <button 
+                            class="btn btn-sm btn-danger" 
+                            (click)="cancelReservation(reserva.id)"
+                            [disabled]="reserva.estado === 'cancelada'">
+                            <i class="fa fa-times"></i> Cancelar
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr *ngIf="filteredActiveReservations.length === 0">
+                      <td colspan="10" class="no-data">
+                        <i class="fa fa-calendar-times-o"></i>
+                        <p>No hay reservas activas que coincidan con los filtros</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
-          <div class="card-body">
-            <div class="table-container">
-              <table class="data-table">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Habitación</th>
-                    <th>Tipo de Cama</th>
-                    <th>Comida</th>
-                    <th>Check-in</th>
-                    <th>Check-out</th>
-                    <th>Precio</th>
-                    <th>Estado</th>
-                    <th>Acción</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let reservation of filteredActiveReservations; let i = index">
-                    <td>{{ i + 1 }}</td>
-                    <td>{{ reservation.room }}</td>
-                    <td>{{ reservation.bedType }}</td>
-                    <td>{{ reservation.meal }}</td>
-                    <td>{{ reservation.checkIn }}</td>
-                    <td>{{ reservation.checkOut }}</td>
-                    <td>{{ reservation.price }}</td>
-                    <td>
-                      <span class="badge" [ngClass]="{
-                        'badge-success': reservation.status === 'active',
-                        'badge-warning': reservation.status === 'pending',
-                        'badge-danger': reservation.status === 'cancelled'
-                      }">
-                        {{ getStatusText(reservation.status) }}
-                      </span>
-                    </td>
-                    <td>
-                      <button class="btn btn-sm btn-primary">Ver</button>
-                      <button class="btn btn-sm btn-danger" (click)="cancelReservation(reservation.id)">Cancelar</button>
-                    </td>
-                  </tr>
-                  <tr *ngIf="filteredActiveReservations.length === 0">
-                    <td colspan="9" class="no-data">
-                      <i class="fa fa-calendar-times-o"></i>
-                      <p>No hay reservas activas que coincidan con los filtros</p>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+
+          <!-- CARD: HISTORIAL DE RESERVAS -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <i class="fa fa-history"></i> Historial de Reservas
+              </h3>
+              <span class="badge badge-info">{{ filteredHistoryReservations.length }}</span>
+            </div>
+            <div class="card-body">
+              <div class="table-container">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Habitación</th>
+                      <th>Tipo</th>
+                      <th>Check-in</th>
+                      <th>Check-out</th>
+                      <th>Noches</th>
+                      <th>Precio Total</th>
+                      <th>Estado</th>
+                      <th>Fecha Reserva</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let reserva of filteredHistoryReservations; let i = index">
+                      <td>{{ i + 1 }}</td>
+                      <td>
+                        <strong>{{ reserva.habitacionNumero }}</strong>
+                      </td>
+                      <td>{{ reserva.habitacionTipo }}</td>
+                      <td>{{ formatDate(reserva.fechaEntrada) }}</td>
+                      <td>{{ formatDate(reserva.fechaSalida) }}</td>
+                      <td>{{ reserva.numeroNoches }}</td>
+                      <td>
+                        <strong>{{ formatPrice(reserva.precioTotal) }}</strong>
+                      </td>
+                      <td>
+                        <span class="badge" [ngClass]="getStatusClass(reserva.estado)">
+                          {{ getStatusText(reserva.estado) }}
+                        </span>
+                      </td>
+                      <td>{{ formatDate(reserva.createdAt) }}</td>
+                    </tr>
+                    <tr *ngIf="filteredHistoryReservations.length === 0">
+                      <td colspan="9" class="no-data">
+                        <i class="fa fa-history"></i>
+                        <p>No hay reservas en el historial que coincidan con los filtros</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
-
-        <!-- CARD: HISTORIAL DE RESERVAS -->
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">Historial de Reservas</h3>
-            <span class="badge badge-info">{{ filteredHistoryReservations.length }}</span>
-          </div>
-          <div class="card-body">
-            <div class="table-container">
-              <table class="data-table">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Habitación</th>
-                    <th>Check-in</th>
-                    <th>Check-out</th>
-                    <th>Estado</th>
-                    <th>Acción</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let reservation of filteredHistoryReservations; let i = index">
-                    <td>{{ i + 1 }}</td>
-                    <td>{{ reservation.room }}</td>
-                    <td>{{ reservation.checkIn }}</td>
-                    <td>{{ reservation.checkOut }}</td>
-                    <td>
-                      <span class="badge badge-secondary">
-                        {{ getStatusText(reservation.status) }}
-                      </span>
-                    </td>
-                    <td>
-                      <button class="btn btn-sm btn-primary">Ver Detalles</button>
-                    </td>
-                  </tr>
-                  <tr *ngIf="filteredHistoryReservations.length === 0">
-                    <td colspan="6" class="no-data">
-                      <i class="fa fa-history"></i>
-                      <p>No hay reservas en el historial que coincidan con los filtros</p>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
+      </ng-container>
 
     </div>
   </main>
