@@ -9,6 +9,7 @@ import { ReservasService } from '../../../nucleo/servicios/reservas.service';
 import { AutenticacionService } from '../../../nucleo/servicios/autenticacion.service';
 import { Reserva } from '../../../nucleo/modelos/reserva.model';
 import { Usuario } from '../../../nucleo/modelos/usuario.model';
+import { SolesPeruanosPipe } from '../../../nucleo/pipes/soles-peruanos-pipe';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,7 +19,8 @@ import { Usuario } from '../../../nucleo/modelos/usuario.model';
     RouterModule, 
     HeaderCliente, 
     SidebarCliente,
-    NuevaReservaComponent
+    NuevaReservaComponent,
+    SolesPeruanosPipe
   ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
@@ -153,12 +155,5 @@ export class Dashboard implements OnInit, OnDestroy {
       month: '2-digit',
       day: '2-digit'
     });
-  }
-
-  /**
-   * Formatear precio
-   */
-  formatearPrecio(precio: number): string {
-    return `$${precio.toFixed(2)}`;
   }
 }

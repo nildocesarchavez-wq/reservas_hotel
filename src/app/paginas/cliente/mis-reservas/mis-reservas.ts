@@ -9,6 +9,7 @@ import { NuevaReservaComponent } from '../nueva-reserva/nueva-reserva';
 import { ReservasService } from '../../../nucleo/servicios/reservas.service';
 import { AutenticacionService } from '../../../nucleo/servicios/autenticacion.service';
 import { Reserva } from '../../../nucleo/modelos/reserva.model';
+import { SolesPeruanosPipe } from '../../../nucleo/pipes/soles-peruanos-pipe';
 
 @Component({
   selector: 'app-mis-reservas',
@@ -19,7 +20,8 @@ import { Reserva } from '../../../nucleo/modelos/reserva.model';
     FormsModule,
     HeaderCliente,
     SidebarCliente,
-    NuevaReservaComponent
+    NuevaReservaComponent,
+    SolesPeruanosPipe
   ],
   templateUrl: './mis-reservas.html',
   styleUrl: './mis-reservas.css'
@@ -207,13 +209,6 @@ export class MisReservasComponent implements OnInit, OnDestroy {
       month: '2-digit',
       year: 'numeric'
     });
-  }
-
-  /**
-   * Formatear precio
-   */
-  formatPrice(price: number): string {
-    return `$${price.toFixed(2)}`;
   }
 
   /**

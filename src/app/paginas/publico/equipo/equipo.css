@@ -5,9 +5,8 @@
 }
 
 .team-members {
-	display: grid;
-	grid-template-columns: repeat(2, 1fr);
-	gap: 40px;
+	display: flex;
+	justify-content: center;
 	margin-top: 50px;
 }
 
@@ -17,6 +16,8 @@
 	overflow: hidden;
 	box-shadow: 0 5px 30px rgba(0,0,0,0.1);
 	transition: all 0.3s ease;
+	max-width: 500px;
+	width: 100%;
 }
 
 .team-member:hover {
@@ -32,7 +33,7 @@
 
 .team-img-w3-agile img {
 	width: 100%;
-	height: 300px;
+	height: 350px;
 	object-fit: cover;
 	transition: all 0.5s ease;
 }
@@ -43,10 +44,11 @@
 
 .team-Info-agileits {
 	padding: 40px 35px;
+	text-align: center;
 }
 
 .team-Info-agileits h4 {
-	font-size: 28px;
+	font-size: 32px;
 	font-weight: 700;
 	margin-bottom: 10px;
 	color: #212121;
@@ -56,7 +58,7 @@
 }
 
 .team-Info-agileits span {
-	font-size: 16px;
+	font-size: 18px;
 	color: #ffce14;
 	display: block;
 	margin-bottom: 20px;
@@ -82,6 +84,7 @@
 	gap: 12px;
 	padding: 0;
 	list-style: none;
+	justify-content: center;
 }
 
 .social-icons3 li {
@@ -123,20 +126,17 @@
 }
 
 /* Responsive */
-@media (max-width: 991px) {
-	.team-members {
-		grid-template-columns: 1fr;
-		gap: 30px;
-	}
-}
-
 @media (max-width: 768px) {
 	.team {
 		padding: 50px 0;
 	}
 	
+	.team-member {
+		max-width: 100%;
+	}
+	
 	.team-img-w3-agile img {
-		height: 250px;
+		height: 300px;
 	}
 	
 	.team-Info-agileits {
@@ -144,17 +144,13 @@
 	}
 	
 	.team-Info-agileits h4 {
-		font-size: 24px;
+		font-size: 28px;
 	}
 }
 
 @media (max-width: 480px) {
-	.team-members {
-		gap: 25px;
-	}
-	
 	.team-img-w3-agile img {
-		height: 220px;
+		height: 250px;
 	}
 	
 	.team-Info-agileits {
@@ -162,7 +158,11 @@
 	}
 	
 	.team-Info-agileits h4 {
-		font-size: 22px;
+		font-size: 24px;
+	}
+	
+	.team-Info-agileits span {
+		font-size: 16px;
 	}
 	
 	.team-Info-agileits p {

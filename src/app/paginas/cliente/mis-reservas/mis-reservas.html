@@ -126,10 +126,10 @@
                       <td>{{ reserva.numeroNoches }}</td>
                       <td>{{ reserva.numeroHuespedes }}</td>
                       <td>
-                        <strong>{{ formatPrice(reserva.precioTotal) }}</strong>
+                        <strong>{{ reserva.precioTotal | solesPeruanos }}</strong>
                         <br>
                         <small style="color: #8f9bb3;">
-                          ({{ formatPrice(reserva.precioPorNoche) }}/noche)
+                          ({{ reserva.precioPorNoche | solesPeruanos }}/noche)
                         </small>
                       </td>
                       <td>
@@ -195,7 +195,7 @@
                       <td>{{ formatDate(reserva.fechaSalida) }}</td>
                       <td>{{ reserva.numeroNoches }}</td>
                       <td>
-                        <strong>{{ formatPrice(reserva.precioTotal) }}</strong>
+                        <strong>{{ reserva.precioTotal | solesPeruanos }}</strong>
                       </td>
                       <td>
                         <span class="badge" [ngClass]="getStatusClass(reserva.estado)">

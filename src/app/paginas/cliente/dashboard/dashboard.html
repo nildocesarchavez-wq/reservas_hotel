@@ -51,7 +51,7 @@
                     <td>{{ formatearFecha(reserva.fechaEntrada) }}</td>
                     <td>{{ formatearFecha(reserva.fechaSalida) }}</td>
                     <td>{{ reserva.numeroNoches }}</td>
-                    <td><strong>{{ formatearPrecio(reserva.precioTotal) }}</strong></td>
+                    <td><strong>{{ reserva.precioTotal | solesPeruanos }}</strong></td>
                     <td>
                       <span class="badge" [ngClass]="getBadgeClass(reserva.estado)">
                         {{ getEstadoTexto(reserva.estado) }}
@@ -113,9 +113,9 @@
           </div>
           <div class="card-body">
             <div class="contact-info">
-              <p><strong><i class="fa fa-phone"></i> Teléfono:</strong> +54 9 11 7601-1408</p>
-              <p><strong><i class="fa fa-envelope"></i> Email:</strong> info@facturacionweb.site</p>
-              <p><strong><i class="fa fa-map-marker"></i> Dirección:</strong> Buenos Aires, Argentina</p>
+              <p><strong><i class="fa fa-phone"></i> Teléfono:</strong> +51 931 194 503</p>
+              <p><strong><i class="fa fa-envelope"></i> Email:</strong> nildocesarchavez@gmail.com</p>
+              <p><strong><i class="fa fa-map-marker"></i> Dirección:</strong> San Jerónimo, Apurímac, Perú</p>
               <p><strong><i class="fa fa-clock-o"></i> Horario de atención:</strong> 24/7</p>
             </div>
           </div>
