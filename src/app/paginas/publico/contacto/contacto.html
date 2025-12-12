@@ -4,33 +4,65 @@
       <div class="contact-agileits">
         <h4>Contáctenos</h4>
         <p class="contact-agile2">Inscríbete a nuestros boletines</p>
-        <form id="contactForm">
+        
+        <form (ngSubmit)="onSubmit($event)" #contactForm="ngForm">
           <div class="control-group form-group">
             <label class="contact-p1">Nombre completo:</label>
-            <input type="text" class="form-control" name="name" id="name" required>
-            <p class="help-block"></p>
+            <input 
+              type="text" 
+              class="form-control" 
+              name="nombre" 
+              [(ngModel)]="formData.nombre"
+              required
+              [disabled]="enviando">
           </div>
+
           <div class="control-group form-group">
             <label class="contact-p1">Número de teléfono:</label>
-            <input type="tel" class="form-control" name="phone" id="phone" required>
-            <p class="help-block"></p>
+            <input 
+              type="tel" 
+              class="form-control" 
+              name="telefono" 
+              [(ngModel)]="formData.telefono"
+              required
+              [disabled]="enviando">
           </div>
+
           <div class="control-group form-group">
             <label class="contact-p1">Dirección de correo electrónico:</label>
-            <input type="email" class="form-control" name="email" id="email" required>
-            <p class="help-block"></p>
+            <input 
+              type="email" 
+              class="form-control" 
+              name="email" 
+              [(ngModel)]="formData.email"
+              required
+              [disabled]="enviando">
           </div>
-          <input type="submit" value="Enviar" class="btn btn-primary">
+
+          <button 
+            type="submit" 
+            class="btn btn-primary"
+            [disabled]="enviando || !contactForm.valid">
+            {{ enviando ? 'Enviando...' : 'Enviar' }}
+          </button>
         </form>
-        <div id="form-message" style="display:none; color: #ffce14; margin-top: 15px; font-weight: bold;">
+
+        <!-- Mensajes de éxito/error -->
+        <div *ngIf="mensajeExito" class="alert alert-success">
+          {{ mensajeExito }}
+        </div>
+        <div *ngIf="mensajeError" class="alert alert-error">
+          {{ mensajeError }}
         </div>
       </div>
     </div>
+
     <div class="contact-w3-agile1">
       <h4>Conectate con nosotros</h4>
       <p class="contact-agile1"><strong>Teléfono:</strong> +54 9 11 7601-1408</p>
-      <p class="contact-agile1"><strong>Email:</strong> <a
-          href="mailto:info@facturacionweb.site">info@facturacionweb.site</a></p>
+      <p class="contact-agile1"><strong>Email:</strong> 
+        <a href="mailto:info@facturacionweb.site">info@facturacionweb.site</a>
+      </p>
       <p class="contact-agile1"><strong>Dirección:</strong> Buenos Aires, Argentina</p>
 
       <div class="social-bnr-agileits footer-icons-agileinfo">
@@ -40,8 +72,11 @@
           <li><a href="#" class="fa fa-google-plus icon-border googleplus"> </a></li>
         </ul>
       </div>
+
       <iframe
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3283.330948957813!2d-58.38386198477028!3d-34.60373888045938!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bccacf7663d169%3A0x11bead4e234e558b!2sObelisco!5e0!3m2!1ses-419!2sar!4v1634246067341!5m2!1ses-419!2sar"></iframe>
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3283.330948957813!2d-58.38386198477028!3d-34.60373888045938!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bccacf7663d169%3A0x11bead4e234e558b!2sObelisco!5e0!3m2!1ses-419!2sar!4v1634246067341!5m2!1ses-419!2sar"
+        loading="lazy">
+      </iframe>
     </div>
   </div>
 </section>

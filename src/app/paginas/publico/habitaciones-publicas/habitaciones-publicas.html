@@ -1,108 +1,138 @@
 <div class="plans-section" id="rooms">
   <div class="container">
     <h3 class="title-w3-agileits title-black-wthree">Habitaciones y tarifas</h3>
-    <div class="priceing-table-main">
-      <!-- Habitación 1 -->
-      <div class="price-grid">
-        <div class="price-block agile">
-          <div class="price-gd-top">
-            <img src="images/r1.jpg" alt="Habitación de lujo" class="img-responsive" />
-            <h4>Habitación de lujo</h4>
-          </div>
-          <div class="price-gd-bottom">
-            <div class="price-list">
-              <ul>
-                <li><i class="fa fa-star" aria-hidden="true"></i></li>
-                <li><i class="fa fa-star" aria-hidden="true"></i></li>
-                <li><i class="fa fa-star" aria-hidden="true"></i></li>
-                <li><i class="fa fa-star" aria-hidden="true"></i></li>
-                <li><i class="fa fa-star-o" aria-hidden="true"></i></li>
-              </ul>
-            </div>
-            <div class="price-selet">
-              <h3><span>$</span>320</h3>
-              <a href="#contact">Reservar ahora</a>
-            </div>
-          </div>
-        </div>
+
+    <!-- Filtros -->
+    <div class="filters-container">
+      <div class="filter-group">
+        <label for="tipoFilter">Tipo de Habitación:</label>
+        <select id="tipoFilter" [(ngModel)]="filtroTipoSeleccionado" (change)="aplicarFiltros()" class="filter-select">
+          <option value="todos">Todas</option>
+          <option *ngFor="let tipo of tiposHabitacion" [value]="tipo">{{ tipo }}</option>
+        </select>
       </div>
 
-      <!-- Habitación 2 -->
-      <div class="price-grid">
-        <div class="price-block agile">
-          <div class="price-gd-top">
-            <img src="images/r2.jpg" alt="Habitación de lujo" class="img-responsive" />
-            <h4>Habitación de lujo</h4>
-          </div>
-          <div class="price-gd-bottom">
-            <div class="price-list">
-              <ul>
-                <li><i class="fa fa-star" aria-hidden="true"></i></li>
-                <li><i class="fa fa-star" aria-hidden="true"></i></li>
-                <li><i class="fa fa-star" aria-hidden="true"></i></li>
-                <li><i class="fa fa-star" aria-hidden="true"></i></li>
-                <li><i class="fa fa-star-o" aria-hidden="true"></i></li>
-              </ul>
-            </div>
-            <div class="price-selet">
-              <h3><span>$</span>220</h3>
-              <a href="#contact">Reservar ahora</a>
-            </div>
-          </div>
-        </div>
+      <div class="filter-group">
+        <label for="estrellasFilter">Mínimo de Estrellas:</label>
+        <select id="estrellasFilter" [(ngModel)]="filtroEstrellas" (change)="aplicarFiltros()" class="filter-select">
+          <option [value]="0">Todas</option>
+          <option [value]="1">1+ ⭐</option>
+          <option [value]="2">2+ ⭐</option>
+          <option [value]="3">3+ ⭐</option>
+          <option [value]="4">4+ ⭐</option>
+          <option [value]="5">5 ⭐</option>
+        </select>
       </div>
 
-      <!-- Habitación 3 -->
-      <div class="price-grid">
-        <div class="price-block agile">
-          <div class="price-gd-top">
-            <img src="images/r3.jpg" alt="Casa de huéspedes" class="img-responsive" />
-            <h4>Casa de huéspedes</h4>
-          </div>
-          <div class="price-gd-bottom">
-            <div class="price-list">
-              <ul>
-                <li><i class="fa fa-star" aria-hidden="true"></i></li>
-                <li><i class="fa fa-star" aria-hidden="true"></i></li>
-                <li><i class="fa fa-star" aria-hidden="true"></i></li>
-                <li><i class="fa fa-star-o" aria-hidden="true"></i></li>
-                <li><i class="fa fa-star-o" aria-hidden="true"></i></li>
-              </ul>
-            </div>
-            <div class="price-selet">
-              <h3><span>$</span>180</h3>
-              <a href="#contact">Reservar ahora</a>
-            </div>
-          </div>
-        </div>
+      <div class="filter-group">
+        <label for="precioFilter">Precio Máximo: ${{ filtroPrecioMax }}</label>
+        <input type="range" id="precioFilter" [(ngModel)]="filtroPrecioMax" (input)="aplicarFiltros()" min="50"
+          max="1000" step="10" class="filter-range" />
       </div>
 
-      <!-- Habitación 4 -->
-      <div class="price-grid">
+      <button type="button" class="btn-clear-filters" (click)="limpiarFiltros()">
+        <i class="fa fa-refresh"></i> Limpiar Filtros
+      </button>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-container">
+      <div class="spinner-large"></div>
+      <p>Cargando habitaciones...</p>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error && !isLoading" class="error-container">
+      <i class="fa fa-exclamation-triangle"></i>
+      <p>{{ error }}</p>
+      <button type="button" class="btn-retry" (click)="cargarHabitaciones()">
+        <i class="fa fa-refresh"></i> Reintentar
+      </button>
+    </div>
+
+    <!-- Sin Resultados -->
+    <div *ngIf="!isLoading && !error && habitacionesFiltradas.length === 0" class="no-results">
+      <i class="fa fa-bed"></i>
+      <p>No se encontraron habitaciones con los filtros seleccionados.</p>
+      <button type="button" class="btn-clear-filters" (click)="limpiarFiltros()">
+        Ver todas las habitaciones
+      </button>
+    </div>
+
+    <!-- Lista de Habitaciones -->
+    <div *ngIf="!isLoading && !error && habitacionesFiltradas.length > 0" class="priceing-table-main">
+      <div *ngFor="let habitacion of habitacionesFiltradas" class="price-grid">
         <div class="price-block agile">
           <div class="price-gd-top">
-            <img src="images/r4.jpg" alt="Habitación Individual" class="img-responsive" />
-            <h4>Habitación Indiv.</h4>
+            <img [src]="getImagenPrincipal(habitacion)" [alt]="habitacion.tipo" class="img-responsive" />
+            <h4>{{ habitacion.tipo }}</h4>
+            <div class="room-badge" [class.disponible]="habitacion.disponible">
+              {{ habitacion.disponible ? 'Disponible' : 'No Disponible' }}
+            </div>
           </div>
+
           <div class="price-gd-bottom">
+            <!-- Información de la habitación -->
+            <div class="room-info">
+              <div class="room-capacity">
+                <i class="fa fa-users"></i>
+                <span>Hasta {{ habitacion.capacidad }} personas</span>
+              </div>
+              <div class="room-number">
+                <i class="fa fa-door-open"></i>
+                <span>Habitación #{{ habitacion.numero }}</span>
+              </div>
+            </div>
+
+            <!-- Estrellas -->
             <div class="price-list">
               <ul>
-                <li><i class="fa fa-star" aria-hidden="true"></i></li>
-                <li><i class="fa fa-star" aria-hidden="true"></i></li>
-                <li><i class="fa fa-star-o" aria-hidden="true"></i></li>
-                <li><i class="fa fa-star-o" aria-hidden="true"></i></li>
-                <li><i class="fa fa-star-o" aria-hidden="true"></i></li>
+                <li *ngFor="let estrella of getEstrellas(habitacion.estrellas)">
+                  <i class="fa" [class.fa-star]="estrella === 1" [class.fa-star-o]="estrella === 0"
+                    aria-hidden="true"></i>
+                </li>
               </ul>
             </div>
+
+            <!-- Descripción -->
+            <p class="room-description">{{ habitacion.descripcion }}</p>
+
+            <!-- Características -->
+            <div class="room-features" *ngIf="habitacion.caracteristicas.length > 0">
+              <span *ngFor="let caracteristica of habitacion.caracteristicas.slice(0, 3)" class="feature-badge">
+                <i class="fa fa-check"></i> {{ caracteristica }}
+              </span>
+            </div>
+
+            <!-- Precio y botón de reserva -->
             <div class="price-selet">
-              <h3><span>$</span>150</h3>
-              <a href="#contact">Reservar ahora</a>
+              <h3>
+                <span>$</span>{{ habitacion.precio }}
+                <small>/noche</small>
+              </h3>
+
+              <div class="action-buttons">
+                <button type="button" class="btn-details" (click)="verDetalles(habitacion)">
+                  <i class="fa fa-info-circle"></i> Detalles
+                </button>
+
+                <button type="button" class="btn-reserve" (click)="reservarHabitacion(habitacion)"
+                  [disabled]="!habitacion.disponible">
+                  <i class="fa fa-calendar-check-o"></i>
+                  {{ habitacion.disponible ? 'Reservar ahora' : 'No disponible' }}
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       <div class="clearfix"></div>
+    </div>
+
+    <!-- Contador de resultados -->
+    <div *ngIf="!isLoading && habitacionesFiltradas.length > 0" class="results-counter">
+      Mostrando {{ habitacionesFiltradas.length }} de {{ habitaciones.length }} habitaciones
     </div>
   </div>
 </div>

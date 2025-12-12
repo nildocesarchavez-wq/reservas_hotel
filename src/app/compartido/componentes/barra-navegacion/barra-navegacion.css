@@ -327,32 +327,6 @@
     to { transform: rotate(360deg); }
 }
 
-/* Botón de usuario en desktop menu */
-.menu__item--user {
-    display: block;
-}
-
-.user-btn-desktop {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: rgba(255, 206, 20, 0.15);
-    border: 2px solid rgba(255, 206, 20, 0.3);
-    padding: 8px 18px;
-    border-radius: 50px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    color: white;
-    font-size: 14px;
-    font-weight: 500;
-}
-
-.user-btn-desktop:hover {
-    background: rgba(255, 206, 20, 0.25);
-    border-color: #ffce14;
-    transform: translateY(-2px);
-}
-
 /* ===== BOTÓN LOGIN ===== */
 
 .login-btn {
@@ -484,6 +458,15 @@
     display: block;
 }
 
+/* Botón de usuario en desktop menu - OCULTAR SIEMPRE */
+.menu__item--user {
+    display: none !important;
+}
+
+.user-btn-desktop {
+    display: none !important;
+}
+
 /* ===== RESPONSIVE ===== */
 
 /* Tablets (991px y menos) */
@@ -548,13 +531,11 @@
     }
     
     /* Ocultar elementos desktop */
-    .menu__item--login,
-    .menu__item--user {
+    .menu__item--login {
         display: none;
     }
     
-    .login-btn-desktop,
-    .user-btn-desktop {
+    .login-btn-desktop {
         display: none;
     }
     
