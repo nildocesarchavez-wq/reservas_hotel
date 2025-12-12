@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { HeaderDashboard } from "../../../compartido/componentes/header-dashboard/header-dashboard";
+import { HeaderAdmin } from "../../../compartido/componentes/header-admin/header-admin";
 import { SidebarAdmin } from "../../../compartido/componentes/sidebar-admin/sidebar-admin";
 
 @Component({
   selector: 'app-estado-habitacion',
-  imports: [HeaderDashboard, SidebarAdmin],
+  imports: [HeaderAdmin, SidebarAdmin],
   templateUrl: './estado-habitacion.html',
   styleUrl: './estado-habitacion.css',
 })

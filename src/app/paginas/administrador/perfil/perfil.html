@@ -1,0 +1,166 @@
+<div class="app-container">
+  <!-- HEADER TOP -->
+  <app-header-admin></app-header-admin>
+
+  <!-- SIDEBAR -->
+  <app-sidebar-admin></app-sidebar-admin>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    <div class="content-wrapper">
+      <!-- PAGE HEADER -->
+      <div class="page-header">
+        <h1 class="page-title">ADMINISTRADOR</h1>
+        <p class="page-subtitle">Gestión de cuentas</p>
+      </div>
+
+      <!-- TABLA DE USUARIOS -->
+      <div class="content-grid" style="grid-template-columns: 1fr;">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">LISTA DE USUARIOS ADMINISTRADORES</h3>
+          </div>
+          <div class="card-body">
+            <div class="table-container">
+              <table class="data-table" id="dataTables-example">
+                <thead>
+                  <tr>
+                    <th>ID Usuario</th>
+                    <th>Nombre Usuario</th>
+                    <th>Password</th>
+                    <th>Actualizar</th>
+                    <th>Retirar</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Usuario 1 -->
+                  <tr class='gradeC'>
+                    <td>1</td>
+                    <td>admin</td>
+                    <td>admin123</td>
+                    <td>
+                      <button class='btn btn-primary btn-edit-user' data-id='1' data-username='admin' data-password='admin123'>
+                        <i class='fa fa-edit'></i> Actualizar
+                      </button>
+                    </td>
+                    <td>
+                      <button class='btn btn-danger btn-delete-user' data-id='1'>
+                        <i class='fa fa-trash'></i> Eliminar
+                      </button>
+                    </td>
+                  </tr>
+
+                  <!-- Usuario 2 -->
+                  <tr class='gradeU'>
+                    <td>2</td>
+                    <td>supervisor</td>
+                    <td>super2024</td>
+                    <td>
+                      <button class='btn btn-primary btn-edit-user' data-id='2' data-username='supervisor' data-password='super2024'>
+                        <i class='fa fa-edit'></i> Actualizar
+                      </button>
+                    </td>
+                    <td>
+                      <button class='btn btn-danger btn-delete-user' data-id='2'>
+                        <i class='fa fa-trash'></i> Eliminar
+                      </button>
+                    </td>
+                  </tr>
+
+                  <!-- Usuario 3 -->
+                  <tr class='gradeC'>
+                    <td>3</td>
+                    <td>recepcion</td>
+                    <td>recep123</td>
+                    <td>
+                      <button class='btn btn-primary btn-edit-user' data-id='3' data-username='recepcion' data-password='recep123'>
+                        <i class='fa fa-edit'></i> Actualizar
+                      </button>
+                    </td>
+                    <td>
+                      <button class='btn btn-danger btn-delete-user' data-id='3'>
+                        <i class='fa fa-trash'></i> Eliminar
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- BOTÓN AGREGAR NUEVO ADMINISTRADOR -->
+        <div class="panel-body">
+          <button class="btn btn-primary" id="openAddUserModal">
+            <i class="fa fa-plus"></i> Agregar nuevo administrador
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- MODAL PARA EDITAR USUARIO -->
+  <div class="modal" id="myModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Cambiar el nombre de usuario y la contraseña</h4>
+          <button type="button" class="close" id="closeEditModal">&times;</button>
+        </div>
+        <form id="editUserForm">
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Cambie el nombre de usuario</label>
+              <input type="text" name="usname" id="editUsername" class="form-control"
+                placeholder="Enter User name" required>
+            </div>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Cambie Password</label>
+              <input type="password" name="pasd" id="editPassword" class="form-control"
+                placeholder="Enter Password" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="cancelEditModal">Cerrar</button>
+            <button type="submit" class="btn btn-primary">Actualizar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL PARA AGREGAR NUEVO USUARIO -->
+  <div class="modal" id="myModal1" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Agregue el nombre de usuario y la contraseña</h4>
+          <button type="button" class="close" id="closeAddModal">&times;</button>
+        </div>
+        <form id="addUserForm">
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Agregar nuevo nombre de usuario</label>
+              <input type="text" name="newus" id="newUsername" class="form-control"
+                placeholder="Enter User name" required>
+            </div>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Nueva contraseña</label>
+              <input type="password" name="newps" id="newPassword" class="form-control"
+                placeholder="Enter Password" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="cancelAddModal">Cerrar</button>
+            <button type="submit" class="btn btn-primary">Agregar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -89,6 +89,11 @@ export const routes: Routes = [
     loadComponent: () => import('./paginas/administrador/eliminar-habitacion/eliminar-habitacion').then(m => m.EliminarHabitacion)
   },
 
+  {
+    path: 'admin/perfil',
+    loadComponent: () => import('./paginas/administrador/perfil/perfil').then(m => m.Perfil)
+  },
+
   // Ruta 404
   {
     path: '**',

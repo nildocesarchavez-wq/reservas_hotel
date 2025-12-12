@@ -1,0 +1,35 @@
+<header class="header-top">
+  <div class="header-left">
+    <button class="menu-toggle" (click)="toggleMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <div class="logo">
+      <a routerLink="/admin/estado">SUN RISE</a>
+    </div>
+  </div>
+
+  <div class="header-right">
+    <div class="user-menu">
+      <button class="user-button" (click)="toggleUserMenu()">
+        <span class="user-avatar">
+          <i class="fa fa-user"></i>
+        </span>
+        <span class="user-name">Admin</span>
+        <i class="fa fa-caret-down"></i>
+      </button>
+      <div class="dropdown-menu" [class.show]="showUserMenu">
+        <a routerLink="/admin/perfil" class="dropdown-item">
+          <i class="fa fa-user"></i>
+          <span>Perfil del usuario</span>
+        </a>
+        <div class="dropdown-divider"></div>
+        <a routerLink="/auth/login" class="dropdown-item">
+          <i class="fa fa-sign-out"></i>
+          <span>Cerrar sesión</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</header>

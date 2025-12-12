@@ -2,13 +2,13 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { HeaderDashboard } from '../../../compartido/componentes/header-dashboard/header-dashboard';
+import { HeaderCliente } from '../../../compartido/componentes/header-cliente/header-cliente';
 import { SidebarCliente } from '../../../compartido/componentes/sidebar-cliente/sidebar-cliente';
 
 @Component({
   selector: 'app-perfil',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, HeaderDashboard, SidebarCliente],
+  imports: [CommonModule, RouterModule, FormsModule, HeaderCliente, SidebarCliente],
   templateUrl: './perfil.html',
   styleUrl: './perfil.css',
 })
@@ -41,7 +41,7 @@ export class Perfil {
 
   onSubmitPassword(event: Event) {
     event.preventDefault();
-    
+
     if (this.password.new !== this.password.confirm) {
       alert('Las contraseñas no coinciden');
       return;
@@ -49,7 +49,7 @@ export class Perfil {
 
     console.log('Contraseña actualizada');
     alert('¡Contraseña actualizada exitosamente! (Simulación)');
-    
+
     // Reset password fields
     this.password = {
       current: '',

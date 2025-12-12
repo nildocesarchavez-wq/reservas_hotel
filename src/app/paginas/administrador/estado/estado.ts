@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { HeaderDashboard } from "../../../compartido/componentes/header-dashboard/header-dashboard";
+import { HeaderAdmin } from "../../../compartido/componentes/header-admin/header-admin";
 import { SidebarAdmin } from "../../../compartido/componentes/sidebar-admin/sidebar-admin";
 
 @Component({
   selector: 'app-estado',
   standalone: true,
-  imports: [CommonModule, RouterModule, HeaderDashboard, SidebarAdmin],
+  imports: [CommonModule, RouterModule, HeaderAdmin, SidebarAdmin],
   templateUrl: './estado.html',
   styleUrl: './estado.css',
 })

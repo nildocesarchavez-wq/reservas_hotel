@@ -2,19 +2,19 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { HeaderDashboard } from '../../../compartido/componentes/header-dashboard/header-dashboard';
+import { HeaderCliente } from '../../../compartido/componentes/header-cliente/header-cliente';
 import { SidebarCliente } from '../../../compartido/componentes/sidebar-cliente/sidebar-cliente';
 
 @Component({
     selector: 'app-mis-reservas',
     standalone: true,
-    imports: [CommonModule, RouterModule, FormsModule, HeaderDashboard, SidebarCliente],
+    imports: [CommonModule, RouterModule, FormsModule, HeaderCliente, SidebarCliente],
     templateUrl: './mis-reservas.html',
     styleUrl: './mis-reservas.css'
 })
 export class MisReservasComponent {
     showNewReservation = false;
-    
+
     newReservation = {
         roomType: '',
         bedType: '',

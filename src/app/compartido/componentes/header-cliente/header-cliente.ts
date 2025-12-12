@@ -3,13 +3,13 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'app-header-dashboard',
+  selector: 'app-header-cliente',
   standalone: true,
   imports: [CommonModule, RouterModule],
-  templateUrl: './header-dashboard.html',
-  styleUrl: './header-dashboard.css'
+  templateUrl: './header-cliente.html',
+  styleUrl: './header-cliente.css'
 })
-export class HeaderDashboard {
+export class HeaderCliente {
   showUserMenu = false;
 
   toggleMenu() {
