@@ -10,75 +10,45 @@
     <div class="content-wrapper">
       <!-- PAGE HEADER -->
       <div class="page-header">
-        <h1 class="page-title">Disponible</h1>
-        <p class="page-subtitle">Habitaciones por tipo y disponibilidad de camas</p>
+        <h1 class="page-title">Disponibilidad de Habitaciones</h1>
+        <p class="page-subtitle">Estado en tiempo real por tipo y capacidad</p>
+      </div>
+
+      <!-- LOADING STATE -->
+      <div *ngIf="cargando" class="loading-container">
+        <div class="loading-spinner"></div>
+        <p>Cargando habitaciones...</p>
+      </div>
+
+      <!-- ERROR STATE -->
+      <div *ngIf="error && !cargando" class="error-container">
+        <i class="fa fa-exclamation-triangle"></i>
+        <p>{{ error }}</p>
+        <button (click)="recargar()" class="btn-reload">
+          <i class="fa fa-refresh"></i> Reintentar
+        </button>
+      </div>
+
+      <!-- EMPTY STATE -->
+      <div *ngIf="!cargando && !error && estadisticas.length === 0" class="empty-container">
+        <i class="fa fa-bed fa-3x"></i>
+        <p>No hay habitaciones registradas</p>
       </div>
 
       <!-- ROOM GRID -->
-      <div class="room-grid">
-        <!-- Superior Room (Blue) - Ejemplo 1 -->
-        <div class="room-panel bg-color-blue">
+      <div *ngIf="!cargando && !error && estadisticas.length > 0" class="room-grid">
+        <div *ngFor="let stat of estadisticas" 
+             [ngClass]="obtenerClasePanel(stat.color)">
           <div class="panel-body">
             <i class="fa fa-users fa-5x"></i>
-            <h3>Double</h3>
+            <h3>{{ stat.capacidad }}</h3>
+            <div class="panel-info">
+              <p class="disponibles">{{ stat.disponibles }} / {{ stat.cantidad }}</p>
+              <p class="label-disponibles">Disponibles</p>
+            </div>
           </div>
-          <div class="panel-footer back-footer-blue">
-            Superior Room
-          </div>
-        </div>
-
-        <!-- Deluxe Room (Green) - Ejemplo 2 -->
-        <div class="room-panel bg-color-green">
-          <div class="panel-body">
-            <i class="fa fa-users fa-5x"></i>
-            <h3>Single</h3>
-          </div>
-          <div class="panel-footer back-footer-green">
-            Deluxe Room
-          </div>
-        </div>
-
-        <!-- Guest House (Brown) - Ejemplo 3 -->
-        <div class="room-panel bg-color-brown">
-          <div class="panel-body">
-            <i class="fa fa-users fa-5x"></i>
-            <h3>Triple</h3>
-          </div>
-          <div class="panel-footer back-footer-brown">
-            Guest House
-          </div>
-        </div>
-
-        <!-- Single Room (Red) - Ejemplo 4 -->
-        <div class="room-panel bg-color-red">
-          <div class="panel-body">
-            <i class="fa fa-users fa-5x"></i>
-            <h3>Single</h3>
-          </div>
-          <div class="panel-footer back-footer-red">
-            Single Room
-          </div>
-        </div>
-
-        <!-- Superior Room (Blue) - Ejemplo 5 -->
-        <div class="room-panel bg-color-blue">
-          <div class="panel-body">
-            <i class="fa fa-users fa-5x"></i>
-            <h3>Quad</h3>
-          </div>
-          <div class="panel-footer back-footer-blue">
-            Superior Room
-          </div>
-        </div>
-
-        <!-- Deluxe Room (Green) - Ejemplo 6 -->
-        <div class="room-panel bg-color-green">
-          <div class="panel-body">
-            <i class="fa fa-users fa-5x"></i>
-            <h3>Double</h3>
-          </div>
-          <div class="panel-footer back-footer-green">
-            Deluxe Room
+          <div [ngClass]="obtenerClaseFooter(stat.color)">
+            {{ stat.tipo }}
           </div>
         </div>
       </div>

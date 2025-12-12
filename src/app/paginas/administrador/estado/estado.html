@@ -14,185 +14,202 @@
         <p class="page-subtitle">Reserva de habitación</p>
       </div>
 
-      <!-- FILTROS -->
-      <div class="filters-section">
-        <div class="filters-card">
-          <div class="filters-header">
-            <i class="fa fa-filter"></i>
-            <h3>Filtros de Búsqueda</h3>
-          </div>
-          <div class="filters-body">
-            <div class="filters-grid">
-              <!-- Filtro por Estado -->
-              <div class="filter-group">
-                <label>Estado de Reserva</label>
-                <select class="filter-control" [(ngModel)]="filters.status" (change)="applyFilters()">
-                  <option value="">Todos los estados</option>
-                  <option value="pending">Pendiente</option>
-                  <option value="confirmed">Confirmada</option>
-                  <option value="cancelled">Cancelada</option>
-                </select>
-              </div>
-
-              <!-- Filtro por Fecha Desde -->
-              <div class="filter-group">
-                <label>Fecha Desde</label>
-                <input 
-                  type="date" 
-                  class="filter-control" 
-                  [(ngModel)]="filters.dateFrom"
-                  (change)="applyFilters()">
-              </div>
-
-              <!-- Filtro por Fecha Hasta -->
-              <div class="filter-group">
-                <label>Fecha Hasta</label>
-                <input 
-                  type="date" 
-                  class="filter-control" 
-                  [(ngModel)]="filters.dateTo"
-                  (change)="applyFilters()">
-              </div>
-
-              <!-- Botón Limpiar Filtros -->
-              <div class="filter-group filter-actions">
-                <button class="btn btn-secondary" (click)="clearFilters()">
-                  <i class="fa fa-times"></i>
-                  Limpiar Filtros
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+      <!-- LOADING INDICATOR -->
+      <div *ngIf="isLoading" class="loading-container">
+        <div class="spinner"></div>
+        <p>Cargando información..</p>
       </div>
 
-      <!-- CARDS GRID -->
-      <div class="cards-grid">
-        <!-- CARD: NUEVA RESERVA -->
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">Nueva reserva de habitaciones</h3>
-            <span class="badge badge-danger">{{ filteredNewReservations.length }}</span>
-          </div>
-          <div class="card-body">
-            <div class="table-container">
-              <table class="data-table">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Nombre</th>
-                    <th>Email</th>
-                    <th>País</th>
-                    <th>Habitación</th>
-                    <th>Cama</th>
-                    <th>Comida</th>
-                    <th>Check-in</th>
-                    <th>Check-out</th>
-                    <th>Estado</th>
-                    <th>Acción</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let reservation of filteredNewReservations; let i = index">
-                    <td>{{ i + 1 }}</td>
-                    <td>{{ reservation.name }}</td>
-                    <td>{{ reservation.email }}</td>
-                    <td>{{ reservation.country }}</td>
-                    <td>{{ reservation.room }}</td>
-                    <td>{{ reservation.bed }}</td>
-                    <td>{{ reservation.meal }}</td>
-                    <td>{{ reservation.checkIn }}</td>
-                    <td>{{ reservation.checkOut }}</td>
-                    <td>
-                      <span class="badge" [ngClass]="{
-                        'badge-warning': reservation.status === 'pending',
-                        'badge-success': reservation.status === 'confirmed',
-                        'badge-danger': reservation.status === 'cancelled'
-                      }">
-                        {{ getStatusText(reservation.status) }}
-                      </span>
-                    </td>
-                    <td>
-                      <a routerLink="/admin/reserva-habitacion" class="btn btn-primary btn-sm">
-                        <i class="fa fa-eye"></i> Ver
-                      </a>
-                    </td>
-                  </tr>
-                  <tr *ngIf="filteredNewReservations.length === 0">
-                    <td colspan="11" class="no-data">
-                      <i class="fa fa-inbox"></i>
-                      <p>No hay reservas que coincidan con los filtros</p>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+      <!-- CONTENT -->
+      <div *ngIf="!isLoading">
+        <!-- FILTROS -->
+        <div class="filters-section">
+          <div class="filters-card">
+            <div class="filters-header">
+              <i class="fa fa-filter"></i>
+              <h3>Filtros de Búsqueda</h3>
+            </div>
+            <div class="filters-body">
+              <div class="filters-grid">
+                <!-- Filtro por Estado -->
+                <div class="filter-group">
+                  <label>Estado de Reserva</label>
+                  <select class="filter-control" [(ngModel)]="filters.status" (change)="applyFilters()">
+                    <option value="">Todos los estados</option>
+                    <option value="pendiente">Pendiente</option>
+                    <option value="confirmada">Confirmada</option>
+                    <option value="cancelada">Cancelada</option>
+                    <option value="completada">Completada</option>
+                  </select>
+                </div>
+
+                <!-- Filtro por Fecha Desde -->
+                <div class="filter-group">
+                  <label>Fecha Desde</label>
+                  <input 
+                    type="date" 
+                    class="filter-control" 
+                    [(ngModel)]="filters.dateFrom"
+                    (change)="applyFilters()">
+                </div>
+
+                <!-- Filtro por Fecha Hasta -->
+                <div class="filter-group">
+                  <label>Fecha Hasta</label>
+                  <input 
+                    type="date" 
+                    class="filter-control" 
+                    [(ngModel)]="filters.dateTo"
+                    (change)="applyFilters()">
+                </div>
+
+                <!-- Botón Limpiar Filtros -->
+                <div class="filter-group filter-actions">
+                  <button class="btn btn-secondary" (click)="clearFilters()">
+                    <i class="fa fa-times"></i>
+                    Limpiar Filtros
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- CARD: CUARTOS RESERVADOS -->
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">Cuartos reservados</h3>
-            <span class="badge badge-success">{{ confirmedRooms.length }}</span>
+        <!-- CARDS GRID -->
+        <div class="cards-grid">
+          <!-- CARD: NUEVA RESERVA -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Nueva reserva de habitaciones</h3>
+              <span class="badge badge-danger">{{ filteredNewReservations.length }}</span>
+            </div>
+            <div class="card-body">
+              <div class="table-container">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Nombre</th>
+                      <th>Email</th>
+                      <th>País</th>
+                      <th>Habitación</th>
+                      <th>Cama</th>
+                      <th>Notas</th>
+                      <th>Check-in</th>
+                      <th>Check-out</th>
+                      <th>Estado</th>
+                      <th>Acción</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let reservation of filteredNewReservations; let i = index">
+                      <td>{{ i + 1 }}</td>
+                      <td>{{ reservation.name }}</td>
+                      <td>{{ reservation.email }}</td>
+                      <td>{{ reservation.country }}</td>
+                      <td>{{ reservation.room }}</td>
+                      <td>{{ reservation.bed }}</td>
+                      <td>{{ reservation.meal }}</td>
+                      <td>{{ reservation.checkIn }}</td>
+                      <td>{{ reservation.checkOut }}</td>
+                      <td>
+                        <span class="badge" [ngClass]="{
+                          'badge-warning': reservation.status === 'pendiente',
+                          'badge-success': reservation.status === 'confirmada',
+                          'badge-danger': reservation.status === 'cancelada',
+                          'badge-info': reservation.status === 'completada'
+                        }">
+                          {{ getStatusText(reservation.status) }}
+                        </span>
+                      </td>
+                      <td>
+                        <a routerLink="/admin/reserva-habitacion" class="btn btn-primary btn-sm">
+                          <i class="fa fa-eye"></i> Ver
+                        </a>
+                      </td>
+                    </tr>
+                    <tr *ngIf="filteredNewReservations.length === 0">
+                      <td colspan="11" class="no-data">
+                        <i class="fa fa-inbox"></i>
+                        <p>No hay reservas que coincidan con los filtros</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
-          <div class="card-body">
-            <div class="rooms-grid">
-              <div 
-                *ngFor="let room of confirmedRooms" 
-                class="room-card" 
-                [ngClass]="room.color">
-                <div class="room-card-body">
-                  <i class="fa fa-users"></i>
-                  <h3>{{ room.guest }}</h3>
-                </div>
-                <div class="room-card-footer">
-                  {{ room.roomType }}
+
+          <!-- CARD: CUARTOS RESERVADOS -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Cuartos reservados</h3>
+              <span class="badge badge-success">{{ confirmedRooms.length }}</span>
+            </div>
+            <div class="card-body">
+              <div class="rooms-grid" *ngIf="confirmedRooms.length > 0">
+                <div 
+                  *ngFor="let room of confirmedRooms" 
+                  class="room-card" 
+                  [ngClass]="room.color">
+                  <div class="room-card-body">
+                    <i class="fa fa-users"></i>
+                    <h3>{{ room.guest }}</h3>
+                  </div>
+                  <div class="room-card-footer">
+                    {{ room.roomType }}
+                  </div>
                 </div>
               </div>
               <div *ngIf="confirmedRooms.length === 0" class="no-data-rooms">
                 <i class="fa fa-bed"></i>
-                <p>No hay habitaciones reservadas</p>
+                <p>No hay habitaciones confirmadas actualmente</p>
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- CARD: SEGUIDORES -->
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">Seguidores</h3>
-            <span class="badge badge-info">{{ followers.length }}</span>
-          </div>
-          <div class="card-body">
-            <div class="table-container">
-              <table class="data-table">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Nombre completo</th>
-                    <th>Email</th>
-                    <th>Fecha</th>
-                    <th>Estado</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let follower of followers; let i = index">
-                    <td>{{ i + 1 }}</td>
-                    <td>{{ follower.name }}</td>
-                    <td>{{ follower.email }}</td>
-                    <td>{{ follower.date }}</td>
-                    <td>
-                      <span class="badge" [ngClass]="{
-                        'badge-warning': follower.status === 'Pending',
-                        'badge-success': follower.status === 'Approved'
-                      }">
-                        {{ follower.status }}
-                      </span>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+          <!-- CARD: SEGUIDORES -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Seguidores / Contactos</h3>
+              <span class="badge badge-info">{{ followers.length }}</span>
+            </div>
+            <div class="card-body">
+              <div class="table-container">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Nombre completo</th>
+                      <th>Email</th>
+                      <th>Fecha</th>
+                      <th>Estado</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let follower of followers; let i = index">
+                      <td>{{ i + 1 }}</td>
+                      <td>{{ follower.name }}</td>
+                      <td>{{ follower.email }}</td>
+                      <td>{{ follower.date }}</td>
+                      <td>
+                        <span class="badge" [ngClass]="{
+                          'badge-warning': follower.status === 'Pending',
+                          'badge-success': follower.status === 'Approved'
+                        }">
+                          {{ follower.status }}
+                        </span>
+                      </td>
+                    </tr>
+                    <tr *ngIf="followers.length === 0">
+                      <td colspan="5" class="no-data">
+                        <i class="fa fa-users"></i>
+                        <p>No hay contactos registrados</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>

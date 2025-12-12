@@ -9,204 +9,290 @@
   <main class="main-content">
     <div class="content-wrapper">
 
-      <!-- SECCIÓN 1: RESERVAS PENDIENTES (Tabla de Solicitudes) -->
-      <div class="page-header">
-        <h1 class="page-title">RESERVAS PENDIENTES</h1>
-        <p class="page-subtitle">Gestión de solicitudes de reserva de clientes</p>
+      <!-- LOADING INDICATOR -->
+      <div *ngIf="isLoading" class="loading-container">
+        <div class="spinner"></div>
+        <p>Cargando información...</p>
       </div>
 
-      <div class="content-grid" style="grid-template-columns: 1fr;">
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">SOLICITUDES DE RESERVA (NO CONFIRMADAS)</h3>
-          </div>
-          <div class="card-body">
-            <div class="table-container">
-              <table class="data-table">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Nombre Completo</th>
-                    <th>Tipo Habitación</th>
-                    <th>Entrada</th>
-                    <th>Salida</th>
-                    <th>Estado</th>
-                    <th>Acción</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <!-- Fila 1: Reserva Pendiente -->
-                  <tr class="odd">
-                    <td>1001</td>
-                    <td>Juan Pérez González</td>
-                    <td>Deluxe Room</td>
-                    <td>2025-11-25</td>
-                    <td>2025-11-28</td>
-                    <td><span class="status-badge status-pending">No Confirmado</span></td>
-                    <td><a href="#reservation-detail"
-                        class="btn btn-sm btn-info scroll-link">Ver y Confirmar</a></td>
-                  </tr>
-                  <!-- Fila 2: Reserva Pendiente -->
-                  <tr class="even">
-                    <td>1002</td>
-                    <td>María López Díaz</td>
-                    <td>Superior Room</td>
-                    <td>2025-12-01</td>
-                    <td>2025-12-05</td>
-                    <td><span class="status-badge status-pending">No Confirmado</span></td>
-                    <td><a href="#reservation-detail"
-                        class="btn btn-sm btn-info scroll-link">Ver y Confirmar</a></td>
-                  </tr>
-                  <!-- Fila 3: Reserva Confirmada -->
-                  <tr class="odd">
-                    <td>1003</td>
-                    <td>Carlos Ruíz Soto</td>
-                    <td>Guest House</td>
-                    <td>2025-12-10</td>
-                    <td>2025-12-15</td>
-                    <td><span class="status-badge status-confirmed">Confirmado</span></td>
-                    <td><a href="#reservation-detail"
-                        class="btn btn-sm btn-secondary scroll-link">Ver Detalles</a></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
+      <!-- MENSAJES -->
+      <div *ngIf="mensajeExito" class="alert alert-success">
+        <i class="fa fa-check-circle"></i>
+        {{ mensajeExito }}
+      </div>
+
+      <div *ngIf="mensajeError" class="alert alert-error">
+        <i class="fa fa-exclamation-circle"></i>
+        {{ mensajeError }}
+      </div>
+
+      <!-- SECCIÓN 1: RESERVAS PENDIENTES -->
+      <div *ngIf="!isLoading">
+        <div class="page-header">
+          <h1 class="page-title">RESERVAS PENDIENTES</h1>
+          <p class="page-subtitle">Gestión de solicitudes de reserva de clientes</p>
         </div>
-      </div>
 
-      <div style="height: 40px;"></div> <!-- Separador visual -->
-
-      <!-- SECCIÓN 2: RESERVA DE HABITACIÓN (Detalle de Confirmación) -->
-      <div class="page-header" id="reservation-detail">
-        <h1 class="page-title">RESERVA DE HABITACIÓN</h1>
-        <p class="page-subtitle" style="color: #666;">Detalle de la Reserva ID: 1001</p>
-      </div>
-
-      <div class="content-grid" style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
-
-        <!-- Columna Izquierda: Detalles y Confirmación -->
-        <div>
-          <div class="card card-info">
+        <div class="content-grid" style="grid-template-columns: 1fr;">
+          <div class="card">
             <div class="card-header">
-              <h3 class="card-title">CONFIRMACIÓN DE RESERVA</h3>
+              <h3 class="card-title">SOLICITUDES DE RESERVA (NO CONFIRMADAS)</h3>
+              <span class="badge badge-warning">{{ reservasPendientes.length }}</span>
             </div>
             <div class="card-body">
               <div class="table-container">
-                <table class="data-table details-table">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Nombre Completo</th>
+                      <th>Email</th>
+                      <th>Tipo Habitación</th>
+                      <th>Entrada</th>
+                      <th>Salida</th>
+                      <th>Noches</th>
+                      <th>Total</th>
+                      <th>Estado</th>
+                      <th>Acción</th>
+                    </tr>
+                  </thead>
                   <tbody>
-                    <tr>
-                      <th>DESCRIPCIÓN</th>
-                      <th>INFORMACIÓN</th>
+                    <tr *ngFor="let reserva of reservasPendientes" 
+                        [class.selected-row]="reservaSeleccionada?.id === reserva.id">
+                      <td>{{ reserva.id.substring(0, 8) }}</td>
+                      <td>{{ reserva.usuarioNombre }}</td>
+                      <td>{{ reserva.usuarioEmail }}</td>
+                      <td>{{ reserva.habitacionTipo }}</td>
+                      <td>{{ formatearFecha(reserva.fechaEntrada) }}</td>
+                      <td>{{ formatearFecha(reserva.fechaSalida) }}</td>
+                      <td>{{ reserva.numeroNoches }}</td>
+                      <td>S/. {{ reserva.precioTotal.toFixed(2) }}</td>
+                      <td>
+                        <span class="status-badge status-pending">
+                          {{ obtenerEstadoTexto(reserva.estado) }}
+                        </span>
+                      </td>
+                      <td>
+                        <button 
+                          class="btn btn-sm btn-info"
+                          (click)="seleccionarReserva(reserva)">
+                          <i class="fa fa-eye"></i> Ver y Confirmar
+                        </button>
+                      </td>
                     </tr>
-                    <tr>
-                      <td>Nombre</td>
-                      <td>Sr. Juan Pérez González</td>
-                    </tr>
-                    <tr>
-                      <td>Email</td>
-                      <td>juan.perez@ejemplo.com</td>
-                    </tr>
-                    <tr>
-                      <td>Nacionalidad</td>
-                      <td>Peruana</td>
-                    </tr>
-                    <tr>
-                      <td>País</td>
-                      <td>Perú</td>
-                    </tr>
-                    <tr>
-                      <td>No. Teléfono</td>
-                      <td>+51 987 654 321</td>
-                    </tr>
-                    <tr>
-                      <td>Tipo de Habitación</td>
-                      <td>Deluxe Room</td>
-                    </tr>
-                    <tr>
-                      <td>No. de Habitaciones</td>
-                      <td>2</td>
-                    </tr>
-                    <tr>
-                      <td>Régimen de Comidas</td>
-                      <td>Desayuno y Cena</td>
-                    </tr>
-                    <tr>
-                      <td>Cama</td>
-                      <td>Double</td>
-                    </tr>
-                    <tr>
-                      <td>Fecha de Entrada</td>
-                      <td>25/11/2025</td>
-                    </tr>
-                    <tr>
-                      <td>Fecha de Salida</td>
-                      <td>28/11/2025</td>
-                    </tr>
-                    <tr>
-                      <td>No. de Días</td>
-                      <td>3</td>
-                    </tr>
-                    <tr>
-                      <td>Nivel de Estado</td>
-                      <td>No Confirmado</td>
+                    <tr *ngIf="reservasPendientes.length === 0">
+                      <td colspan="10" class="no-data">
+                        <i class="fa fa-inbox"></i>
+                        <p>No hay reservas pendientes</p>
+                      </td>
                     </tr>
                   </tbody>
                 </table>
               </div>
             </div>
-            <div class="card-footer">
-              <form class="form">
-                <div class="form-group">
-                  <label for="confirmation">Seleccione la Conformación</label>
-                  <select name="conf" id="confirmation" class="form-input"
-                    style="max-width: 250px;">
-                    <option value="" selected>Seleccionar...</option>
-                    <option value="Conform">Confirmar</option>
-                  </select>
+          </div>
+        </div>
+
+        <div style="height: 40px;"></div>
+
+        <!-- SECCIÓN 2: DETALLE DE RESERVA -->
+        <div *ngIf="reservaSeleccionada" id="reservation-detail">
+          <div class="page-header">
+            <h1 class="page-title">RESERVA DE HABITACIÓN</h1>
+            <p class="page-subtitle" style="color: #666;">
+              Detalle de la Reserva ID: {{ reservaSeleccionada.id.substring(0, 8) }}
+            </p>
+          </div>
+
+          <div class="content-grid" style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
+
+            <!-- Columna Izquierda: Detalles y Confirmación -->
+            <div>
+              <div class="card card-info">
+                <div class="card-header">
+                  <h3 class="card-title">CONFIRMACIÓN DE RESERVA</h3>
                 </div>
-                <button type="submit" name="co" class="btn btn-success">Confirmar</button>
-              </form>
+                <div class="card-body">
+                  <div class="table-container">
+                    <table class="data-table details-table">
+                      <tbody>
+                        <tr>
+                          <th>DESCRIPCIÓN</th>
+                          <th>INFORMACIÓN</th>
+                        </tr>
+                        <tr>
+                          <td>ID de Reserva</td>
+                          <td>{{ reservaSeleccionada.id }}</td>
+                        </tr>
+                        <tr>
+                          <td>Nombre</td>
+                          <td>{{ reservaSeleccionada.usuarioNombre }}</td>
+                        </tr>
+                        <tr>
+                          <td>Email</td>
+                          <td>{{ reservaSeleccionada.usuarioEmail }}</td>
+                        </tr>
+                        <tr>
+                          <td>ID Usuario</td>
+                          <td>{{ reservaSeleccionada.usuarioId.substring(0, 12) }}...</td>
+                        </tr>
+                        <tr>
+                          <td>Tipo de Habitación</td>
+                          <td>{{ reservaSeleccionada.habitacionTipo }}</td>
+                        </tr>
+                        <tr>
+                          <td>No. de Habitación</td>
+                          <td>{{ reservaSeleccionada.habitacionNumero }}</td>
+                        </tr>
+                        <tr>
+                          <td>No. de Huéspedes</td>
+                          <td>{{ reservaSeleccionada.numeroHuespedes }}</td>
+                        </tr>
+                        <tr>
+                          <td>Tipo de Cama</td>
+                          <td>{{ obtenerTipoCama(reservaSeleccionada.habitacionTipo) }}</td>
+                        </tr>
+                        <tr>
+                          <td>Fecha de Entrada</td>
+                          <td>{{ formatearFecha(reservaSeleccionada.fechaEntrada) }}</td>
+                        </tr>
+                        <tr>
+                          <td>Fecha de Salida</td>
+                          <td>{{ formatearFecha(reservaSeleccionada.fechaSalida) }}</td>
+                        </tr>
+                        <tr>
+                          <td>No. de Noches</td>
+                          <td>{{ reservaSeleccionada.numeroNoches }}</td>
+                        </tr>
+                        <tr>
+                          <td>Precio por Noche</td>
+                          <td>S/. {{ reservaSeleccionada.precioPorNoche.toFixed(2) }}</td>
+                        </tr>
+                        <tr>
+                          <td>Precio Total</td>
+                          <td><strong>S/. {{ reservaSeleccionada.precioTotal.toFixed(2) }}</strong></td>
+                        </tr>
+                        <tr>
+                          <td>Notas / Solicitudes</td>
+                          <td>{{ reservaSeleccionada.notas || 'Sin notas especiales' }}</td>
+                        </tr>
+                        <tr>
+                          <td>Estado Actual</td>
+                          <td>
+                            <span class="status-badge" [ngClass]="{
+                              'status-pending': reservaSeleccionada.estado === 'pendiente',
+                              'status-confirmed': reservaSeleccionada.estado === 'confirmada'
+                            }">
+                              {{ obtenerEstadoTexto(reservaSeleccionada.estado) }}
+                            </span>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Fecha de Creación</td>
+                          <td>{{ formatearFecha(reservaSeleccionada.createdAt) }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <form class="form" (ngSubmit)="confirmarReserva()">
+                    <div class="form-group">
+                      <label for="confirmation">Seleccione la Acción</label>
+                      <select 
+                        name="conf" 
+                        id="confirmation" 
+                        class="form-input"
+                        [(ngModel)]="estadoConfirmacion"
+                        style="max-width: 250px;">
+                        <option value="pendiente">Seleccionar...</option>
+                        <option value="confirmada">✓ Confirmar Reserva</option>
+                        <option value="cancelada">✗ Cancelar Reserva</option>
+                      </select>
+                    </div>
+                    <button 
+                      type="submit" 
+                      class="btn"
+                      [ngClass]="{
+                        'btn-success': estadoConfirmacion === 'confirmada',
+                        'btn-danger': estadoConfirmacion === 'cancelada'
+                      }"
+                      [disabled]="estadoConfirmacion === 'pendiente'">
+                      <i class="fa" [ngClass]="{
+                        'fa-check': estadoConfirmacion === 'confirmada',
+                        'fa-times': estadoConfirmacion === 'cancelada'
+                      }"></i>
+                      {{ estadoConfirmacion === 'confirmada' ? 'Confirmar' : 
+                         estadoConfirmacion === 'cancelada' ? 'Cancelar' : 
+                         'Seleccione una acción' }}
+                    </button>
+                  </form>
+                </div>
+              </div>
             </div>
+
+            <!-- Columna Derecha: Disponibilidad -->
+            <div>
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">DISPONIBILIDAD EN TIEMPO REAL</h3>
+                </div>
+                <div class="card-body">
+                  <table class="data-table availability-table">
+                    <tbody>
+                      <tr *ngFor="let disponibilidad of disponibilidadHabitaciones">
+                        <td><b>{{ disponibilidad.tipo }}</b></td>
+                        <td>
+                          <span class="badge" [ngClass]="{
+                            'badge-primary': disponibilidad.cantidad > 0,
+                            'badge-danger': disponibilidad.cantidad === 0
+                          }">
+                            {{ disponibilidad.cantidad > 0 ? disponibilidad.cantidad : 'NO' }}
+                          </span>
+                        </td>
+                      </tr>
+                      <tr *ngIf="disponibilidadHabitaciones.length === 0">
+                        <td colspan="2" class="no-data-small">
+                          <p>Sin habitaciones disponibles</p>
+                        </td>
+                      </tr>
+                      <tr style="border-top: 2px solid #ccc;">
+                        <td><b>Total de Habitaciones Libres</b></td>
+                        <td>
+                          <span class="badge badge-success">
+                            {{ totalHabitacionesLibres }}
+                          </span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Estadísticas adicionales -->
+              <div class="card" style="margin-top: 1.5rem;">
+                <div class="card-header">
+                  <h3 class="card-title">RESUMEN</h3>
+                </div>
+                <div class="card-body">
+                  <div class="stats-grid">
+                    <div class="stat-item">
+                      <div class="stat-label">Total Reservas</div>
+                      <div class="stat-value">{{ todasReservas.length }}</div>
+                    </div>
+                    <div class="stat-item">
+                      <div class="stat-label">Pendientes</div>
+                      <div class="stat-value text-warning">{{ reservasPendientes.length }}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
-
-        <!-- Columna Derecha: Disponibilidad -->
-        <div>
-          <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">DETALLES DE HABITACIONES DISPONIBLES</h3>
-            </div>
-            <div class="card-body">
-              <table class="data-table availability-table">
-                <tbody>
-                  <tr>
-                    <td><b>Habitación Superior</b></td>
-                    <td><span class="badge badge-primary">4</span></td>
-                  </tr>
-                  <tr>
-                    <td><b>Casa de Huéspedes</b></td>
-                    <td><span class="badge badge-primary">2</span></td>
-                  </tr>
-                  <tr>
-                    <td><b>Habitación Individual</b></td>
-                    <td><span class="badge badge-primary">NO</span></td>
-                  </tr>
-                  <tr>
-                    <td><b>Habitación de Lujo</b></td>
-                    <td><span class="badge badge-primary">6</span></td>
-                  </tr>
-                  <tr style="border-top: 1px solid #ccc;">
-                    <td><b>Total de Habitaciones Libres</b></td>
-                    <td> <span class="badge badge-danger">12</span></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
       </div>
+
     </div>
   </main>
 </div>

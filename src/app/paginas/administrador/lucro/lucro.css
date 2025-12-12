@@ -71,6 +71,71 @@ ul {
     font-weight: 500;
 }
 
+/* ===== LOADING, ERROR & EMPTY STATES ===== */
+.loading-container,
+.error-container,
+.empty-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #edf1ff;
+    border-top: 4px solid #0095ff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-container p,
+.error-container p,
+.empty-container p {
+    font-size: 1.1rem;
+    color: #8f9bb3;
+    margin-top: 1rem;
+}
+
+.error-container i {
+    font-size: 3rem;
+    color: #ff3d71;
+    margin-bottom: 1rem;
+}
+
+.empty-container i {
+    color: #8f9bb3;
+    margin-bottom: 1rem;
+}
+
+.btn-reload {
+    margin-top: 1.5rem;
+    padding: 0.75rem 1.5rem;
+    background: #0095ff;
+    color: white;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-reload:hover {
+    background: #0077cc;
+    transform: translateY(-2px);
+}
+
+.btn-reload i {
+    margin-right: 0.5rem;
+}
+
 /* ===== CONTENT GRID ===== */
 .content-grid {
     display: flex;
@@ -97,6 +162,7 @@ ul {
     align-items: center;
     padding: 1.5rem;
     border-bottom: 1px solid #edf1f7;
+    background: #f7f9fc;
 }
 
 .card-title {
@@ -114,12 +180,11 @@ ul {
     padding: 20px;
     background-color: white;
     border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
+    margin-bottom: 0;
 }
 
 #chart {
-    height: 300px;
+    min-height: 350px;
 }
 
 /* ===== TABLES ===== */
@@ -159,8 +224,16 @@ ul {
     transition: background-color 0.2s;
 }
 
+.data-table tbody tr.odd {
+    background-color: #ffffff;
+}
+
+.data-table tbody tr.even {
+    background-color: #fafbfc;
+}
+
 .data-table tbody tr:hover {
-    background-color: #f7f9fc;
+    background-color: #f0f3ff !important;
 }
 
 .data-table tbody tr:last-child td {
@@ -168,10 +241,18 @@ ul {
 }
 
 .data-table tfoot th {
-    background-color: #f7f9fc;
-    font-weight: 600;
+    background-color: #edf1ff;
+    font-weight: 700;
     color: #222b45;
     padding: 1rem;
+    font-size: 0.875rem;
+    border-top: 2px solid #0095ff;
+}
+
+/* ===== TEXT UTILITIES ===== */
+.text-success {
+    color: #00d68f;
+    font-weight: 600;
 }
 
 /* ===== RESPONSIVE ===== */
@@ -205,7 +286,11 @@ ul {
     }
 
     #chart {
-        height: 250px;
+        min-height: 250px;
+    }
+
+    .chart-container {
+        padding: 10px;
     }
 }
 
@@ -219,6 +304,10 @@ ul {
     }
 
     #chart {
-        height: 200px;
+        min-height: 200px;
+    }
+
+    .table-container {
+        font-size: 0.7rem;
     }
 }

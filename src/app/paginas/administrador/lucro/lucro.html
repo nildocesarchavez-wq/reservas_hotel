@@ -14,8 +14,31 @@
         <p class="page-subtitle">Análisis de lucro basado en el 10% del total de las transacciones.</p>
       </div>
 
-      <!-- CONTENT GRID (Una sola columna de ancho completo) -->
-      <div class="content-grid" style="grid-template-columns: 1fr;">
+      <!-- LOADING STATE -->
+      <div *ngIf="cargando" class="loading-container">
+        <div class="loading-spinner"></div>
+        <p>Cargando datos de ganancias...</p>
+      </div>
+
+      <!-- ERROR STATE -->
+      <div *ngIf="error && !cargando" class="error-container">
+        <i class="fa fa-exclamation-triangle"></i>
+        <p>{{ error }}</p>
+        <button (click)="recargar()" class="btn-reload">
+          <i class="fa fa-refresh"></i> Reintentar
+        </button>
+      </div>
+
+      <!-- EMPTY STATE -->
+      <div *ngIf="!cargando && !error && lucroDetalles.length === 0" class="empty-container">
+        <i class="fa fa-money fa-3x"></i>
+        <p>No hay reservas completadas o confirmadas para mostrar</p>
+      </div>
+
+      <!-- CONTENT GRID -->
+      <div *ngIf="!cargando && !error && lucroDetalles.length > 0" 
+           class="content-grid" 
+           style="grid-template-columns: 1fr;">
 
         <!-- CARD: GRÁFICO DE GANANCIAS -->
         <div class="card">
@@ -52,60 +75,25 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <!-- Fila de ejemplo 1 -->
-                  <tr class="odd">
-                    <td>1001</td>
-                    <td>Antonio Gómez</td>
-                    <td>2025-10-15</td>
-                    <td>2025-10-20</td>
-                    <td>$500.00</td>
-                    <td>$50.00</td>
-                    <td>$120.00</td>
-                    <td>$670.00</td>
-                    <td>$67.00</td>
-                  </tr>
-                  <!-- Fila de ejemplo 2 -->
-                  <tr class="even">
-                    <td>1002</td>
-                    <td>Elena Morales</td>
-                    <td>2025-11-01</td>
-                    <td>2025-11-04</td>
-                    <td>$240.00</td>
-                    <td>$0.00</td>
-                    <td>$45.00</td>
-                    <td>$285.00</td>
-                    <td>$28.50</td>
-                  </tr>
-                  <!-- Fila de ejemplo 3 -->
-                  <tr class="odd">
-                    <td>1003</td>
-                    <td>Luis Fernández</td>
-                    <td>2025-12-05</td>
-                    <td>2025-12-12</td>
-                    <td>$910.00</td>
-                    <td>$0.00</td>
-                    <td>$0.00</td>
-                    <td>$910.00</td>
-                    <td>$91.00</td>
-                  </tr>
-                  <!-- Fila de ejemplo 4 -->
-                  <tr class="even">
-                    <td>1004</td>
-                    <td>Sofia Torres</td>
-                    <td>2025-12-15</td>
-                    <td>2025-12-18</td>
-                    <td>$350.00</td>
-                    <td>$20.00</td>
-                    <td>$60.00</td>
-                    <td>$430.00</td>
-                    <td>$43.00</td>
+                  <tr *ngFor="let detalle of lucroDetalles; let i = index" 
+                      [class.odd]="i % 2 === 0"
+                      [class.even]="i % 2 !== 0">
+                    <td>{{ detalle.id.substring(0, 8) }}</td>
+                    <td>{{ detalle.nombre }}</td>
+                    <td>{{ detalle.fechaEntrada }}</td>
+                    <td>{{ detalle.fechaSalida }}</td>
+                    <td>{{ formatearMoneda(detalle.alquilerHabitacion) }}</td>
+                    <td>{{ formatearMoneda(detalle.extras) }}</td>
+                    <td>{{ formatearMoneda(detalle.comidas) }}</td>
+                    <td><strong>{{ formatearMoneda(detalle.granTotal) }}</strong></td>
+                    <td><strong class="text-success">{{ formatearMoneda(detalle.lucro) }}</strong></td>
                   </tr>
                 </tbody>
                 <tfoot>
                   <tr>
-                    <th colspan="7" style="text-align: right;">Total de Ganancias Simuladas:</th>
-                    <th>$2295.00</th>
-                    <th>$229.50</th>
+                    <th colspan="7" style="text-align: right;">Total de Ganancias:</th>
+                    <th>{{ formatearMoneda(totalGeneral) }}</th>
+                    <th><strong class="text-success">{{ formatearMoneda(totalLucro) }}</strong></th>
                   </tr>
                 </tfoot>
               </table>

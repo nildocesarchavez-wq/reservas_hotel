@@ -71,6 +71,71 @@ ul {
     font-weight: 500;
 }
 
+/* ===== LOADING, ERROR & EMPTY STATES ===== */
+.loading-container,
+.error-container,
+.empty-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #edf1ff;
+    border-top: 4px solid #0095ff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-container p,
+.error-container p,
+.empty-container p {
+    font-size: 1.1rem;
+    color: #8f9bb3;
+    margin-top: 1rem;
+}
+
+.error-container i {
+    font-size: 3rem;
+    color: #ff3d71;
+    margin-bottom: 1rem;
+}
+
+.empty-container i {
+    color: #8f9bb3;
+    margin-bottom: 1rem;
+}
+
+.btn-reload {
+    margin-top: 1.5rem;
+    padding: 0.75rem 1.5rem;
+    background: #0095ff;
+    color: white;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-reload:hover {
+    background: #0077cc;
+    transform: translateY(-2px);
+}
+
+.btn-reload i {
+    margin-right: 0.5rem;
+}
+
 /* ===== ROOM GRID ===== */
 .room-grid {
     display: grid;
@@ -106,6 +171,24 @@ ul {
 .panel-body h3 {
     font-size: 1.5rem;
     font-weight: 600;
+    margin: 0 0 1rem 0;
+}
+
+.panel-info {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.disponibles {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0 0 0.25rem 0;
+}
+
+.label-disponibles {
+    font-size: 0.9rem;
+    opacity: 0.9;
     margin: 0;
 }
 
@@ -134,6 +217,14 @@ ul {
     background: linear-gradient(135deg, #ff3d71 0%, #cc2f5a 100%);
 }
 
+.bg-color-purple {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+}
+
+.bg-color-orange {
+    background: linear-gradient(135deg, #ff9500 0%, #ff6b00 100%);
+}
+
 /* ===== FOOTER BACKGROUNDS ===== */
 .back-footer-blue {
     background: rgba(0, 119, 204, 0.8);
@@ -149,6 +240,14 @@ ul {
 
 .back-footer-red {
     background: rgba(204, 47, 90, 0.8);
+}
+
+.back-footer-purple {
+    background: rgba(124, 58, 237, 0.8);
+}
+
+.back-footer-orange {
+    background: rgba(255, 107, 0, 0.8);
 }
 
 /* ===== FONTAWESOME SIZE ===== */
@@ -191,6 +290,10 @@ ul {
 
     .panel-body h3 {
         font-size: 1.25rem;
+    }
+
+    .disponibles {
+        font-size: 1.5rem;
     }
 }
 

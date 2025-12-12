@@ -23,7 +23,6 @@ button {
     cursor: pointer;
     border: none;
     outline: none;
-    background: transparent;
     font-family: inherit;
 }
 
@@ -69,6 +68,76 @@ ul {
     font-size: 1rem;
     color: #8f9bb3;
     font-weight: 500;
+}
+
+/* ===== LOADING INDICATOR ===== */
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #edf1f7;
+    border-top: 4px solid #3366ff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-container p {
+    color: #8f9bb3;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+/* ===== ALERTS ===== */
+.alert {
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 500;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.alert i {
+    font-size: 1.25rem;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
 }
 
 /* ===== CONTENT GRID ===== */
@@ -158,6 +227,14 @@ ul {
     background-color: #ff3d71;
 }
 
+.badge-success {
+    background-color: #00d68f;
+}
+
+.badge-warning {
+    background-color: #ffc107;
+}
+
 /* ===== BUTTONS ===== */
 .btn {
     display: inline-flex;
@@ -173,6 +250,11 @@ ul {
     gap: 0.5rem;
 }
 
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 .btn-sm {
     padding: 0.5rem 1rem;
     font-size: 0.813rem;
@@ -183,7 +265,7 @@ ul {
     color: #ffffff;
 }
 
-.btn-info:hover {
+.btn-info:hover:not(:disabled) {
     background-color: #0077cc;
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(0, 149, 255, 0.3);
@@ -194,7 +276,7 @@ ul {
     color: #ffffff;
 }
 
-.btn-secondary:hover {
+.btn-secondary:hover:not(:disabled) {
     background-color: #6b7a99;
 }
 
@@ -203,10 +285,21 @@ ul {
     color: #ffffff;
 }
 
-.btn-success:hover {
+.btn-success:hover:not(:disabled) {
     background-color: #00b377;
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(0, 214, 143, 0.3);
+}
+
+.btn-danger {
+    background-color: #ff3d71;
+    color: #ffffff;
+}
+
+.btn-danger:hover:not(:disabled) {
+    background-color: #db2c66;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 61, 113, 0.3);
 }
 
 /* ===== TABLES ===== */
@@ -243,11 +336,16 @@ ul {
 }
 
 .data-table tbody tr {
-    transition: background-color 0.2s;
+    transition: all 0.2s;
 }
 
 .data-table tbody tr:hover {
     background-color: #f7f9fc;
+}
+
+.data-table tbody tr.selected-row {
+    background-color: #e3f2fd;
+    border-left: 3px solid #3366ff;
 }
 
 .data-table tbody tr:last-child td {
@@ -282,6 +380,31 @@ ul {
     text-align: right;
 }
 
+/* ===== NO DATA ===== */
+.no-data {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #8f9bb3;
+}
+
+.no-data i {
+    font-size: 48px;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.no-data p {
+    font-size: 1rem;
+    margin: 0;
+}
+
+.no-data-small {
+    text-align: center;
+    padding: 1rem;
+    color: #8f9bb3;
+    font-size: 0.875rem;
+}
+
 /* ===== FORM ===== */
 .form-group {
     margin-bottom: 1.25rem;
@@ -312,6 +435,38 @@ ul {
     border-color: #3366ff;
     background-color: #ffffff;
     box-shadow: 0 0 0 3px rgba(51, 102, 255, 0.1);
+}
+
+/* ===== STATS GRID ===== */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 1rem;
+    background-color: #f7f9fc;
+    border-radius: 8px;
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    color: #8f9bb3;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #222b45;
+}
+
+.text-warning {
+    color: #ffc107 !important;
 }
 
 /* ===== SMOOTH SCROLL ===== */
@@ -357,6 +512,10 @@ html {
     .btn-sm {
         padding: 0.4rem 0.8rem;
         font-size: 0.75rem;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
     }
 }
 

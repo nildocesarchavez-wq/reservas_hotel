@@ -10,90 +10,93 @@
     <div class="content-wrapper">
       <!-- PAGE HEADER -->
       <div class="page-header">
-        <h1 class="page-title">ADMINISTRADOR</h1>
-        <p class="page-subtitle">Gestión de cuentas</p>
+        <h1 class="page-title">ADMINISTRADORES</h1>
+        <p class="page-subtitle">Gestión de cuentas de administradores</p>
       </div>
 
-      <!-- TABLA DE USUARIOS -->
-      <div class="content-grid" style="grid-template-columns: 1fr;">
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">LISTA DE USUARIOS ADMINISTRADORES</h3>
-          </div>
-          <div class="card-body">
-            <div class="table-container">
-              <table class="data-table" id="dataTables-example">
-                <thead>
-                  <tr>
-                    <th>ID Usuario</th>
-                    <th>Nombre Usuario</th>
-                    <th>Password</th>
-                    <th>Actualizar</th>
-                    <th>Retirar</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <!-- Usuario 1 -->
-                  <tr class='gradeC'>
-                    <td>1</td>
-                    <td>admin</td>
-                    <td>admin123</td>
-                    <td>
-                      <button class='btn btn-primary btn-edit-user' data-id='1' data-username='admin' data-password='admin123'>
-                        <i class='fa fa-edit'></i> Actualizar
-                      </button>
-                    </td>
-                    <td>
-                      <button class='btn btn-danger btn-delete-user' data-id='1'>
-                        <i class='fa fa-trash'></i> Eliminar
-                      </button>
-                    </td>
-                  </tr>
+      <!-- LOADING INDICATOR -->
+      <div *ngIf="isLoading" class="loading-container">
+        <div class="spinner"></div>
+        <p>Cargando información...</p>
+      </div>
 
-                  <!-- Usuario 2 -->
-                  <tr class='gradeU'>
-                    <td>2</td>
-                    <td>supervisor</td>
-                    <td>super2024</td>
-                    <td>
-                      <button class='btn btn-primary btn-edit-user' data-id='2' data-username='supervisor' data-password='super2024'>
-                        <i class='fa fa-edit'></i> Actualizar
-                      </button>
-                    </td>
-                    <td>
-                      <button class='btn btn-danger btn-delete-user' data-id='2'>
-                        <i class='fa fa-trash'></i> Eliminar
-                      </button>
-                    </td>
-                  </tr>
+      <!-- MENSAJES -->
+      <div *ngIf="mensajeExito" class="alert alert-success">
+        <i class="fa fa-check-circle"></i>
+        {{ mensajeExito }}
+      </div>
 
-                  <!-- Usuario 3 -->
-                  <tr class='gradeC'>
-                    <td>3</td>
-                    <td>recepcion</td>
-                    <td>recep123</td>
-                    <td>
-                      <button class='btn btn-primary btn-edit-user' data-id='3' data-username='recepcion' data-password='recep123'>
-                        <i class='fa fa-edit'></i> Actualizar
-                      </button>
-                    </td>
-                    <td>
-                      <button class='btn btn-danger btn-delete-user' data-id='3'>
-                        <i class='fa fa-trash'></i> Eliminar
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+      <div *ngIf="mensajeError" class="alert alert-error">
+        <i class="fa fa-exclamation-circle"></i>
+        {{ mensajeError }}
+      </div>
+
+      <!-- CONTENIDO -->
+      <div *ngIf="!isLoading">
+        <!-- TABLA DE USUARIOS -->
+        <div class="content-grid" style="grid-template-columns: 1fr;">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">LISTA DE USUARIOS ADMINISTRADORES</h3>
+              <span class="badge badge-primary">{{ administradores.length }}</span>
+            </div>
+            <div class="card-body">
+              <div class="table-container">
+                <table class="data-table" id="dataTables-example">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Nombre Usuario</th>
+                      <th>Email</th>
+                      <th>Fecha Creación</th>
+                      <th>Última Actualización</th>
+                      <th>Actualizar</th>
+                      <th>Eliminar</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let admin of administradores; let i = index" 
+                        [class.gradeC]="i % 2 === 0"
+                        [class.gradeU]="i % 2 !== 0">
+                      <td>{{ admin.id.substring(0, 8) }}...</td>
+                      <td><strong>{{ admin.displayName }}</strong></td>
+                      <td>{{ admin.email }}</td>
+                      <td>{{ formatearFecha(admin.createdAt) }}</td>
+                      <td>{{ formatearFecha(admin.updatedAt) }}</td>
+                      <td>
+                        <button 
+                          class='btn btn-primary btn-sm'
+                          (click)="abrirModalEditar(admin)">
+                          <i class='fa fa-edit'></i> Actualizar
+                        </button>
+                      </td>
+                      <td>
+                        <button 
+                          class='btn btn-danger btn-sm'
+                          (click)="eliminarUsuario(admin)">
+                          <i class='fa fa-trash'></i> Eliminar
+                        </button>
+                      </td>
+                    </tr>
+
+                    <tr *ngIf="administradores.length === 0">
+                      <td colspan="7" class="no-data">
+                        <i class="fa fa-users"></i>
+                        <p>No hay administradores registrados</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- BOTÓN AGREGAR NUEVO ADMINISTRADOR -->
-        <div class="panel-body">
-          <button class="btn btn-primary" id="openAddUserModal">
-            <i class="fa fa-plus"></i> Agregar nuevo administrador
-          </button>
+          <!-- BOTÓN AGREGAR NUEVO ADMINISTRADOR -->
+          <div class="panel-body">
+            <button class="btn btn-primary" (click)="abrirModalAgregar()">
+              <i class="fa fa-plus"></i> Agregar nuevo administrador
+            </button>
+          </div>
         </div>
       </div>
 
@@ -101,31 +104,63 @@
   </main>
 
   <!-- MODAL PARA EDITAR USUARIO -->
-  <div class="modal" id="myModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
+  <div class="modal" [class.show]="showEditModal" (click)="cerrarModalEditar()">
+    <div class="modal-dialog" (click)="$event.stopPropagation()">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title">Cambiar el nombre de usuario y la contraseña</h4>
-          <button type="button" class="close" id="closeEditModal">&times;</button>
+          <h4 class="modal-title">Actualizar Administrador</h4>
+          <button type="button" class="close" (click)="cerrarModalEditar()">&times;</button>
         </div>
-        <form id="editUserForm">
+        <form (ngSubmit)="actualizarUsuario()">
           <div class="modal-body">
             <div class="form-group">
-              <label>Cambie el nombre de usuario</label>
-              <input type="text" name="usname" id="editUsername" class="form-control"
-                placeholder="Enter User name" required>
+              <label for="editUsername">Nombre de Usuario</label>
+              <input 
+                type="text" 
+                id="editUsername" 
+                class="form-control"
+                [(ngModel)]="editForm.displayName"
+                name="displayName"
+                placeholder="Ingrese el nombre de usuario" 
+                required>
             </div>
-          </div>
-          <div class="modal-body">
+
             <div class="form-group">
-              <label>Cambie Password</label>
-              <input type="password" name="pasd" id="editPassword" class="form-control"
-                placeholder="Enter Password" required>
+              <label for="editEmail">Correo Electrónico</label>
+              <input 
+                type="email" 
+                id="editEmail" 
+                class="form-control"
+                [(ngModel)]="editForm.email"
+                name="email"
+                placeholder="Ingrese el correo electrónico" 
+                required>
+            </div>
+
+            <div class="form-group">
+              <label for="editPassword">
+                Nueva Contraseña 
+                <small class="text-muted">(opcional - dejar vacío para no cambiar)</small>
+              </label>
+              <input 
+                type="password" 
+                id="editPassword" 
+                class="form-control"
+                [(ngModel)]="editForm.newPassword"
+                name="newPassword"
+                placeholder="Ingrese nueva contraseña">
+              <small class="form-text">Mínimo 6 caracteres</small>
             </div>
           </div>
+          
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" id="cancelEditModal">Cerrar</button>
-            <button type="submit" class="btn btn-primary">Actualizar</button>
+            <button type="button" class="btn btn-secondary" (click)="cerrarModalEditar()">
+              Cancelar
+            </button>
+            <button type="submit" class="btn btn-primary" [disabled]="isLoading">
+              <i class="fa fa-save"></i>
+              {{ isLoading ? 'Actualizando...' : 'Actualizar' }}
+            </button>
           </div>
         </form>
       </div>
@@ -133,31 +168,66 @@
   </div>
 
   <!-- MODAL PARA AGREGAR NUEVO USUARIO -->
-  <div class="modal" id="myModal1" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
+  <div class="modal" [class.show]="showAddModal" (click)="cerrarModalAgregar()">
+    <div class="modal-dialog" (click)="$event.stopPropagation()">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title">Agregue el nombre de usuario y la contraseña</h4>
-          <button type="button" class="close" id="closeAddModal">&times;</button>
+          <h4 class="modal-title">Agregar Nuevo Administrador</h4>
+          <button type="button" class="close" (click)="cerrarModalAgregar()">&times;</button>
         </div>
-        <form id="addUserForm">
+        <form (ngSubmit)="agregarNuevoAdmin()">
           <div class="modal-body">
             <div class="form-group">
-              <label>Agregar nuevo nombre de usuario</label>
-              <input type="text" name="newus" id="newUsername" class="form-control"
-                placeholder="Enter User name" required>
+              <label for="newUsername">Nombre de Usuario *</label>
+              <input 
+                type="text" 
+                id="newUsername" 
+                class="form-control"
+                [(ngModel)]="addForm.displayName"
+                name="displayName"
+                placeholder="Ingrese el nombre completo" 
+                required>
             </div>
-          </div>
-          <div class="modal-body">
+
             <div class="form-group">
-              <label>Nueva contraseña</label>
-              <input type="password" name="newps" id="newPassword" class="form-control"
-                placeholder="Enter Password" required>
+              <label for="newEmail">Correo Electrónico *</label>
+              <input 
+                type="email" 
+                id="newEmail" 
+                class="form-control"
+                [(ngModel)]="addForm.email"
+                name="email"
+                placeholder="ejemplo@hotel.com" 
+                required>
+            </div>
+
+            <div class="form-group">
+              <label for="newPassword">Contraseña *</label>
+              <input 
+                type="password" 
+                id="newPassword" 
+                class="form-control"
+                [(ngModel)]="addForm.password"
+                name="password"
+                placeholder="Mínimo 6 caracteres" 
+                required>
+              <small class="form-text">La contraseña debe tener al menos 6 caracteres</small>
+            </div>
+
+            <div class="info-box">
+              <i class="fa fa-info-circle"></i>
+              <p>Se creará una cuenta de administrador con acceso completo al sistema.</p>
             </div>
           </div>
+          
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" id="cancelAddModal">Cerrar</button>
-            <button type="submit" class="btn btn-primary">Agregar</button>
+            <button type="button" class="btn btn-secondary" (click)="cerrarModalAgregar()">
+              Cancelar
+            </button>
+            <button type="submit" class="btn btn-primary" [disabled]="isLoading">
+              <i class="fa fa-plus"></i>
+              {{ isLoading ? 'Agregando...' : 'Agregar Administrador' }}
+            </button>
           </div>
         </form>
       </div>
