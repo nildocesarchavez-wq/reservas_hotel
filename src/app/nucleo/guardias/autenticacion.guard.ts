@@ -12,10 +12,16 @@ export const autenticacionGuard: CanActivateFn = (route, state) => {
     map(user => {
       if (user) {
         // Usuario autenticado, permitir acceso
+        console.log('✅ Guardia de Autenticación: Usuario autenticado');
         return true;
       } else {
         // No autenticado, redirigir al login
-        console.log('Acceso denegado: No hay sesión activa');
+        console.log('❌ Guardia de Autenticación: Acceso denegado, redirigiendo al login');
+        console.log('📍 Ruta solicitada:', state.url);
+        
+        // Guardar la URL solicitada para redirigir después del login
+        sessionStorage.setItem('redirectUrl', state.url);
+        
         router.navigate(['/auth/login']);
         return false;
       }

@@ -10,21 +10,23 @@ export const administradorGuard: CanActivateFn = (route, state) => {
   return authService.userData$.pipe(
     take(1),
     map(userData => {
-      if (userData && userData.rol === 'administrador') {
-        // Usuario es administrador, permitir acceso
+      // Verificar si hay datos de usuario
+      if (!userData) {
+        console.log('❌ Guardia de Administrador: Usuario no autenticado');
+        router.navigate(['/auth/login']);
+        return false;
+      }
+
+      // Verificar si el usuario es administrador
+      if (userData.rol === 'administrador') {
+        console.log('✅ Guardia de Administrador: Acceso permitido');
         return true;
       } else {
-        // No es administrador, redirigir
-        console.log('Acceso denegado: Requiere permisos de administrador');
+        console.log('❌ Guardia de Administrador: Usuario no tiene permisos');
+        console.log('👤 Rol del usuario:', userData.rol);
         
-        if (userData) {
-          // Si está autenticado pero no es admin, redirigir al dashboard de cliente
-          router.navigate(['/cliente/dashboard']);
-        } else {
-          // Si no está autenticado, redirigir al login
-          router.navigate(['/auth/login']);
-        }
-        
+        // Usuario autenticado pero no es admin, redirigir a su dashboard
+        router.navigate(['/cliente/dashboard']);
         return false;
       }
     })

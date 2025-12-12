@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { invitadoGuard } from './nucleo/guardias/invitado-guard'; 
 
 export const routes: Routes = [
   // Ruta por defecto - Redirige a inicio
@@ -8,7 +9,7 @@ export const routes: Routes = [
     pathMatch: 'full'
   },
 
-  // Rutas públicas
+  // Rutas públicas (sin guardias)
   {
     path: 'inicio',
     loadComponent: () => import('./paginas/publico/inicio/inicio').then(m => m.InicioComponent)
@@ -26,23 +27,25 @@ export const routes: Routes = [
     loadComponent: () => import('./paginas/publico/contacto/contacto').then(m => m.ContactoComponent)
   },
 
-  // Rutas de autenticación
+  // Rutas de autenticación - Solo para usuarios NO autenticados
   {
     path: 'auth/login',
-    loadComponent: () => import('./paginas/autenticacion/inicio-sesion/inicio-sesion').then(m => m.InicioSesionComponent)
+    loadComponent: () => import('./paginas/autenticacion/inicio-sesion/inicio-sesion').then(m => m.InicioSesionComponent),
+    canActivate: [invitadoGuard]
   },
   {
     path: 'auth/registro',
-    loadComponent: () => import('./paginas/autenticacion/registro/registro').then(m => m.RegistroComponent)
+    loadComponent: () => import('./paginas/autenticacion/registro/registro').then(m => m.RegistroComponent),
+    canActivate: [invitadoGuard]
   },
 
-  // Rutas cliente - Carga lazy de rutas hijas
+  // Rutas cliente - Solo para usuarios autenticados con rol 'cliente'
   {
     path: 'cliente',
     loadChildren: () => import('./paginas/cliente/cliente.routing').then(m => m.CLIENTE_ROUTES)
   },
 
-  // Rutas administrador - Carga lazy de rutas hijas
+  // Rutas administrador - Solo para usuarios autenticados con rol 'administrador'
   {
     path: 'admin',
     loadChildren: () => import('./paginas/administrador/admin.routes').then(m => m.ADMIN_ROUTES)

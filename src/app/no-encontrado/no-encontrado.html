@@ -1,1 +1,60 @@
-<p>no-encontrado works!</p>
+<div class="error-page">
+  <div class="clouds">
+    <div class="cloud x1"></div>
+    <div class="cloud x2"></div>
+    <div class="cloud x3"></div>
+    <div class="cloud x4"></div>
+    <div class="cloud x5"></div>
+  </div>
+
+  <div class="error-container">
+    <div class="error-content">
+      <!-- Icono de error animado -->
+      <div class="error-icon">
+        <i class="fa fa-compass"></i>
+      </div>
+
+      <!-- Código de error -->
+      <h1 class="error-code">404</h1>
+      
+      <!-- Mensaje principal -->
+      <h2 class="error-title">¡Página No Encontrada!</h2>
+      
+      <!-- Descripción -->
+      <p class="error-description">
+        Lo sentimos, la página que buscas no existe o ha sido movida.
+      </p>
+
+      <!-- Botones de acción -->
+      <div class="action-buttons">
+        <a routerLink="/inicio" class="btn btn-primary">
+          <i class="fa fa-home"></i>
+          Volver al Inicio
+        </a>
+        <button (click)="goBack()" class="btn btn-secondary">
+          <i class="fa fa-arrow-left"></i>
+          Página Anterior
+        </button>
+      </div>
+
+      <!-- Sugerencias -->
+      <div class="suggestions">
+        <p class="suggestions-title">Páginas Útiles:</p>
+        <div class="suggestion-links">
+          <a routerLink="/habitaciones" class="suggestion-link">
+            <i class="fa fa-bed"></i>
+            Habitaciones
+          </a>
+          <a routerLink="/nosotros" class="suggestion-link">
+            <i class="fa fa-info-circle"></i>
+            Nosotros
+          </a>
+          <a routerLink="/contacto" class="suggestion-link">
+            <i class="fa fa-envelope"></i>
+            Contacto
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
