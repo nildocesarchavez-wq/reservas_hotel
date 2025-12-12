@@ -6,30 +6,63 @@
       <span></span>
     </button>
     <div class="logo">
-      <a routerLink="/admin/estado">SUN RISE</a>
+      <a routerLink="/admin/estado">NEW DAWN - ADMIN</a>
     </div>
   </div>
 
   <div class="header-right">
-    <div class="user-menu">
+    <!-- Admin Badge -->
+    <div class="admin-badge" *ngIf="!isLoading">
+      <i class="fa fa-shield"></i>
+      <span>Administrador</span>
+    </div>
+
+    <!-- User Menu -->
+    <div class="user-menu" *ngIf="!isLoading">
       <button class="user-button" (click)="toggleUserMenu()">
-        <span class="user-avatar">
-          <i class="fa fa-user"></i>
+        <span class="user-avatar" *ngIf="!hasProfilePhoto()">
+          {{ getUserInitials() }}
         </span>
-        <span class="user-name">Admin</span>
+        <img 
+          *ngIf="hasProfilePhoto()" 
+          [src]="getProfilePhotoUrl()" 
+          alt="Avatar" 
+          class="user-avatar-img"
+        />
+        <span class="user-name">{{ getUserName() }}</span>
         <i class="fa fa-caret-down"></i>
       </button>
+      
       <div class="dropdown-menu" [class.show]="showUserMenu">
-        <a routerLink="/admin/perfil" class="dropdown-item">
-          <i class="fa fa-user"></i>
-          <span>Perfil del usuario</span>
-        </a>
+        <div class="dropdown-header">
+          <div class="dropdown-user-info">
+            <span class="dropdown-name">{{ getFullName() }}</span>
+            <span class="dropdown-email">{{ getUserEmail() }}</span>
+            <span class="dropdown-role">
+              <i class="fa fa-shield"></i> Administrador
+            </span>
+          </div>
+        </div>
+        
         <div class="dropdown-divider"></div>
-        <a routerLink="/auth/login" class="dropdown-item">
+        
+        <a (click)="goToProfile()" class="dropdown-item">
+          <i class="fa fa-user"></i>
+          <span>Mi Perfil</span>
+        </a>
+        
+        <div class="dropdown-divider"></div>
+        
+        <a (click)="logout()" class="dropdown-item logout-item">
           <i class="fa fa-sign-out"></i>
           <span>Cerrar sesión</span>
         </a>
       </div>
+    </div>
+
+    <!-- Loading indicator -->
+    <div class="loading-avatar" *ngIf="isLoading">
+      <div class="spinner"></div>
     </div>
   </div>
 </header>

@@ -45,11 +45,11 @@
 }
 
 .logo a {
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 700;
     color: #667eea;
     text-decoration: none;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
     transition: color 0.3s ease;
 }
 
@@ -103,6 +103,7 @@
     border-radius: 50%;
     object-fit: cover;
     flex-shrink: 0;
+    border: 2px solid #667eea;
 }
 
 .user-name {
@@ -126,7 +127,7 @@
     position: absolute;
     top: calc(100% + 8px);
     right: 0;
-    min-width: 240px;
+    min-width: 260px;
     background: white;
     border-radius: 12px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
@@ -145,7 +146,10 @@
 }
 
 .dropdown-header {
-    padding: 12px 20px;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px 12px 0 0;
+    margin: -8px 0 0 0;
 }
 
 .dropdown-user-info {
@@ -155,14 +159,14 @@
 }
 
 .dropdown-name {
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 600;
-    color: #222b45;
+    color: white;
 }
 
 .dropdown-email {
     font-size: 12px;
-    color: #8f9bb3;
+    color: rgba(255, 255, 255, 0.85);
     word-break: break-word;
 }
 
@@ -248,7 +252,7 @@
     }
 
     .logo a {
-        font-size: 20px;
+        font-size: 18px;
     }
 
     .user-name {
@@ -260,13 +264,13 @@
     }
 
     .dropdown-menu {
-        min-width: 200px;
+        min-width: 220px;
     }
 }
 
 @media (max-width: 480px) {
     .logo a {
-        font-size: 18px;
+        font-size: 16px;
     }
 
     .user-avatar,
@@ -277,7 +281,7 @@
     }
 
     .dropdown-menu {
-        min-width: 180px;
+        min-width: 200px;
         right: -10px;
     }
 }

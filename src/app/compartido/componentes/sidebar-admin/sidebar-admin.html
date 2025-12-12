@@ -1,31 +1,85 @@
-<!-- SIDEBAR -->
+<!-- SIDEBAR ADMIN -->
 <aside class="sidebar" [class.show]="isOpen" id="sidebar">
   <nav class="sidebar-nav">
+    <!-- User Info Section -->
+    <div class="sidebar-user" *ngIf="currentUser && !isLoading">
+      <div class="user-avatar-wrapper">
+        <div class="user-avatar" *ngIf="!hasProfilePhoto()">
+          {{ getUserInitials() }}
+        </div>
+        <img 
+          *ngIf="hasProfilePhoto()" 
+          [src]="getProfilePhotoUrl()" 
+          alt="Avatar" 
+          class="user-avatar-img"
+        />
+        <span class="user-status"></span>
+      </div>
+      <div class="user-info">
+        <h4 class="user-name">{{ getUserName() }}</h4>
+        <span class="user-role">
+          <i class="fa fa-shield"></i> Administrador
+        </span>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div class="sidebar-loading" *ngIf="isLoading">
+      <div class="spinner"></div>
+      <span>Cargando...</span>
+    </div>
+
+    <div class="nav-divider"></div>
+
+    <!-- Navigation Menu -->
     <ul class="nav-list">
-      <li class="nav-item" routerLinkActive="active">
+      <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: false}">
         <a routerLink="/admin/estado" class="nav-link">
           <i class="fa fa-dashboard"></i>
           <span>Estado</span>
         </a>
       </li>
-      <li class="nav-item" routerLinkActive="active">
+      
+      <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: false}">
         <a routerLink="/admin/reserva-habitacion" class="nav-link">
           <i class="fa fa-bar-chart-o"></i>
           <span>Reserva de habitación</span>
         </a>
       </li>
-      <li class="nav-item" routerLinkActive="active">
+      
+      <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: false}">
         <a routerLink="/admin/lucro" class="nav-link">
           <i class="fa fa-qrcode"></i>
           <span>Lucro</span>
         </a>
       </li>
-      <li class="nav-item" routerLinkActive="active">
+      
+      <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: false}">
         <a routerLink="/admin/estado-habitacion" class="nav-link">
-          <i class="fa fa-dashboard"></i>
-          <span>Estado de la habitación</span>
+          <i class="fa fa-bed"></i>
+          <span>Estado de habitación</span>
+        </a>
+      </li>
+
+      <div class="nav-divider"></div>
+
+      <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: false}">
+        <a routerLink="/admin/perfil" class="nav-link">
+          <i class="fa fa-user"></i>
+          <span>Mi Perfil</span>
         </a>
       </li>
     </ul>
+
+    <!-- Logout Button -->
+    <div class="sidebar-footer">
+      <button class="logout-btn" (click)="logout()">
+        <i class="fa fa-sign-out"></i>
+        <span>Cerrar sesión</span>
+      </button>
+    </div>
   </nav>
 </aside>
+
+<!-- Overlay for mobile -->
+<div class="sidebar-overlay" [class.show]="isOpen" (click)="close()"></div>
