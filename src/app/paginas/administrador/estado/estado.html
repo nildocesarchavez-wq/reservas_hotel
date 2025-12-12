@@ -14,13 +14,65 @@
         <p class="page-subtitle">Reserva de habitación</p>
       </div>
 
+      <!-- FILTROS -->
+      <div class="filters-section">
+        <div class="filters-card">
+          <div class="filters-header">
+            <i class="fa fa-filter"></i>
+            <h3>Filtros de Búsqueda</h3>
+          </div>
+          <div class="filters-body">
+            <div class="filters-grid">
+              <!-- Filtro por Estado -->
+              <div class="filter-group">
+                <label>Estado de Reserva</label>
+                <select class="filter-control" [(ngModel)]="filters.status" (change)="applyFilters()">
+                  <option value="">Todos los estados</option>
+                  <option value="pending">Pendiente</option>
+                  <option value="confirmed">Confirmada</option>
+                  <option value="cancelled">Cancelada</option>
+                </select>
+              </div>
+
+              <!-- Filtro por Fecha Desde -->
+              <div class="filter-group">
+                <label>Fecha Desde</label>
+                <input 
+                  type="date" 
+                  class="filter-control" 
+                  [(ngModel)]="filters.dateFrom"
+                  (change)="applyFilters()">
+              </div>
+
+              <!-- Filtro por Fecha Hasta -->
+              <div class="filter-group">
+                <label>Fecha Hasta</label>
+                <input 
+                  type="date" 
+                  class="filter-control" 
+                  [(ngModel)]="filters.dateTo"
+                  (change)="applyFilters()">
+              </div>
+
+              <!-- Botón Limpiar Filtros -->
+              <div class="filter-group filter-actions">
+                <button class="btn btn-secondary" (click)="clearFilters()">
+                  <i class="fa fa-times"></i>
+                  Limpiar Filtros
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- CARDS GRID -->
       <div class="cards-grid">
         <!-- CARD: NUEVA RESERVA -->
         <div class="card">
           <div class="card-header">
             <h3 class="card-title">Nueva reserva de habitaciones</h3>
-            <span class="badge badge-danger">2</span>
+            <span class="badge badge-danger">{{ filteredNewReservations.length }}</span>
           </div>
           <div class="card-body">
             <div class="table-container">
@@ -41,31 +93,36 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>Juan Pérez</td>
-                    <td>juan@email.com</td>
-                    <td>Perú</td>
-                    <td>Suite Deluxe</td>
-                    <td>King Size</td>
-                    <td>Desayuno incluido</td>
-                    <td>2025-11-20</td>
-                    <td>2025-11-25</td>
-                    <td>Not Conform</td>
-                    <td><a routerLink="/admin/reserva-habitacion" class="btn btn-primary">Action</a></td>
+                  <tr *ngFor="let reservation of filteredNewReservations; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ reservation.name }}</td>
+                    <td>{{ reservation.email }}</td>
+                    <td>{{ reservation.country }}</td>
+                    <td>{{ reservation.room }}</td>
+                    <td>{{ reservation.bed }}</td>
+                    <td>{{ reservation.meal }}</td>
+                    <td>{{ reservation.checkIn }}</td>
+                    <td>{{ reservation.checkOut }}</td>
+                    <td>
+                      <span class="badge" [ngClass]="{
+                        'badge-warning': reservation.status === 'pending',
+                        'badge-success': reservation.status === 'confirmed',
+                        'badge-danger': reservation.status === 'cancelled'
+                      }">
+                        {{ getStatusText(reservation.status) }}
+                      </span>
+                    </td>
+                    <td>
+                      <a routerLink="/admin/reserva-habitacion" class="btn btn-primary btn-sm">
+                        <i class="fa fa-eye"></i> Ver
+                      </a>
+                    </td>
                   </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>María García</td>
-                    <td>maria@email.com</td>
-                    <td>España</td>
-                    <td>Habitación Doble</td>
-                    <td>Queen Size</td>
-                    <td>Media pensión</td>
-                    <td>2025-11-22</td>
-                    <td>2025-11-28</td>
-                    <td>Not Conform</td>
-                    <td><a routerLink="/admin/reserva-habitacion" class="btn btn-primary">Action</a></td>
+                  <tr *ngIf="filteredNewReservations.length === 0">
+                    <td colspan="11" class="no-data">
+                      <i class="fa fa-inbox"></i>
+                      <p>No hay reservas que coincidan con los filtros</p>
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -77,27 +134,25 @@
         <div class="card">
           <div class="card-header">
             <h3 class="card-title">Cuartos reservados</h3>
-            <span class="badge badge-success">2</span>
+            <span class="badge badge-success">{{ confirmedRooms.length }}</span>
           </div>
           <div class="card-body">
             <div class="rooms-grid">
-              <div class="room-card room-blue">
+              <div 
+                *ngFor="let room of confirmedRooms" 
+                class="room-card" 
+                [ngClass]="room.color">
                 <div class="room-card-body">
                   <i class="fa fa-users"></i>
-                  <h3>Carlos López</h3>
+                  <h3>{{ room.guest }}</h3>
                 </div>
                 <div class="room-card-footer">
-                  Suite Presidencial
+                  {{ room.roomType }}
                 </div>
               </div>
-              <div class="room-card room-green">
-                <div class="room-card-body">
-                  <i class="fa fa-users"></i>
-                  <h3>Ana Martínez</h3>
-                </div>
-                <div class="room-card-footer">
-                  Habitación Simple
-                </div>
+              <div *ngIf="confirmedRooms.length === 0" class="no-data-rooms">
+                <i class="fa fa-bed"></i>
+                <p>No hay habitaciones reservadas</p>
               </div>
             </div>
           </div>
@@ -107,7 +162,7 @@
         <div class="card">
           <div class="card-header">
             <h3 class="card-title">Seguidores</h3>
-            <span class="badge badge-info">2</span>
+            <span class="badge badge-info">{{ followers.length }}</span>
           </div>
           <div class="card-body">
             <div class="table-container">
@@ -122,25 +177,22 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>Pedro Sánchez</td>
-                    <td>pedro@email.com</td>
-                    <td>2025-11-15</td>
-                    <td>Pending</td>
-                  </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>Laura Torres</td>
-                    <td>laura@email.com</td>
-                    <td>2025-11-16</td>
-                    <td>Approved</td>
+                  <tr *ngFor="let follower of followers; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ follower.name }}</td>
+                    <td>{{ follower.email }}</td>
+                    <td>{{ follower.date }}</td>
+                    <td>
+                      <span class="badge" [ngClass]="{
+                        'badge-warning': follower.status === 'Pending',
+                        'badge-success': follower.status === 'Approved'
+                      }">
+                        {{ follower.status }}
+                      </span>
+                    </td>
                   </tr>
                 </tbody>
               </table>
-            </div>
-            <div class="card-footer">
-              <a routerLink="/admin/mensajes-masivos" class="btn btn-primary">Más acción</a>
             </div>
           </div>
         </div>

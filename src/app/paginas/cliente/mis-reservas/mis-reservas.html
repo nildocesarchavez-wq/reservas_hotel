@@ -16,9 +16,61 @@
 
       <!-- NUEVA RESERVA BUTTON -->
       <div class="action-bar">
-        <button class="btn btn-primary" (click)="toggleNewReservation()">
+        <button class="btn btn-primary" (click)="openNewReservation()">
           <i class="fa fa-plus"></i> Nueva Reserva
         </button>
+      </div>
+
+      <!-- FILTROS -->
+      <div class="filters-section">
+        <div class="filters-card">
+          <div class="filters-header">
+            <i class="fa fa-filter"></i>
+            <h3>Filtros de Búsqueda</h3>
+          </div>
+          <div class="filters-body">
+            <div class="filters-grid">
+              <!-- Filtro por Estado -->
+              <div class="filter-group">
+                <label>Estado</label>
+                <select class="filter-control" [(ngModel)]="filters.status" (change)="applyFilters()">
+                  <option value="">Todos</option>
+                  <option value="active">Activa</option>
+                  <option value="completed">Completada</option>
+                  <option value="cancelled">Cancelada</option>
+                </select>
+              </div>
+
+              <!-- Filtro por Fecha Desde -->
+              <div class="filter-group">
+                <label>Fecha Desde</label>
+                <input 
+                  type="date" 
+                  class="filter-control" 
+                  [(ngModel)]="filters.dateFrom"
+                  (change)="applyFilters()">
+              </div>
+
+              <!-- Filtro por Fecha Hasta -->
+              <div class="filter-group">
+                <label>Fecha Hasta</label>
+                <input 
+                  type="date" 
+                  class="filter-control" 
+                  [(ngModel)]="filters.dateTo"
+                  (change)="applyFilters()">
+              </div>
+
+              <!-- Botón Limpiar -->
+              <div class="filter-group filter-actions">
+                <button class="btn btn-secondary" (click)="clearFilters()">
+                  <i class="fa fa-times"></i>
+                  Limpiar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- CARDS GRID -->
@@ -27,7 +79,7 @@
         <div class="card">
           <div class="card-header">
             <h3 class="card-title">Reservas Activas</h3>
-            <span class="badge badge-success">1</span>
+            <span class="badge badge-success">{{ filteredActiveReservations.length }}</span>
           </div>
           <div class="card-body">
             <div class="table-container">
@@ -46,18 +98,32 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>Suite Deluxe</td>
-                    <td>King Size</td>
-                    <td>Desayuno incluido</td>
-                    <td>2025-12-20</td>
-                    <td>2025-12-25</td>
-                    <td>$320/noche</td>
-                    <td><span class="badge badge-success">Confirmada</span></td>
+                  <tr *ngFor="let reservation of filteredActiveReservations; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ reservation.room }}</td>
+                    <td>{{ reservation.bedType }}</td>
+                    <td>{{ reservation.meal }}</td>
+                    <td>{{ reservation.checkIn }}</td>
+                    <td>{{ reservation.checkOut }}</td>
+                    <td>{{ reservation.price }}</td>
+                    <td>
+                      <span class="badge" [ngClass]="{
+                        'badge-success': reservation.status === 'active',
+                        'badge-warning': reservation.status === 'pending',
+                        'badge-danger': reservation.status === 'cancelled'
+                      }">
+                        {{ getStatusText(reservation.status) }}
+                      </span>
+                    </td>
                     <td>
                       <button class="btn btn-sm btn-primary">Ver</button>
-                      <button class="btn btn-sm btn-danger">Cancelar</button>
+                      <button class="btn btn-sm btn-danger" (click)="cancelReservation(reservation.id)">Cancelar</button>
+                    </td>
+                  </tr>
+                  <tr *ngIf="filteredActiveReservations.length === 0">
+                    <td colspan="9" class="no-data">
+                      <i class="fa fa-calendar-times-o"></i>
+                      <p>No hay reservas activas que coincidan con los filtros</p>
                     </td>
                   </tr>
                 </tbody>
@@ -70,7 +136,7 @@
         <div class="card">
           <div class="card-header">
             <h3 class="card-title">Historial de Reservas</h3>
-            <span class="badge badge-info">2</span>
+            <span class="badge badge-info">{{ filteredHistoryReservations.length }}</span>
           </div>
           <div class="card-body">
             <div class="table-container">
@@ -86,84 +152,40 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>Habitación Doble</td>
-                    <td>2025-11-01</td>
-                    <td>2025-11-05</td>
-                    <td><span class="badge badge-secondary">Completada</span></td>
-                    <td><button class="btn btn-sm btn-primary">Ver Detalles</button></td>
+                  <tr *ngFor="let reservation of filteredHistoryReservations; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ reservation.room }}</td>
+                    <td>{{ reservation.checkIn }}</td>
+                    <td>{{ reservation.checkOut }}</td>
+                    <td>
+                      <span class="badge badge-secondary">
+                        {{ getStatusText(reservation.status) }}
+                      </span>
+                    </td>
+                    <td>
+                      <button class="btn btn-sm btn-primary">Ver Detalles</button>
+                    </td>
                   </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>Habitación Simple</td>
-                    <td>2025-10-15</td>
-                    <td>2025-10-18</td>
-                    <td><span class="badge badge-secondary">Completada</span></td>
-                    <td><button class="btn btn-sm btn-primary">Ver Detalles</button></td>
+                  <tr *ngIf="filteredHistoryReservations.length === 0">
+                    <td colspan="6" class="no-data">
+                      <i class="fa fa-history"></i>
+                      <p>No hay reservas en el historial que coincidan con los filtros</p>
+                    </td>
                   </tr>
                 </tbody>
               </table>
             </div>
           </div>
         </div>
-
-        <!-- CARD: FORMULARIO NUEVA RESERVA -->
-        <div class="card" *ngIf="showNewReservation">
-          <div class="card-header">
-            <h3 class="card-title">Nueva Reserva</h3>
-          </div>
-          <div class="card-body">
-            <form (submit)="onSubmitReservation($event)">
-              <div class="form-row">
-                <div class="form-group">
-                  <label>Tipo de Habitación</label>
-                  <select class="form-control" [(ngModel)]="newReservation.roomType" name="roomType" required>
-                    <option value="">Seleccionar...</option>
-                    <option value="suite">Suite Deluxe - $320/noche</option>
-                    <option value="deluxe">Habitación de Lujo - $220/noche</option>
-                    <option value="guest">Casa de Huéspedes - $180/noche</option>
-                    <option value="single">Habitación Individual - $150/noche</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label>Tipo de Cama</label>
-                  <select class="form-control" [(ngModel)]="newReservation.bedType" name="bedType" required>
-                    <option value="">Seleccionar...</option>
-                    <option value="king">King Size</option>
-                    <option value="queen">Queen Size</option>
-                    <option value="single">Individual</option>
-                  </select>
-                </div>
-              </div>
-              <div class="form-row">
-                <div class="form-group">
-                  <label>Fecha de Check-in</label>
-                  <input type="date" class="form-control" [(ngModel)]="newReservation.checkIn" name="checkIn" required>
-                </div>
-                <div class="form-group">
-                  <label>Fecha de Check-out</label>
-                  <input type="date" class="form-control" [(ngModel)]="newReservation.checkOut" name="checkOut" required>
-                </div>
-              </div>
-              <div class="form-group">
-                <label>Plan de Comida</label>
-                <select class="form-control" [(ngModel)]="newReservation.mealPlan" name="mealPlan" required>
-                  <option value="">Seleccionar...</option>
-                  <option value="breakfast">Solo Desayuno</option>
-                  <option value="half">Media Pensión</option>
-                  <option value="full">Pensión Completa</option>
-                </select>
-              </div>
-              <div class="form-actions">
-                <button type="submit" class="btn btn-primary">Reservar Ahora</button>
-                <button type="button" class="btn btn-secondary" (click)="toggleNewReservation()">Cancelar</button>
-              </div>
-            </form>
-          </div>
-        </div>
       </div>
 
     </div>
   </main>
+
+  <!-- MODAL NUEVA RESERVA -->
+  <app-nueva-reserva 
+    [isOpen]="showNewReservation"
+    (closeEvent)="closeNewReservation()"
+    (submitEvent)="onReservationSubmit($event)">
+  </app-nueva-reserva>
 </div>

@@ -1,1 +1,126 @@
-<p>registro works!</p>
+<div class="register-page">
+  <div class="clouds">
+    <div class="cloud x1"></div>
+    <div class="cloud x2"></div>
+    <div class="cloud x3"></div>
+    <div class="cloud x4"></div>
+    <div class="cloud x5"></div>
+  </div>
+
+  <div class="register-container">
+    <div class="register-box">
+      <form class="register-form" (ngSubmit)="onSubmit()">
+        <div class="register-header">
+          <h2 class="register-title">NEW DAWN HOTEL</h2>
+          <p class="register-subtitle">Crear Cuenta</p>
+        </div>
+
+        <!-- Nombre Completo -->
+        <div class="form-group">
+          <input 
+            type="text" 
+            class="form-input" 
+            name="fullName"
+            [(ngModel)]="formData.fullName"
+            placeholder="Nombre Completo" 
+            required>
+          <span class="input-icon">👤</span>
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <input 
+            type="email" 
+            class="form-input" 
+            name="email"
+            [(ngModel)]="formData.email"
+            placeholder="Correo Electrónico" 
+            required>
+          <span class="input-icon">📧</span>
+        </div>
+
+        <!-- Teléfono -->
+        <div class="form-group">
+          <input 
+            type="tel" 
+            class="form-input" 
+            name="phone"
+            [(ngModel)]="formData.phone"
+            placeholder="Teléfono" 
+            required>
+          <span class="input-icon">📱</span>
+        </div>
+
+        <!-- País -->
+        <div class="form-group">
+          <select 
+            class="form-input" 
+            name="country"
+            [(ngModel)]="formData.country"
+            required>
+            <option value="">Seleccionar País</option>
+            <option value="AR">Argentina</option>
+            <option value="BO">Bolivia</option>
+            <option value="CL">Chile</option>
+            <option value="CO">Colombia</option>
+            <option value="EC">Ecuador</option>
+            <option value="ES">España</option>
+            <option value="MX">México</option>
+            <option value="PE">Perú</option>
+            <option value="UY">Uruguay</option>
+            <option value="VE">Venezuela</option>
+          </select>
+          <span class="input-icon">🌎</span>
+        </div>
+
+        <!-- Contraseña -->
+        <div class="form-group">
+          <input 
+            type="password" 
+            class="form-input"
+            name="password"
+            [(ngModel)]="formData.password"
+            placeholder="Contraseña" 
+            required>
+          <span class="input-icon">🔒</span>
+        </div>
+
+        <!-- Confirmar Contraseña -->
+        <div class="form-group">
+          <input 
+            type="password" 
+            class="form-input"
+            name="confirmPassword"
+            [(ngModel)]="formData.confirmPassword"
+            placeholder="Confirmar Contraseña" 
+            required>
+          <span class="input-icon">🔑</span>
+        </div>
+
+        <!-- Términos y Condiciones -->
+        <div class="checkbox-group">
+          <label class="checkbox-label">
+            <input 
+              type="checkbox" 
+              name="terms"
+              [(ngModel)]="formData.acceptTerms"
+              required>
+            <span>Acepto los <a href="#" class="terms-link">términos y condiciones</a></span>
+          </label>
+        </div>
+
+        <!-- Botón Submit -->
+        <button type="submit" class="submit-btn">Registrarse</button>
+
+        <!-- Link de login -->
+        <p class="login-link">
+          ¿Ya tienes cuenta? <a routerLink="/auth/login">Inicia Sesión</a>
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <div class="bottom-link">
+    <a routerLink="/" class="home-link">NEW DAWN HOMEPAGE</a>
+  </div>
+</div>

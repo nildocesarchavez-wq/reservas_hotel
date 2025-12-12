@@ -1,1 +1,164 @@
-<p>nueva-reserva works!</p>
+<!-- MODAL NUEVA RESERVA -->
+<div class="modal-overlay" [class.show]="isOpen" (click)="closeModal()">
+  <div class="modal-dialog" (click)="$event.stopPropagation()">
+    <div class="modal-content">
+      
+      <!-- MODAL HEADER -->
+      <div class="modal-header">
+        <h3 class="modal-title">Nueva Reserva</h3>
+        <button type="button" class="modal-close" (click)="closeModal()">
+          <i class="fa fa-times"></i>
+        </button>
+      </div>
+
+      <!-- MODAL BODY -->
+      <div class="modal-body">
+        <form id="reservationForm" (submit)="onSubmit($event)">
+          
+          <!-- TIPO DE HABITACIÓN -->
+          <div class="form-row">
+            <div class="form-group">
+              <label>Tipo de Habitación *</label>
+              <select 
+                class="form-control" 
+                [(ngModel)]="reservationData.roomType" 
+                name="roomType"
+                (change)="onRoomTypeChange()"
+                required>
+                <option value="">Seleccionar...</option>
+                <option value="suite">Suite Deluxe - $320/noche</option>
+                <option value="deluxe">Habitación de Lujo - $220/noche</option>
+                <option value="guest">Casa de Huéspedes - $180/noche</option>
+                <option value="single">Habitación Individual - $150/noche</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Tipo de Cama *</label>
+              <select 
+                class="form-control" 
+                [(ngModel)]="reservationData.bedType" 
+                name="bedType"
+                required>
+                <option value="">Seleccionar...</option>
+                <option value="king">King Size</option>
+                <option value="queen">Queen Size</option>
+                <option value="double">Doble</option>
+                <option value="single">Individual</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- FECHAS -->
+          <div class="form-row">
+            <div class="form-group">
+              <label>Fecha de Check-in *</label>
+              <input 
+                type="date" 
+                class="form-control" 
+                [(ngModel)]="reservationData.checkIn" 
+                name="checkIn"
+                (change)="checkAvailability()"
+                [min]="minDate"
+                required>
+            </div>
+            <div class="form-group">
+              <label>Fecha de Check-out *</label>
+              <input 
+                type="date" 
+                class="form-control" 
+                [(ngModel)]="reservationData.checkOut" 
+                name="checkOut"
+                (change)="checkAvailability()"
+                [min]="reservationData.checkIn"
+                required>
+            </div>
+          </div>
+
+          <!-- MENSAJE DE DISPONIBILIDAD -->
+          <div class="availability-message" *ngIf="availabilityMessage">
+            <div class="alert" [ngClass]="{'alert-success': isAvailable, 'alert-danger': !isAvailable}">
+              <i class="fa" [ngClass]="{'fa-check-circle': isAvailable, 'fa-times-circle': !isAvailable}"></i>
+              <span>{{ availabilityMessage }}</span>
+            </div>
+          </div>
+
+          <!-- RESUMEN DE PRECIO -->
+          <div class="booking-summary" *ngIf="totalNights > 0">
+            <div class="summary-row">
+              <span>Total de noches:</span>
+              <strong>{{ totalNights }} noches</strong>
+            </div>
+            <div class="summary-row">
+              <span>Precio por noche:</span>
+              <strong>${{ pricePerNight }}</strong>
+            </div>
+            <div class="summary-row total">
+              <span>Total estimado:</span>
+              <strong>${{ totalPrice }}</strong>
+            </div>
+          </div>
+
+          <!-- SERVICIOS ADICIONALES -->
+          <div class="form-row">
+            <div class="form-group">
+              <label>Plan de Comida *</label>
+              <select 
+                class="form-control" 
+                [(ngModel)]="reservationData.mealPlan" 
+                name="mealPlan"
+                required>
+                <option value="">Seleccionar...</option>
+                <option value="none">Sin comida</option>
+                <option value="breakfast">Solo Desayuno</option>
+                <option value="half">Media Pensión</option>
+                <option value="full">Pensión Completa</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Número de Huéspedes *</label>
+              <input 
+                type="number" 
+                class="form-control" 
+                [(ngModel)]="reservationData.guests" 
+                name="guests"
+                min="1"
+                max="4"
+                required>
+            </div>
+          </div>
+
+          <!-- COMENTARIOS -->
+          <div class="form-group">
+            <label>Comentarios o Solicitudes Especiales</label>
+            <textarea 
+              class="form-control" 
+              [(ngModel)]="reservationData.comments" 
+              name="comments"
+              rows="3"
+              placeholder="Ej: Necesito cuna para bebé, habitación en piso alto, etc."></textarea>
+          </div>
+
+        </form>
+      </div>
+
+      <!-- MODAL FOOTER -->
+      <div class="modal-footer">
+        <button 
+          type="button" 
+          class="btn btn-secondary" 
+          (click)="closeModal()">
+          Cancelar
+        </button>
+        <button 
+          type="submit" 
+          form="reservationForm"
+          class="btn btn-primary"
+          [disabled]="!isAvailable || !reservationData.checkIn || !reservationData.checkOut">
+          <i class="fa fa-check"></i>
+          Confirmar Reserva
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

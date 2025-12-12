@@ -32,6 +32,11 @@ export const routes: Routes = [
     loadComponent: () => import('./paginas/autenticacion/inicio-sesion/inicio-sesion').then(m => m.InicioSesionComponent)
   },
 
+  {
+    path: 'auth/registro',
+    loadComponent: () => import('./paginas/autenticacion/registro/registro').then(m => m.RegistroComponent)
+  },
+
   // Rutas cliente
   {
     path: 'cliente/dashboard',
