@@ -18,12 +18,6 @@ export class InicioSesionComponent {
     constructor(private router: Router) {}
 
     onSubmit(): void {
-        // Simulación estática de login
-        console.log('Intentando iniciar sesión...');
-        console.log('Tipo de usuario:', this.userType);
-        console.log('Usuario:', this.username);
-        console.log('Contraseña:', this.password);
-
         // Validación simple
         if (!this.username || !this.password) {
             alert('Por favor, completa todos los campos');
@@ -31,14 +25,13 @@ export class InicioSesionComponent {
         }
 
         // Simulación de autenticación exitosa
+        // Redirige según el tipo de usuario seleccionado
         if (this.userType === 'admin') {
-            // Redirigir al dashboard de admin (cuando esté listo)
-            alert('¡Bienvenido Administrador! (Funcionalidad en desarrollo)');
-            // this.router.navigate(['/admin/dashboard']);
+            console.log('Redirigiendo al panel de administrador...');
+            this.router.navigate(['/admin/tablero']);
         } else {
-            // Redirigir al dashboard de cliente (cuando esté listo)
-            alert('¡Bienvenido Cliente! (Funcionalidad en desarrollo)');
-            // this.router.navigate(['/cliente/habitaciones']);
+            console.log('Redirigiendo al dashboard de cliente...');
+            this.router.navigate(['/cliente/dashboard']);
         }
     }
 }

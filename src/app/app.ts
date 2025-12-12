@@ -12,14 +12,5 @@ import { filter } from 'rxjs/operators';
   styleUrl: './app.css'
 })
 export class App {
-  showHeaderFooter = true;
 
-  constructor(private router: Router) {
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe((event: any) => {
-      // Ocultar header y footer en rutas de autenticación
-      this.showHeaderFooter = !event.url.includes('/auth/');
-    });
-  }
 }
