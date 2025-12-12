@@ -17,6 +17,7 @@ html, body {
 a {
     text-decoration: none;
     color: inherit;
+    transition: color 0.2s ease;
 }
 
 button {
@@ -31,7 +32,7 @@ ul {
     list-style: none;
 }
 
-/* ===== LAYOUT ===== */
+/* ===== DASHBOARD LAYOUT ===== */
 .app-container {
     display: flex;
     flex-direction: column;
@@ -39,6 +40,7 @@ ul {
     background-color: #f7f9fc;
 }
 
+/* ===== MAIN CONTENT ===== */
 .main-content {
     margin-left: 260px;
     margin-top: 64px;
@@ -63,33 +65,30 @@ ul {
     font-weight: 700;
     color: #222b45;
     margin-bottom: 0.75rem;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
 }
 
 .page-subtitle {
     font-size: 1rem;
     color: #8f9bb3;
     font-weight: 500;
+    line-height: 1.5;
 }
 
-/* ===== ACTION BAR ===== */
-.action-bar {
-    margin-bottom: 2rem;
-    display: flex;
-    justify-content: flex-end;
-}
-
-/* ===== CARDS ===== */
 .cards-grid {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
 }
 
+/* ===== CARDS ===== */
 .card {
     background: #ffffff;
     border-radius: 12px;
     box-shadow: 0 2px 12px rgba(25, 42, 70, 0.08);
     overflow: hidden;
+    transition: box-shadow 0.3s ease;
 }
 
 .card:hover {
@@ -130,14 +129,6 @@ ul {
 
 .badge-success {
     background-color: #00d68f;
-}
-
-.badge-info {
-    background-color: #0095ff;
-}
-
-.badge-secondary {
-    background-color: #8f9bb3;
 }
 
 /* ===== TABLES ===== */
@@ -198,6 +189,7 @@ ul {
     cursor: pointer;
     border: none;
     gap: 0.5rem;
+    text-decoration: none;
 }
 
 .btn-primary {
@@ -211,69 +203,80 @@ ul {
     box-shadow: 0 4px 12px rgba(51, 102, 255, 0.3);
 }
 
-.btn-secondary {
-    background-color: #edf1f7;
-    color: #222b45;
-}
-
-.btn-secondary:hover {
-    background-color: #e4e9f2;
-}
-
-.btn-danger {
-    background-color: #ff3d71;
-    color: #ffffff;
-}
-
-.btn-danger:hover {
-    background-color: #db2c66;
-}
-
-.btn-sm {
-    padding: 0.5rem 0.75rem;
-    font-size: 0.813rem;
-}
-
-/* ===== FORMS ===== */
-.form-row {
+/* ===== QUICK ACTIONS ===== */
+.quick-actions {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1.5rem;
-    margin-bottom: 1.5rem;
 }
 
-.form-group {
-    margin-bottom: 1.5rem;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-    color: #222b45;
-    font-size: 0.9rem;
-}
-
-.form-control {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    border: 1px solid #dfe4ea;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    transition: all 0.3s ease;
-    background: white;
-}
-
-.form-control:focus {
-    outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-}
-
-.form-actions {
+.action-card {
     display: flex;
-    gap: 1rem;
-    margin-top: 1.5rem;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1.5rem;
+    border-radius: 12px;
+    text-align: center;
+    text-decoration: none;
+    color: white;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.action-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    text-decoration: none;
+    color: white;
+}
+
+.action-card i {
+    font-size: 48px;
+    margin-bottom: 1rem;
+    opacity: 0.95;
+}
+
+.action-card h4 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: white;
+}
+
+.action-card p {
+    font-size: 0.875rem;
+    opacity: 0.9;
+    margin: 0;
+    color: white;
+}
+
+.action-blue {
+    background: linear-gradient(135deg, #0095ff 0%, #0077cc 100%);
+}
+
+.action-green {
+    background: linear-gradient(135deg, #00d68f 0%, #00b377 100%);
+}
+
+.action-orange {
+    background: linear-gradient(135deg, #ff9500 0%, #ff7700 100%);
+}
+
+/* ===== CONTACT INFO ===== */
+.contact-info {
+    padding: 0.5rem 0;
+}
+
+.contact-info p {
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+    color: #222b45;
+}
+
+.contact-info strong {
+    color: #667eea;
+    margin-right: 0.5rem;
 }
 
 /* ===== RESPONSIVE ===== */
@@ -306,7 +309,7 @@ ul {
         padding: 0.75rem 0.5rem;
     }
 
-    .form-row {
+    .quick-actions {
         grid-template-columns: 1fr;
     }
 }

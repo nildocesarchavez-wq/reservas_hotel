@@ -1,1 +1,169 @@
-<p>mis-reservas works!</p>
+<div class="app-container">
+  <!-- HEADER -->
+  <app-header-dashboard></app-header-dashboard>
+
+  <!-- SIDEBAR -->
+  <app-sidebar-cliente></app-sidebar-cliente>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    <div class="content-wrapper">
+      <!-- PAGE HEADER -->
+      <div class="page-header">
+        <h1 class="page-title">Mis Reservas</h1>
+        <p class="page-subtitle">Gestiona todas tus reservas</p>
+      </div>
+
+      <!-- NUEVA RESERVA BUTTON -->
+      <div class="action-bar">
+        <button class="btn btn-primary" (click)="toggleNewReservation()">
+          <i class="fa fa-plus"></i> Nueva Reserva
+        </button>
+      </div>
+
+      <!-- CARDS GRID -->
+      <div class="cards-grid">
+        <!-- CARD: RESERVAS ACTIVAS -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Reservas Activas</h3>
+            <span class="badge badge-success">1</span>
+          </div>
+          <div class="card-body">
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Habitación</th>
+                    <th>Tipo de Cama</th>
+                    <th>Comida</th>
+                    <th>Check-in</th>
+                    <th>Check-out</th>
+                    <th>Precio</th>
+                    <th>Estado</th>
+                    <th>Acción</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>1</td>
+                    <td>Suite Deluxe</td>
+                    <td>King Size</td>
+                    <td>Desayuno incluido</td>
+                    <td>2025-12-20</td>
+                    <td>2025-12-25</td>
+                    <td>$320/noche</td>
+                    <td><span class="badge badge-success">Confirmada</span></td>
+                    <td>
+                      <button class="btn btn-sm btn-primary">Ver</button>
+                      <button class="btn btn-sm btn-danger">Cancelar</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD: HISTORIAL DE RESERVAS -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Historial de Reservas</h3>
+            <span class="badge badge-info">2</span>
+          </div>
+          <div class="card-body">
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Habitación</th>
+                    <th>Check-in</th>
+                    <th>Check-out</th>
+                    <th>Estado</th>
+                    <th>Acción</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>1</td>
+                    <td>Habitación Doble</td>
+                    <td>2025-11-01</td>
+                    <td>2025-11-05</td>
+                    <td><span class="badge badge-secondary">Completada</span></td>
+                    <td><button class="btn btn-sm btn-primary">Ver Detalles</button></td>
+                  </tr>
+                  <tr>
+                    <td>2</td>
+                    <td>Habitación Simple</td>
+                    <td>2025-10-15</td>
+                    <td>2025-10-18</td>
+                    <td><span class="badge badge-secondary">Completada</span></td>
+                    <td><button class="btn btn-sm btn-primary">Ver Detalles</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD: FORMULARIO NUEVA RESERVA -->
+        <div class="card" *ngIf="showNewReservation">
+          <div class="card-header">
+            <h3 class="card-title">Nueva Reserva</h3>
+          </div>
+          <div class="card-body">
+            <form (submit)="onSubmitReservation($event)">
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Tipo de Habitación</label>
+                  <select class="form-control" [(ngModel)]="newReservation.roomType" name="roomType" required>
+                    <option value="">Seleccionar...</option>
+                    <option value="suite">Suite Deluxe - $320/noche</option>
+                    <option value="deluxe">Habitación de Lujo - $220/noche</option>
+                    <option value="guest">Casa de Huéspedes - $180/noche</option>
+                    <option value="single">Habitación Individual - $150/noche</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Tipo de Cama</label>
+                  <select class="form-control" [(ngModel)]="newReservation.bedType" name="bedType" required>
+                    <option value="">Seleccionar...</option>
+                    <option value="king">King Size</option>
+                    <option value="queen">Queen Size</option>
+                    <option value="single">Individual</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Fecha de Check-in</label>
+                  <input type="date" class="form-control" [(ngModel)]="newReservation.checkIn" name="checkIn" required>
+                </div>
+                <div class="form-group">
+                  <label>Fecha de Check-out</label>
+                  <input type="date" class="form-control" [(ngModel)]="newReservation.checkOut" name="checkOut" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Plan de Comida</label>
+                <select class="form-control" [(ngModel)]="newReservation.mealPlan" name="mealPlan" required>
+                  <option value="">Seleccionar...</option>
+                  <option value="breakfast">Solo Desayuno</option>
+                  <option value="half">Media Pensión</option>
+                  <option value="full">Pensión Completa</option>
+                </select>
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Reservar Ahora</button>
+                <button type="button" class="btn btn-secondary" (click)="toggleNewReservation()">Cancelar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>

@@ -1,1 +1,30 @@
-<p>sidebar-cliente works!</p>
+<aside class="sidebar" [class.active]="isOpen">
+  <nav class="sidebar-nav">
+    <ul class="nav-list">
+      <li class="nav-item">
+        <a routerLink="/cliente/dashboard" routerLinkActive="active" class="nav-link">
+          <i class="fa fa-dashboard"></i>
+          <span>Panel Principal</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a routerLink="/cliente/mis-reservas" routerLinkActive="active" class="nav-link">
+          <i class="fa fa-calendar"></i>
+          <span>Mis Reservas</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a routerLink="/cliente/perfil" routerLinkActive="active" class="nav-link">
+          <i class="fa fa-user"></i>
+          <span>Mi Perfil</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a routerLink="/inicio" class="nav-link">
+          <i class="fa fa-home"></i>
+          <span>Volver al Hotel</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</aside>

@@ -31,6 +31,12 @@ export const routes: Routes = [
     loadComponent: () => import('./paginas/autenticacion/inicio-sesion/inicio-sesion').then(m => m.InicioSesionComponent)
   },
 
+  // Rutas cliente
+  {
+    path: 'cliente/dashboard',
+    loadComponent: () => import('./compartido/componentes/sidebar-cliente/sidebar-cliente').then(m => m.SidebarCliente)
+  },
+
   // Ruta 404
   {
     path: '**',
