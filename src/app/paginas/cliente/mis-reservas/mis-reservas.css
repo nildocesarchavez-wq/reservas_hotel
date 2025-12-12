@@ -71,6 +71,208 @@ ul {
     font-weight: 500;
 }
 
+/* ===== NOTIFICACIÃ"N FLOTANTE ===== */
+.notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+    opacity: 0;
+    transform: translateX(400px);
+    transition: all 0.3s ease;
+}
+
+.notification-container.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.notification-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    min-width: 300px;
+    max-width: 500px;
+    border-left: 4px solid;
+}
+
+.notification-container.success .notification-content {
+    border-left-color: #00d68f;
+}
+
+.notification-container.success .notification-content i {
+    color: #00d68f;
+    font-size: 24px;
+}
+
+.notification-container.error .notification-content {
+    border-left-color: #ff3d71;
+}
+
+.notification-container.error .notification-content i {
+    color: #ff3d71;
+    font-size: 24px;
+}
+
+.notification-container.warning .notification-content {
+    border-left-color: #ff9500;
+}
+
+.notification-container.warning .notification-content i {
+    color: #ff9500;
+    font-size: 24px;
+}
+
+.notification-content span {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 500;
+    color: #222b45;
+}
+
+.notification-close {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: transparent;
+    color: #8f9bb3;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.notification-close:hover {
+    background: #f7f9fc;
+    color: #222b45;
+}
+
+/* ===== MODAL DE CONFIRMACIÃ"N ===== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    backdrop-filter: blur(4px);
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.modal-dialog {
+    background: white;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px;
+    border-bottom: 1px solid #edf1f7;
+}
+
+.modal-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 20px;
+    font-weight: 600;
+    color: #222b45;
+    margin: 0;
+}
+
+.modal-title i {
+    color: #ff9500;
+    font-size: 24px;
+}
+
+.modal-close {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: transparent;
+    color: #8f9bb3;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.modal-close:hover {
+    background: #f7f9fc;
+    color: #222b45;
+}
+
+.modal-body {
+    padding: 24px;
+}
+
+.modal-body p {
+    margin: 0 0 16px 0;
+    font-size: 15px;
+    color: #222b45;
+    line-height: 1.6;
+}
+
+.modal-body p:last-child {
+    margin-bottom: 0;
+}
+
+.modal-warning {
+    color: #ff3d71 !important;
+    font-weight: 600;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 20px 24px;
+    background: #f7f9fc;
+    border-top: 1px solid #edf1f7;
+    border-radius: 0 0 16px 16px;
+}
+
 /* ===== LOADING & ERROR STATES ===== */
 .loading-container,
 .error-container {
@@ -439,6 +641,28 @@ select.filter-control {
 
     .table-container {
         overflow-x: scroll;
+    }
+
+    .notification-container {
+        right: 10px;
+        left: 10px;
+    }
+
+    .notification-content {
+        min-width: auto;
+    }
+
+    .modal-dialog {
+        width: 95%;
+        margin: 1rem;
+    }
+
+    .modal-footer {
+        flex-direction: column;
+    }
+
+    .modal-footer .btn {
+        width: 100%;
     }
 }
 

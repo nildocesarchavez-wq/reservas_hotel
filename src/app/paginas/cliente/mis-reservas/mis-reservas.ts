@@ -36,6 +36,15 @@ export class MisReservasComponent implements OnInit, OnDestroy {
   loading = true;
   error: string | null = null;
 
+  // Notificaciones
+  showNotification = false;
+  notificationMessage = '';
+  notificationType: 'success' | 'error' | 'warning' = 'success';
+
+  // Modal de confirmación
+  showConfirmModal = false;
+  reservaToCancel: string | null = null;
+
   // Datos de reservas desde Firebase
   activeReservations: Reserva[] = [];
   historyReservations: Reserva[] = [];
@@ -212,22 +221,66 @@ export class MisReservasComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Cancelar una reserva
+   * Mostrar notificación
    */
-  async cancelReservation(id: string) {
-    if (!confirm('¿Estás seguro de que deseas cancelar esta reserva?')) {
-      return;
-    }
+  showNotificationMessage(message: string, type: 'success' | 'error' | 'warning' = 'success') {
+    this.notificationMessage = message;
+    this.notificationType = type;
+    this.showNotification = true;
+
+    // Auto-ocultar después de 5 segundos
+    setTimeout(() => {
+      this.showNotification = false;
+    }, 5000);
+  }
+
+  /**
+   * Cerrar notificación manualmente
+   */
+  closeNotification() {
+    this.showNotification = false;
+  }
+
+  /**
+   * Abrir modal de confirmación para cancelar
+   */
+  openCancelModal(id: string) {
+    this.reservaToCancel = id;
+    this.showConfirmModal = true;
+  }
+
+  /**
+   * Cerrar modal de confirmación
+   */
+  closeCancelModal() {
+    this.showConfirmModal = false;
+    this.reservaToCancel = null;
+  }
+
+  /**
+   * Confirmar cancelación de reserva
+   */
+  async confirmCancelReservation() {
+    if (!this.reservaToCancel) return;
 
     try {
-      await this.reservasService.cancelarReserva(id);
-      console.log('✅ Reserva cancelada:', id);
-      alert('Reserva cancelada exitosamente');
-      // No necesitas recargar manualmente, Firebase actualizará en tiempo real
+      await this.reservasService.cancelarReserva(this.reservaToCancel);
+      console.log('✅ Reserva cancelada:', this.reservaToCancel);
+      
+      this.closeCancelModal();
+      this.showNotificationMessage('Reserva cancelada exitosamente', 'success');
+      
     } catch (error) {
       console.error('❌ Error al cancelar reserva:', error);
-      alert('Error al cancelar la reserva. Intenta nuevamente.');
+      this.showNotificationMessage('Error al cancelar la reserva. Intenta nuevamente.', 'error');
     }
+  }
+
+  /**
+   * Cancelar una reserva
+   */
+  cancelReservation(id: string) {
+    this.openCancelModal(id);
   }
 
   /**
@@ -250,14 +303,11 @@ export class MisReservasComponent implements OnInit, OnDestroy {
   async onReservationSubmit(data: any) {
     try {
       console.log('📝 Creando reserva:', data);
-      // La creación se maneja en el componente nueva-reserva
-      // Aquí solo cerramos el modal
       this.closeNewReservation();
-      alert('¡Reserva creada exitosamente!');
-      // Firebase actualizará automáticamente la lista
+      this.showNotificationMessage('¡Reserva creada exitosamente!', 'success');
     } catch (error) {
       console.error('❌ Error al crear reserva:', error);
-      alert('Error al crear la reserva');
+      this.showNotificationMessage('Error al crear la reserva', 'error');
     }
   }
 }

@@ -1,3 +1,21 @@
+<!-- NOTIFICACIÓN FLOTANTE -->
+<div class="notification-container" 
+     [class.show]="notificacion.visible"
+     [class.success]="notificacion.tipo === 'success'"
+     [class.error]="notificacion.tipo === 'error'"
+     [class.warning]="notificacion.tipo === 'warning'">
+  <div class="notification-content">
+    <i class="fa" 
+       [class.fa-check-circle]="notificacion.tipo === 'success'"
+       [class.fa-exclamation-circle]="notificacion.tipo === 'error'"
+       [class.fa-exclamation-triangle]="notificacion.tipo === 'warning'"></i>
+    <span>{{ notificacion.mensaje }}</span>
+    <button class="notification-close" (click)="cerrarNotificacion()">
+      <i class="fa fa-times"></i>
+    </button>
+  </div>
+</div>
+
 <!-- MODAL NUEVA RESERVA -->
 <div class="modal-overlay" [class.show]="isOpen" (click)="closeModal()">
   <div class="modal-dialog" (click)="$event.stopPropagation()">
@@ -28,7 +46,7 @@
               <option 
                 *ngFor="let habitacion of habitacionesDisponibles" 
                 [value]="habitacion.id">
-                {{ habitacion.numero }} - {{ habitacion.tipo }} - ${{ habitacion.precio }}/noche ({{ getCapacidadTexto(habitacion.capacidad) }})
+                {{ habitacion.numero }} - {{ habitacion.tipo }} - {{ habitacion.precio | solesPeruanos }}/noche ({{ getCapacidadTexto(habitacion.capacidad) }})
               </option>
             </select>
           </div>
@@ -115,11 +133,11 @@
             </div>
             <div class="summary-row">
               <span>Precio por noche:</span>
-              <strong>${{ pricePerNight.toFixed(2) }}</strong>
+              <strong>{{ pricePerNight | solesPeruanos }}</strong>
             </div>
             <div class="summary-row total">
               <span>Total estimado:</span>
-              <strong>${{ totalPrice.toFixed(2) }}</strong>
+              <strong>{{ totalPrice | solesPeruanos }}</strong>
             </div>
           </div>
 
@@ -131,8 +149,14 @@
               class="form-control" 
               [(ngModel)]="reservationData.guests" 
               name="guests"
+              (input)="validarHuespedes($event)"
+              (keyup)="validarHuespedes($event)"
+              (blur)="validarHuespedes($event)"
               [min]="1"
-              [max]="habitacionSeleccionada?.capacidad || 4"
+              [max]="habitacionSeleccionada?.capacidad || 99"
+              step="1"
+              pattern="[0-9]*"
+              maxlength="2"
               required>
             <small style="display: block; margin-top: 0.25rem; color: #8f9bb3; font-size: 0.75rem;" *ngIf="habitacionSeleccionada">
               Máximo: {{ habitacionSeleccionada.capacidad }} {{ habitacionSeleccionada.capacidad === 1 ? 'persona' : 'personas' }}
@@ -176,7 +200,7 @@
   </div>
 </div>
 
-<!-- Estilos adicionales inline para alert-info -->
+<!-- Estilos adicionales inline -->
 <style>
 .alert-info {
     background-color: #e6f3ff;
@@ -197,5 +221,87 @@
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+/* Notificación dentro del modal */
+.notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10001;
+    opacity: 0;
+    transform: translateX(400px);
+    transition: all 0.3s ease;
+}
+
+.notification-container.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.notification-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    min-width: 300px;
+    max-width: 500px;
+    border-left: 4px solid;
+}
+
+.notification-container.success .notification-content {
+    border-left-color: #00d68f;
+}
+
+.notification-container.success .notification-content i {
+    color: #00d68f;
+    font-size: 24px;
+}
+
+.notification-container.error .notification-content {
+    border-left-color: #ff3d71;
+}
+
+.notification-container.error .notification-content i {
+    color: #ff3d71;
+    font-size: 24px;
+}
+
+.notification-container.warning .notification-content {
+    border-left-color: #ff9500;
+}
+
+.notification-container.warning .notification-content i {
+    color: #ff9500;
+    font-size: 24px;
+}
+
+.notification-content span {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 500;
+    color: #222b45;
+}
+
+.notification-close {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: transparent;
+    color: #8f9bb3;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+}
+
+.notification-close:hover {
+    background: #f7f9fc;
+    color: #222b45;
 }
 </style>

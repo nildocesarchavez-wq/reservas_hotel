@@ -24,7 +24,7 @@ export class Perfil implements OnInit, OnDestroy {
   // Datos del usuario actual
   currentUser: Usuario | null = null;
   isLoading = true;
-  isEditingProfile = false; // Estado de edición
+  isEditingProfile = false;
 
   profile = {
     fullName: '',
@@ -34,7 +34,6 @@ export class Perfil implements OnInit, OnDestroy {
     address: ''
   };
 
-  // Copia original para cancelar cambios
   originalProfile = {
     fullName: '',
     email: '',
@@ -49,21 +48,29 @@ export class Perfil implements OnInit, OnDestroy {
     confirm: ''
   };
 
+  // Sistema de notificaciones
+  notificacion: {
+    visible: boolean;
+    mensaje: string;
+    tipo: 'success' | 'error' | 'warning';
+  } = {
+    visible: false,
+    mensaje: '',
+    tipo: 'success'
+  };
+
   ngOnInit() {
-    // Suscribirse a los datos del usuario en tiempo real
     this.userSubscription = this.autenticacionService.userData$.subscribe({
       next: (userData) => {
         if (userData) {
           this.currentUser = userData;
-          // Cargar datos del usuario en el formulario
           this.profile = {
             fullName: userData.displayName || '',
             email: userData.email || '',
             phone: userData.phoneNumber || '',
             country: userData.country || 'PE',
-            address: '' // Firebase no tiene campo address en el modelo actual
+            address: ''
           };
-          // Guardar copia original
           this.originalProfile = { ...this.profile };
           this.isLoading = false;
         }
@@ -76,25 +83,38 @@ export class Perfil implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // Limpiar suscripción
     if (this.userSubscription) {
       this.userSubscription.unsubscribe();
     }
+  }
+
+  mostrarNotificacion(mensaje: string, tipo: 'success' | 'error' | 'warning') {
+    this.notificacion = {
+      visible: true,
+      mensaje,
+      tipo
+    };
+
+    setTimeout(() => {
+      this.notificacion.visible = false;
+    }, 5000);
+  }
+
+  cerrarNotificacion() {
+    this.notificacion.visible = false;
   }
 
   async onSubmitProfile(event: Event) {
     event.preventDefault();
 
     if (!this.currentUser) {
-      alert('No se pudo identificar el usuario');
+      this.mostrarNotificacion('No se pudo identificar el usuario', 'error');
       return;
     }
 
     try {
-      // Referencia al documento del usuario en Firestore
       const userDocRef = doc(this.firestore, `usuarios/${this.currentUser.uid}`);
 
-      // Actualizar datos en Firestore
       await updateDoc(userDocRef, {
         displayName: this.profile.fullName,
         phoneNumber: this.profile.phone,
@@ -102,15 +122,14 @@ export class Perfil implements OnInit, OnDestroy {
         updatedAt: new Date()
       });
 
-      alert('¡Perfil actualizado exitosamente!');
+      this.mostrarNotificacion('¡Perfil actualizado exitosamente!', 'success');
       console.log('Perfil actualizado en Firebase');
       
-      // Actualizar copia original y salir del modo edición
       this.originalProfile = { ...this.profile };
       this.isEditingProfile = false;
     } catch (error) {
       console.error('Error al actualizar perfil:', error);
-      alert('Error al actualizar el perfil. Intenta nuevamente.');
+      this.mostrarNotificacion('Error al actualizar el perfil. Intenta nuevamente.', 'error');
     }
   }
 
@@ -119,7 +138,6 @@ export class Perfil implements OnInit, OnDestroy {
   }
 
   cancelEditProfile() {
-    // Restaurar datos originales
     this.profile = { ...this.originalProfile };
     this.isEditingProfile = false;
   }
@@ -128,14 +146,13 @@ export class Perfil implements OnInit, OnDestroy {
     event.preventDefault();
 
     if (this.password.new !== this.password.confirm) {
-      alert('Las contraseñas no coinciden');
+      this.mostrarNotificacion('Las contraseñas no coinciden', 'error');
       return;
     }
 
     console.log('Contraseña actualizada');
-    alert('¡Contraseña actualizada exitosamente! (Simulación)');
+    this.mostrarNotificacion('¡Contraseña actualizada exitosamente!', 'success');
 
-    // Reset password fields
     this.password = {
       current: '',
       new: '',

@@ -6,11 +6,12 @@ import { HabitacionesService } from '../../../nucleo/servicios/habitaciones.serv
 import { AutenticacionService } from '../../../nucleo/servicios/autenticacion.service';
 import { Habitacion } from '../../../nucleo/modelos/habitacion.model';
 import { Usuario } from '../../../nucleo/modelos/usuario.model';
+import { SolesPeruanosPipe } from '../../../nucleo/pipes/soles-peruanos-pipe';
 
 @Component({
     selector: 'app-nueva-reserva',
     standalone: true,
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule, SolesPeruanosPipe],
     templateUrl: './nueva-reserva.html',
     styleUrl: './nueva-reserva.css'
 })
@@ -50,6 +51,17 @@ export class NuevaReservaComponent implements OnInit, OnChanges {
     verificandoDisponibilidad: boolean = false;
     guardandoReserva: boolean = false;
 
+    // Notificación
+    notificacion: {
+        visible: boolean;
+        mensaje: string;
+        tipo: 'success' | 'error' | 'warning';
+    } = {
+        visible: false,
+        mensaje: '',
+        tipo: 'success'
+    };
+
     async ngOnInit() {
         await this.cargarUsuario();
         this.cargarHabitacionesDisponibles();
@@ -63,6 +75,25 @@ export class NuevaReservaComponent implements OnInit, OnChanges {
                 document.body.classList.remove('modal-open');
             }
         }
+    }
+
+    /**
+     * Mostrar notificación
+     */
+    mostrarNotificacion(mensaje: string, tipo: 'success' | 'error' | 'warning') {
+        this.notificacion = {
+            visible: true,
+            mensaje,
+            tipo
+        };
+
+        setTimeout(() => {
+            this.notificacion.visible = false;
+        }, 5000);
+    }
+
+    cerrarNotificacion() {
+        this.notificacion.visible = false;
     }
 
     /**
@@ -116,6 +147,38 @@ export class NuevaReservaComponent implements OnInit, OnChanges {
             this.habitacionSeleccionada = null;
             this.pricePerNight = 0;
             this.totalPrice = 0;
+        }
+    }
+
+    /**
+     * Validar que solo se ingresen números enteros en huéspedes
+     */
+    validarHuespedes(event: any) {
+        const valor = event.target.value;
+        
+        // Eliminar cualquier caracter no numérico
+        const valorLimpio = valor.replace(/[^0-9]/g, '');
+        let numEntero = parseInt(valorLimpio) || 0;
+        
+        if (this.habitacionSeleccionada) {
+            // Usar la capacidad de la habitación desde Firebase como límite máximo
+            const capacidadMaxima = this.habitacionSeleccionada.capacidad;
+            
+            if (numEntero > capacidadMaxima) {
+                this.reservationData.guests = capacidadMaxima;
+                event.target.value = capacidadMaxima;
+            } else if (numEntero < 1 || isNaN(numEntero)) {
+                this.reservationData.guests = 1;
+                event.target.value = 1;
+            } else {
+                this.reservationData.guests = numEntero;
+                event.target.value = numEntero;
+            }
+        } else {
+            // Si no hay habitación seleccionada, mínimo 1
+            const valorFinal = numEntero < 1 || isNaN(numEntero) ? 1 : numEntero;
+            this.reservationData.guests = valorFinal;
+            event.target.value = valorFinal;
         }
     }
 
@@ -192,17 +255,17 @@ export class NuevaReservaComponent implements OnInit, OnChanges {
         event.preventDefault();
         
         if (!this.isAvailable) {
-            alert('Por favor, verifica la disponibilidad antes de continuar');
+            this.mostrarNotificacion('Por favor, verifica la disponibilidad antes de continuar', 'warning');
             return;
         }
 
         if (!this.usuario) {
-            alert('Debes iniciar sesión para hacer una reserva');
+            this.mostrarNotificacion('Debes iniciar sesión para hacer una reserva', 'error');
             return;
         }
 
         if (!this.habitacionSeleccionada) {
-            alert('Por favor, selecciona una habitación');
+            this.mostrarNotificacion('Por favor, selecciona una habitación', 'warning');
             return;
         }
 
@@ -225,7 +288,7 @@ export class NuevaReservaComponent implements OnInit, OnChanges {
             const reservaId = await this.reservasService.crearReserva(reservaData);
             
             console.log('Reserva creada exitosamente:', reservaId);
-            alert('¡Reserva creada exitosamente! Tu reserva está pendiente de confirmación.');
+            this.mostrarNotificacion('¡Reserva creada exitosamente! Tu reserva está pendiente de confirmación.', 'success');
             
             // Emitir evento de éxito
             this.submitEvent.emit({
@@ -233,13 +296,15 @@ export class NuevaReservaComponent implements OnInit, OnChanges {
                 ...reservaData
             });
 
-            // Resetear y cerrar
-            this.resetForm();
-            this.closeModal();
+            // Resetear y cerrar después de un momento
+            setTimeout(() => {
+                this.resetForm();
+                this.closeModal();
+            }, 1500);
             
         } catch (error: any) {
             console.error('Error al crear reserva:', error);
-            alert(`Error al crear la reserva: ${error.message || 'Intenta nuevamente'}`);
+            this.mostrarNotificacion(`Error al crear la reserva: ${error.message || 'Intenta nuevamente'}`, 'error');
         } finally {
             this.guardandoReserva = false;
         }

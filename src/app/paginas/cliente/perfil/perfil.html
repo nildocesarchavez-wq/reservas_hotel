@@ -5,6 +5,24 @@
   <!-- SIDEBAR -->
   <app-sidebar-cliente></app-sidebar-cliente>
 
+  <!-- NOTIFICACIÓN FLOTANTE -->
+  <div class="notificacion" 
+       [class.notificacion-visible]="notificacion.visible"
+       [class.notificacion-success]="notificacion.tipo === 'success'"
+       [class.notificacion-error]="notificacion.tipo === 'error'"
+       [class.notificacion-warning]="notificacion.tipo === 'warning'">
+    <div class="notificacion-content">
+      <i class="fa" 
+         [class.fa-check-circle]="notificacion.tipo === 'success'"
+         [class.fa-exclamation-circle]="notificacion.tipo === 'error'"
+         [class.fa-exclamation-triangle]="notificacion.tipo === 'warning'"></i>
+      <span>{{ notificacion.mensaje }}</span>
+    </div>
+    <button class="notificacion-close" (click)="cerrarNotificacion()">
+      <i class="fa fa-times"></i>
+    </button>
+  </div>
+
   <!-- MAIN CONTENT -->
   <main class="main-content" *ngIf="currentUser">
     <div class="content-wrapper">
@@ -131,22 +149,22 @@
           </div>
           <div class="card-body">
             <div class="stats-grid">
-              <div class="stat-item">
+              <div class="stat-item stat-blue">
                 <i class="fa fa-calendar"></i>
                 <h4>3</h4>
                 <p>Reservas Totales</p>
               </div>
-              <div class="stat-item">
+              <div class="stat-item stat-green">
                 <i class="fa fa-check-circle"></i>
                 <h4>1</h4>
                 <p>Reserva Activa</p>
               </div>
-              <div class="stat-item">
+              <div class="stat-item stat-orange">
                 <i class="fa fa-star"></i>
                 <h4>15</h4>
                 <p>Noches Totales</p>
               </div>
-              <div class="stat-item">
+              <div class="stat-item stat-purple">
                 <i class="fa fa-trophy"></i>
                 <h4>Gold</h4>
                 <p>Nivel de Cliente</p>

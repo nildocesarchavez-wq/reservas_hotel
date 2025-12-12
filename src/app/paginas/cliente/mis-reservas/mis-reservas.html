@@ -5,6 +5,21 @@
   <!-- SIDEBAR -->
   <app-sidebar-cliente></app-sidebar-cliente>
 
+  <!-- NOTIFICACIÃ"N FLOTANTE -->
+  <div class="notification-container" [class.show]="showNotification" [class.success]="notificationType === 'success'"
+    [class.error]="notificationType === 'error'" [class.warning]="notificationType === 'warning'">
+    <div class="notification-content">
+      <i class="fa"
+        [class.fa-check-circle]="notificationType === 'success'"
+        [class.fa-exclamation-circle]="notificationType === 'error'"
+        [class.fa-exclamation-triangle]="notificationType === 'warning'"></i>
+      <span>{{ notificationMessage }}</span>
+      <button class="notification-close" (click)="closeNotification()">
+        <i class="fa fa-times"></i>
+      </button>
+    </div>
+  </div>
+
   <!-- MAIN CONTENT -->
   <main class="main-content">
     <div class="content-wrapper">
@@ -58,21 +73,13 @@
                 <!-- Filtro por Fecha Desde -->
                 <div class="filter-group">
                   <label>Fecha Desde</label>
-                  <input 
-                    type="date" 
-                    class="filter-control" 
-                    [(ngModel)]="filters.dateFrom"
-                    (change)="applyFilters()">
+                  <input type="date" class="filter-control" [(ngModel)]="filters.dateFrom" (change)="applyFilters()">
                 </div>
 
                 <!-- Filtro por Fecha Hasta -->
                 <div class="filter-group">
                   <label>Fecha Hasta</label>
-                  <input 
-                    type="date" 
-                    class="filter-control" 
-                    [(ngModel)]="filters.dateTo"
-                    (change)="applyFilters()">
+                  <input type="date" class="filter-control" [(ngModel)]="filters.dateTo" (change)="applyFilters()">
                 </div>
 
                 <!-- Botón Limpiar -->
@@ -139,9 +146,7 @@
                       </td>
                       <td>
                         <div style="display: flex; gap: 0.5rem;">
-                          <button 
-                            class="btn btn-sm btn-danger" 
-                            (click)="cancelReservation(reserva.id)"
+                          <button class="btn btn-sm btn-danger" (click)="cancelReservation(reserva.id)"
                             [disabled]="reserva.estado === 'cancelada'">
                             <i class="fa fa-times"></i> Cancelar
                           </button>
@@ -221,10 +226,37 @@
     </div>
   </main>
 
+  <!-- MODAL DE CONFIRMACIÃ"N PARA CANCELAR -->
+  <div class="modal-overlay" *ngIf="showConfirmModal" (click)="closeCancelModal()">
+    <div class="modal-dialog" (click)="$event.stopPropagation()">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">
+            <i class="fa fa-exclamation-triangle"></i>
+            Confirmar Cancelación
+          </h3>
+          <button class="modal-close" (click)="closeCancelModal()">
+            <i class="fa fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>¿Estás seguro de que deseas cancelar esta reserva?</p>
+          <p class="modal-warning">Esta acción no se puede deshacer.</p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" (click)="closeCancelModal()">
+            <i class="fa fa-times"></i> No, volver
+          </button>
+          <button class="btn btn-danger" (click)="confirmCancelReservation()">
+            <i class="fa fa-check"></i> Sí, cancelar reserva
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL NUEVA RESERVA -->
-  <app-nueva-reserva 
-    [isOpen]="showNewReservation"
-    (closeEvent)="closeNewReservation()"
+  <app-nueva-reserva [isOpen]="showNewReservation" (closeEvent)="closeNewReservation()"
     (submitEvent)="onReservationSubmit($event)">
   </app-nueva-reserva>
 </div>
