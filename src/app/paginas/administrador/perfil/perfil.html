@@ -12,6 +12,12 @@
       <div class="page-header">
         <h1 class="page-title">ADMINISTRADORES</h1>
         <p class="page-subtitle">Gestión de cuentas de administradores</p>
+        <div class="user-info" *ngIf="usuarioActual">
+          <span class="badge" [class.badge-admin-principal]="esAdminPrincipal" [class.badge-admin]="!esAdminPrincipal">
+            <i class="fa" [class.fa-crown]="esAdminPrincipal" [class.fa-user-shield]="!esAdminPrincipal"></i>
+            {{ esAdminPrincipal ? 'Administrador Principal' : 'Administrador' }}
+          </span>
+        </div>
       </div>
 
       <!-- LOADING INDICATOR -->
@@ -48,6 +54,7 @@
                       <th>ID</th>
                       <th>Nombre Usuario</th>
                       <th>Email</th>
+                      <th>Tipo</th>
                       <th>Fecha Creación</th>
                       <th>Última Actualización</th>
                       <th>Actualizar</th>
@@ -57,30 +64,46 @@
                   <tbody>
                     <tr *ngFor="let admin of administradores; let i = index" 
                         [class.gradeC]="i % 2 === 0"
-                        [class.gradeU]="i % 2 !== 0">
+                        [class.gradeU]="i % 2 !== 0"
+                        [class.current-user]="usuarioActual?.id === admin.id">
                       <td>{{ admin.id.substring(0, 8) }}...</td>
-                      <td><strong>{{ admin.displayName }}</strong></td>
+                      <td>
+                        <strong>{{ admin.displayName }}</strong>
+                        <span class="badge badge-you" *ngIf="usuarioActual?.id === admin.id">Tú</span>
+                      </td>
                       <td>{{ admin.email }}</td>
+                      <td>
+                        <span class="badge" [class.badge-admin-principal]="admin.esAdminPrincipal" [class.badge-admin]="!admin.esAdminPrincipal">
+                          <i class="fa" [class.fa-crown]="admin.esAdminPrincipal" [class.fa-user-shield]="!admin.esAdminPrincipal"></i>
+                          {{ admin.esAdminPrincipal ? 'Principal' : 'Admin' }}
+                        </span>
+                      </td>
                       <td>{{ formatearFecha(admin.createdAt) }}</td>
                       <td>{{ formatearFecha(admin.updatedAt) }}</td>
                       <td>
                         <button 
                           class='btn btn-primary btn-sm'
-                          (click)="abrirModalEditar(admin)">
+                          [disabled]="!puedeEditarUsuario(admin)"
+                          [class.btn-disabled]="!puedeEditarUsuario(admin)"
+                          (click)="abrirModalEditar(admin)"
+                          [title]="puedeEditarUsuario(admin) ? 'Editar perfil' : 'Solo puedes editar tu propio perfil'">
                           <i class='fa fa-edit'></i> Actualizar
                         </button>
                       </td>
                       <td>
                         <button 
                           class='btn btn-danger btn-sm'
-                          (click)="eliminarUsuario(admin)">
+                          [disabled]="!puedeEliminarUsuario(admin)"
+                          [class.btn-disabled]="!puedeEliminarUsuario(admin)"
+                          (click)="eliminarUsuario(admin)"
+                          [title]="puedeEliminarUsuario(admin) ? 'Eliminar usuario' : 'Solo el admin principal puede eliminar'">
                           <i class='fa fa-trash'></i> Eliminar
                         </button>
                       </td>
                     </tr>
 
                     <tr *ngIf="administradores.length === 0">
-                      <td colspan="7" class="no-data">
+                      <td colspan="8" class="no-data">
                         <i class="fa fa-users"></i>
                         <p>No hay administradores registrados</p>
                       </td>
@@ -93,9 +116,27 @@
 
           <!-- BOTÓN AGREGAR NUEVO ADMINISTRADOR -->
           <div class="panel-body">
-            <button class="btn btn-primary" (click)="abrirModalAgregar()">
+            <button 
+              class="btn btn-primary" 
+              (click)="abrirModalAgregar()"
+              [disabled]="!puedeAgregarAdmin()">
               <i class="fa fa-plus"></i> Agregar nuevo administrador
             </button>
+          </div>
+
+          <!-- INFO SOBRE PERMISOS -->
+          <div class="info-permisos">
+            <div class="info-card">
+              <i class="fa fa-info-circle"></i>
+              <div>
+                <h4>Información de Permisos</h4>
+                <ul>
+                  <li><i class="fa fa-crown"></i> <strong>Administrador Principal:</strong> Puede eliminar otros administradores</li>
+                  <li><i class="fa fa-user-shield"></i> <strong>Administrador:</strong> Puede agregar nuevos administradores y editar su propio perfil</li>
+                  <li><i class="fa fa-lock"></i> Cada administrador solo puede editar su propia información</li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -108,7 +149,7 @@
     <div class="modal-dialog" (click)="$event.stopPropagation()">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title">Actualizar Administrador</h4>
+          <h4 class="modal-title">Actualizar Mi Perfil</h4>
           <button type="button" class="close" (click)="cerrarModalEditar()">&times;</button>
         </div>
         <form (ngSubmit)="actualizarUsuario()">
@@ -216,7 +257,7 @@
 
             <div class="info-box">
               <i class="fa fa-info-circle"></i>
-              <p>Se creará una cuenta de administrador con acceso completo al sistema.</p>
+              <p>Se creará una cuenta de administrador (no principal) con acceso al sistema.</p>
             </div>
           </div>
           

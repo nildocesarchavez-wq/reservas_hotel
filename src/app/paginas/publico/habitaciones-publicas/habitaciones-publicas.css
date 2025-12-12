@@ -471,3 +471,25 @@
 		width: 100%;
 	}
 }
+
+/* Agregar al final de habitaciones-publicas.css */
+
+/* Mensaje para administradores */
+.admin-message {
+	padding: 10px 15px;
+	background: #fff3cd;
+	border: 1px solid #ffc107;
+	border-radius: 8px;
+	color: #856404;
+	font-size: 13px;
+	text-align: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	flex: 1;
+}
+
+.admin-message i {
+	font-size: 14px;
+}

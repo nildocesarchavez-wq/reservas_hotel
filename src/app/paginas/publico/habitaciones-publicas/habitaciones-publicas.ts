@@ -6,11 +6,12 @@ import { Subscription } from 'rxjs';
 import { HabitacionesService } from '../../../nucleo/servicios/habitaciones.service';
 import { AutenticacionService } from '../../../nucleo/servicios/autenticacion.service';
 import { Habitacion, FiltrosHabitacion, TipoHabitacion } from '../../../nucleo/modelos/habitacion.model';
+import { SolesPeruanosPipe } from '../../../nucleo/pipes/soles-peruanos-pipe';
 
 @Component({
   selector: 'app-habitaciones-publicas',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, SolesPeruanosPipe],
   templateUrl: './habitaciones-publicas.html',
   styleUrl: './habitaciones-publicas.css'
 })
@@ -19,31 +20,56 @@ export class HabitacionesPublicasComponent implements OnInit, OnDestroy {
   habitacionesFiltradas: Habitacion[] = [];
   isLoading = true;
   error: string | null = null;
-  
+
+  // Usuario actual
+  usuarioActual: any = null;
+  esCliente = false;
+
   // Filtros
   filtros: FiltrosHabitacion = {
     disponible: true
   };
-  
+
   tiposHabitacion: TipoHabitacion[] = ['Individual', 'Doble', 'Suite', 'Deluxe', 'Presidencial'];
   filtroTipoSeleccionado: string = 'todos';
   filtroEstrellas: number = 0;
   filtroPrecioMax: number = 1000;
-  
+
   private subscriptions: Subscription[] = [];
 
   constructor(
     private habitacionesService: HabitacionesService,
     private authService: AutenticacionService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
+    this.verificarUsuario();
     this.cargarHabitaciones();
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(sub => sub.unsubscribe());
+  }
+
+  /**
+   * Verificar el rol del usuario actual
+   */
+  verificarUsuario(): void {
+    const sub = this.authService.userData$.subscribe({
+      next: (userData) => {
+        this.usuarioActual = this.authService.getCurrentUser();
+        if (userData) {
+          this.esCliente = userData.rol === 'cliente';
+        } else {
+          this.esCliente = false;
+        }
+      },
+      error: (error) => {
+        console.error('Error al obtener datos del usuario:', error);
+      }
+    });
+    this.subscriptions.push(sub);
   }
 
   /**
@@ -114,6 +140,18 @@ export class HabitacionesPublicasComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Verificar si puede reservar (solo clientes o usuarios no autenticados)
+   */
+  puedeReservar(): boolean {
+    // Si no está autenticado, puede intentar reservar (lo redirigirá al login)
+    if (!this.usuarioActual) {
+      return true;
+    }
+    // Si está autenticado, solo puede reservar si es cliente
+    return this.esCliente;
+  }
+
+  /**
    * Reservar habitación
    */
   async reservarHabitacion(habitacion: Habitacion): Promise<void> {
@@ -129,7 +167,13 @@ export class HabitacionesPublicasComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Si está autenticado, redirigir a nueva reserva con la habitación seleccionada
+    // Verificar si es cliente
+    if (!this.esCliente) {
+      alert('Solo los clientes pueden realizar reservas');
+      return;
+    }
+
+    // Si está autenticado y es cliente, redirigir a nueva reserva con la habitación seleccionada
     this.router.navigate(['/cliente/nueva-reserva'], {
       queryParams: { habitacionId: habitacion.id }
     });
@@ -140,7 +184,8 @@ export class HabitacionesPublicasComponent implements OnInit, OnDestroy {
    */
   verDetalles(habitacion: Habitacion): void {
     // Por ahora solo mostramos un alert, luego se puede crear una página de detalles
-    alert(`Detalles de ${habitacion.tipo}\n\nPrecio: $${habitacion.precio}/noche\nCapacidad: ${habitacion.capacidad} personas\n\n${habitacion.descripcion}`);
+    const detalles = `Detalles de ${habitacion.tipo}\n\nPrecio: S/ ${habitacion.precio.toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}/noche\nCapacidad: ${habitacion.capacidad} personas\n\n${habitacion.descripcion}`;
+    alert(detalles);
   }
 
   /**
@@ -148,15 +193,5 @@ export class HabitacionesPublicasComponent implements OnInit, OnDestroy {
    */
   getImagenPrincipal(habitacion: Habitacion): string {
     return habitacion.imagenPrincipal || habitacion.imagenes?.[0] || 'images/r1.jpg';
-  }
-
-  /**
-   * Formatear precio
-   */
-  formatearPrecio(precio: number): string {
-    return precio.toLocaleString('es-PE', {
-      style: 'currency',
-      currency: 'PEN'
-    });
   }
 }

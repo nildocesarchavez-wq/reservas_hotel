@@ -3,9 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SidebarAdmin } from "../../../compartido/componentes/sidebar-admin/sidebar-admin";
 import { HeaderAdmin } from '../../../compartido/componentes/header-admin/header-admin';
-import { 
-  Firestore, 
-  collection, 
+import {
+  Firestore,
+  collection,
   collectionData,
   doc,
   addDoc,
@@ -13,9 +13,10 @@ import {
   deleteDoc,
   query,
   where,
-  Timestamp
+  Timestamp,
+  getDoc
 } from '@angular/fire/firestore';
-import { 
+import {
   Auth,
   createUserWithEmailAndPassword,
   updateProfile
@@ -29,6 +30,7 @@ interface AdminUsuario {
   email: string;
   displayName: string;
   rol: 'administrador';
+  esAdminPrincipal?: boolean; // Nuevo campo
   createdAt: Date;
   updatedAt: Date;
 }
@@ -50,6 +52,8 @@ export class Perfil implements OnInit, OnDestroy {
   // Estado
   isLoading = true;
   administradores: AdminUsuario[] = [];
+  usuarioActual: AdminUsuario | null = null;
+  esAdminPrincipal = false;
 
   // Modales
   showEditModal = false;
@@ -75,18 +79,61 @@ export class Perfil implements OnInit, OnDestroy {
   mensajeError = '';
 
   ngOnInit() {
-    this.cargarAdministradoresEnTiempoReal();
+    this.cargarUsuarioActual();
   }
 
   ngOnDestroy() {
     this.usuariosSubscription?.unsubscribe();
   }
 
+  async cargarUsuarioActual() {
+    const user = this.auth.currentUser;
+    if (!user) {
+      this.mensajeError = 'No hay sesión activa';
+      this.isLoading = false;
+      return;
+    }
+    
+    try {
+      // Buscar el documento del usuario actual en Firestore
+      const usuariosCollection = collection(this.firestore, 'usuarios');
+      const q = query(usuariosCollection, where('uid', '==', user.uid));
+
+      this.usuariosSubscription = collectionData(q, { idField: 'id' }).subscribe({
+        next: (usuarios: any[]) => {
+          if (usuarios.length > 0) {
+            this.usuarioActual = {
+              ...usuarios[0],
+              createdAt: usuarios[0].createdAt?.toDate() || new Date(),
+              updatedAt: usuarios[0].updatedAt?.toDate() || new Date()
+            };
+            this.esAdminPrincipal = this.usuarioActual?.esAdminPrincipal || false;
+
+            // Ahora cargar todos los administradores
+            this.cargarAdministradoresEnTiempoReal();
+          } else {
+            this.mensajeError = 'Usuario no encontrado en la base de datos';
+            this.isLoading = false;
+          }
+        },
+        error: (error) => {
+          console.error('Error al cargar usuario actual:', error);
+          this.mensajeError = 'Error al cargar información del usuario';
+          this.isLoading = false;
+        }
+      });
+    } catch (error) {
+      console.error('Error al cargar usuario actual:', error);
+      this.mensajeError = 'Error al cargar información del usuario';
+      this.isLoading = false;
+    }
+  }
+
   cargarAdministradoresEnTiempoReal() {
     const usuariosCollection = collection(this.firestore, 'usuarios');
     const q = query(usuariosCollection, where('rol', '==', 'administrador'));
 
-    this.usuariosSubscription = collectionData(q, { idField: 'id' }).subscribe({
+    collectionData(q, { idField: 'id' }).subscribe({
       next: (usuarios: any[]) => {
         this.administradores = usuarios.map(user => ({
           ...user,
@@ -103,8 +150,31 @@ export class Perfil implements OnInit, OnDestroy {
     });
   }
 
+  // ========== VERIFICACIONES DE PERMISOS ==========
+  puedeEditarUsuario(admin: AdminUsuario): boolean {
+    // Solo puede editar su propio perfil
+    return this.usuarioActual?.id === admin.id;
+  }
+
+  puedeEliminarUsuario(admin: AdminUsuario): boolean {
+    // Solo el admin principal puede eliminar
+    // Y no puede eliminarse a sí mismo
+    return this.esAdminPrincipal && this.usuarioActual?.id !== admin.id;
+  }
+
+  puedeAgregarAdmin(): boolean {
+    // Todos los admins pueden agregar nuevos admins
+    return true;
+  }
+
   // ========== MODAL EDITAR ==========
   abrirModalEditar(admin: AdminUsuario) {
+    if (!this.puedeEditarUsuario(admin)) {
+      this.mensajeError = 'Solo puedes editar tu propio perfil';
+      setTimeout(() => this.limpiarMensajes(), 3000);
+      return;
+    }
+
     this.usuarioEditando = admin;
     this.editForm = {
       displayName: admin.displayName,
@@ -128,11 +198,16 @@ export class Perfil implements OnInit, OnDestroy {
   async actualizarUsuario() {
     if (!this.usuarioEditando) return;
 
+    if (!this.puedeEditarUsuario(this.usuarioEditando)) {
+      this.mensajeError = 'No tienes permiso para editar este usuario';
+      return;
+    }
+
     try {
       this.isLoading = true;
       this.limpiarMensajes();
 
-      const usuarioDoc = doc(this.firestore, `usuarios/${this.usuarioEditando.id}`);
+      const usuarioDoc = doc(this.firestore, `usuarios/${this.usuarioEditando!.id}`);
 
       const updateData: any = {
         displayName: this.editForm.displayName,
@@ -142,7 +217,7 @@ export class Perfil implements OnInit, OnDestroy {
 
       await updateDoc(usuarioDoc, updateData);
 
-      this.mensajeExito = '✓ Usuario actualizado exitosamente';
+      this.mensajeExito = '✓ Tu perfil ha sido actualizado exitosamente';
       this.cerrarModalEditar();
 
       setTimeout(() => this.limpiarMensajes(), 3000);
@@ -157,6 +232,12 @@ export class Perfil implements OnInit, OnDestroy {
 
   // ========== MODAL AGREGAR ==========
   abrirModalAgregar() {
+    if (!this.puedeAgregarAdmin()) {
+      this.mensajeError = 'No tienes permiso para agregar administradores';
+      setTimeout(() => this.limpiarMensajes(), 3000);
+      return;
+    }
+
     this.addForm = {
       displayName: '',
       email: '',
@@ -214,6 +295,7 @@ export class Perfil implements OnInit, OnDestroy {
         email: this.addForm.email,
         displayName: this.addForm.displayName,
         rol: 'administrador',
+        esAdminPrincipal: false, // Los nuevos admins NO son principales
         phoneNumber: '',
         country: '',
         photoURL: '',
@@ -238,6 +320,12 @@ export class Perfil implements OnInit, OnDestroy {
 
   // ========== ELIMINAR ==========
   async eliminarUsuario(admin: AdminUsuario) {
+    if (!this.puedeEliminarUsuario(admin)) {
+      this.mensajeError = 'Solo el administrador principal puede eliminar usuarios';
+      setTimeout(() => this.limpiarMensajes(), 3000);
+      return;
+    }
+
     const confirmacion = confirm(
       `¿Está seguro de eliminar al administrador "${admin.displayName}"?\n\n` +
       'Esta acción no se puede deshacer.'

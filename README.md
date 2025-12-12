@@ -1,59 +1,88 @@
-# ReservasHotel
+# 🏨 Reservas Hotel - Sistema de Gestión de Reservas
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.6.
+Sistema completo para la gestión de reservas de hotel, desarrollado como una Single Page Application (SPA) moderna. Permite a los clientes reservar habitaciones y a los administradores gestionar el hotel a través de un panel de control.
 
-## Development server
+## 🚀 Tecnologías y Herramientas
 
-To start a local development server, run:
+*   **Frontend**: [Angular v17+](https://angular.io/) (Standalone Components, Signals)
+*   **Lenguaje**: TypeScript
+*   **Backend / Base de Datos**: Firebase (Firestore Database, Authentication)
+*   **Hosting**: Firebase Hosting
+*   **Estilos**: CSS3 Moderno (Diseño Responsivo)
+*   **Control de Versiones**: Git
 
-```bash
-ng serve
-```
+## 📋 Requisitos de Instalación y Ejecución
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Para ejecutar este proyecto localmente, necesitas tener instalado [Node.js](https://nodejs.org/) (v18 o superior) y Angular CLI.
 
-## Code scaffolding
+1.  **Clonar el repositorio**
+    ```bash
+    git clone <url-del-repositorio>
+    cd reservas_hotel
+    ```
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+2.  **Instalar dependencias**
+    ```bash
+    npm install
+    ```
 
-```bash
-ng generate component component-name
-```
+3.  **Configurar Firebase**
+    *   Crea un proyecto en [Firebase Console](https://console.firebase.google.com/).
+    *   Habilita **Authentication** (Email/Password).
+    *   Habilita **Firestore Database**.
+    *   Copia tus credenciales y configúralas en `src/environments/environment.ts`.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+4.  **Ejecutar servidor de desarrollo**
+    ```bash
+    ng serve
+    ```
+    La aplicación estará disponible en `http://localhost:4200/`.
 
-```bash
-ng generate --help
-```
+## 🏗️ Arquitectura del Sistema
 
-## Building
+La aplicación sigue una arquitectura modular basada en componentes independientes (Standalone Components).
 
-To build the project run:
+### 📂 Estructura Principal
+*   **`src/app/nucleo`**: Contiene la lógica de negocio central.
+    *   **`servicios/`**: Comunicación con Firebase (Auth, Firestore) y gestión de estado.
+    *   **`modelos/`**: Interfaces TypeScript para tipado fuerte (Usuario, Reserva, Habitacion).
+    *   **`guards/`**: Protección de rutas (AuthGuard, AdminGuard).
+*   **`src/app/paginas`**: Vistas principales de la aplicación.
+    *   **`publico/`**: Vistas accesibles para todos (Inicio, Habitaciones, Contacto).
+    *   **`cliente/`**: Panel del cliente (Mis Reservas, Perfil).
+    *   **`administrador/`**: Panel de gestión (Dashboard, Reservas, Habitaciones, Usuarios).
+*   **`src/app/compartido`**: Componentes reutilizables (Header, Footer, Sidebar).
 
-```bash
-ng build
-```
+### 🔒 Servicios Principales
+*   **`AuthService`**: Manejo de sesión, registro y login.
+*   **`ReservasService`**: CRUD de reservas en Firestore.
+*   **`HabitacionesService`**: Gestión del inventario de habitaciones.
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## 🌐 Despliegue (Deploy)
 
-## Running unit tests
+La aplicación está desplegada y accesible públicamente en Firebase Hosting:
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+🔗 **URL del Proyecto**: [https://reservashotel-69246.web.app](https://reservashotel-69246.web.app)
 
-```bash
-ng test
-```
+## 🎥 Video Demostrativo
 
-## Running end-to-end tests
+Video explicativo de 5 a 8 minutos cubriendo funcionalidades, autenticación, base de datos y código.
 
-For end-to-end (e2e) testing, run:
+▶️ **Ver Video**: [INSERTE URL DE SU VIDEO AQUÍ]
 
-```bash
-ng e2e
-```
+---
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## 📖 Manual de Usuario
 
-## Additional Resources
+### Para Clientes
+1.  **Registro/Login**: Cree una cuenta o inicie sesión para realizar reservas.
+2.  **Explorar Habitaciones**: Navegue por la página de "Habitaciones" para ver detalles y fotos.
+3.  **Reservar**: Seleccione fechas y habitación. Si está disponible, confirme su reserva.
+4.  **Mis Reservas**: Consulte el estado de sus reservas en su panel personal.
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+### Para Administradores
+1.  **Acceso Admin**: Inicie sesión con una cuenta de rol administrador.
+2.  **Dashboard**: Visualice métricas rápidas (reservas del día, ingresos).
+3.  **Gestión de Reservas**: Apruebe, cancele o modifique reservas pendientes.
+4.  **Gestión de Habitaciones**: Agregue nuevas habitaciones, edite precios o cambie la disponibilidad.
+5.  **Usuarios**: Gestione las cuentas de acceso al sistema.

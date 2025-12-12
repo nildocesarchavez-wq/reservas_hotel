@@ -25,7 +25,7 @@
       </div>
 
       <div class="filter-group">
-        <label for="precioFilter">Precio Máximo: ${{ filtroPrecioMax }}</label>
+        <label for="precioFilter">Precio Máximo: {{ filtroPrecioMax | solesPeruanos }}</label>
         <input type="range" id="precioFilter" [(ngModel)]="filtroPrecioMax" (input)="aplicarFiltros()" min="50"
           max="1000" step="10" class="filter-range" />
       </div>
@@ -107,7 +107,7 @@
             <!-- Precio y botón de reserva -->
             <div class="price-selet">
               <h3>
-                <span>$</span>{{ habitacion.precio }}
+                <span>S/</span> {{ habitacion.precio | solesPeruanos:false }}
                 <small>/noche</small>
               </h3>
 
@@ -116,11 +116,21 @@
                   <i class="fa fa-info-circle"></i> Detalles
                 </button>
 
-                <button type="button" class="btn-reserve" (click)="reservarHabitacion(habitacion)"
+                <!-- Solo mostrar botón de reservar si puede reservar (cliente o no autenticado) -->
+                <button 
+                  *ngIf="puedeReservar()"
+                  type="button" 
+                  class="btn-reserve" 
+                  (click)="reservarHabitacion(habitacion)"
                   [disabled]="!habitacion.disponible">
                   <i class="fa fa-calendar-check-o"></i>
                   {{ habitacion.disponible ? 'Reservar ahora' : 'No disponible' }}
                 </button>
+
+                <!-- Mensaje para administradores -->
+                <div *ngIf="!puedeReservar() && usuarioActual" class="admin-message">
+                  <i class="fa fa-info-circle"></i> Los administradores no pueden reservar
+                </div>
               </div>
             </div>
           </div>
