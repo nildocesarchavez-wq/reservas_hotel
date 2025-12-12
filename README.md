@@ -68,7 +68,7 @@ La aplicación está desplegada y accesible públicamente en Firebase Hosting:
 
 Video explicativo de 5 a 8 minutos cubriendo funcionalidades, autenticación, base de datos y código.
 
-▶️ **Ver Video**: [INSERTE URL DE SU VIDEO AQUÍ]
+▶️ **Ver Video**: 
 
 ---
 
