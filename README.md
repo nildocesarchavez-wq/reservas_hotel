@@ -70,7 +70,7 @@ Video explicativo de 5 a 8 minutos cubriendo funcionalidades, autenticación, ba
 
 ▶️ **Ver Video**: 
 
----
+[Ver Video](https://drive.google.com/drive/folders/1VFTQwJ17-bSeyUhvxxf655F2g1H1-6mKp)
 
 ## 📖 Manual de Usuario
 
